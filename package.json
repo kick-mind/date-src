@@ -30,7 +30,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "scripts": {
-    "test": "set TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
+    "test": "mocha 'tests/index.ts'",
     "build": "webpack",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
