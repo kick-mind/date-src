@@ -1,5 +1,5 @@
 {
-  "name": "sugerCalender",
+  "name": "ui-sugar-date",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/main.bundle.js",
@@ -8,7 +8,9 @@
     "dist"
   ],
   "private": "true",
-  "dependencies": {},
+  "dependencies": {
+    "typescript": "^4.2.3"
+  },
   "devDependencies": {
     "@babel/core": "^7.13.1",
     "@babel/preset-env": "^7.13.5",
@@ -27,13 +29,14 @@
     "webpack": "^5.24.2",
     "webpack-cli": "^4.5.0",
     "webpack-dev-middleware": "^4.1.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.7.3"
   },
   "scripts": {
     "test": "mocha 'tests/**/*.ts'",
-    "build": "webpack",
     "watch": "webpack --watch",
-    "start": "webpack serve --open",
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack serve --open --config webpack.dev.js",
     "server": "node server.js"
   },
   "keywords": [],

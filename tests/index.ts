@@ -1,6 +1,6 @@
 const assert = require("assert");
-//const add = require("../src/date/jalaali/jalaali-date-time");
-
+const Jalaali = require("date/index");
+ 
 describe("Demo", () => {
   it("should add correctly", () => assert.equal(2, 2));
 });
