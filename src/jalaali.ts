@@ -14,7 +14,6 @@ export class JalaaliDateTime extends DateTime {
         super(date);
     }
 
-
     add(amounts: DateTimeValues): DateTime {
         throw new Error('Method not implemented.');
         // const { gy, gm, gd } = Jalaali.toGregorian(this._value.year, this._value.month, this._value.day);
@@ -77,10 +76,6 @@ export class JalaaliDateTime extends DateTime {
         // result.second = this.second;
         // result.millisecond = this.millisecond;
         // return result;
-    }
-
-    format(_string: any): string {
-        throw new Error('Method not implemented.');
     }
 
     diff(datetime: DateTime): number {

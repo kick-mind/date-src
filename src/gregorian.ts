@@ -76,10 +76,6 @@ export class GregorianDateTime extends DateTime {
         // return result;
     }
 
-    format(_string: any): string {
-        throw new Error('Method not implemented.');
-    }
-
     diff(datetime: DateTime): number {
         throw new Error('Method not implemented.');
 

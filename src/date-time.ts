@@ -3,7 +3,7 @@ import { Locale } from './locale';
 export interface DateTimeValues {
     year: number;
     month: number;
-    day: number;
+    day: number; // "day" or "date" ? moment is using "date"
     hour: number;
     minute: number;
     second: number;
@@ -46,7 +46,9 @@ export abstract class DateTime {
     abstract subtract(amounts: DateTimeValues): DateTime;
     abstract clone(): DateTime;
     abstract diff(datetime: DateTime): number;
-    abstract format(format: string): string;
+    format(format: string): string {
+        throw new Error('not implemented.');
+    }
 
     isSame(dateTime: DateTime): boolean {
         const d1 = this._values;
