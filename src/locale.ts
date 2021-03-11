@@ -2,18 +2,14 @@ export interface Locale {
     /** Locale name */
     name: string;
 
-    week: {
-        /** The first day of the week */
-        first: number;
+    /** The first day of the week */
+    weekStart: number;
 
-        /** An array of the weekday names */
-        days: string[];
+    /** weekday names */
+    weekdays: Array<Array<string>>;
+
+    /** month names */
+    months: {
+        [calendar: string]: Array<Array<string>>;
     }
-
-    calendars: {
-        [calendar: string]: {
-            /** An array of the month names */
-            months: string[];
-        }
-    };
 }
