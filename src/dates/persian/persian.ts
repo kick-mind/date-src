@@ -92,7 +92,7 @@ export class PersianDate extends DateTime {
         throw new Error('Method not implemented.');
     }
 
-    get dayOfWeek(): number {
+    get weekDay(): number {
         throw new Error('Method not implemented.');
         // const gDate = new Date(this.toGregorian(this));
         // return gDate.getDate() % 7;
@@ -115,7 +115,7 @@ export class PersianDate extends DateTime {
         // return Math.ceil((week1 - week2) / (1000 * 60 * 60 * 24 * 7));
     }
 
-    get weekYear(): number {
+    get weekNumber(): number {
         throw new Error('Method not implemented.');
         // const gDate = new Date(this.toGregorian(this));
         // const startDayOfTheYear = Jalaali.toGregorian(this._value.year, 1, 1);
@@ -125,12 +125,24 @@ export class PersianDate extends DateTime {
         // return Math.ceil((week1 - week2) / (1000 * 60 * 60 * 24 * 7));
     }
 
-    get isLeapYear(): boolean {
+    get isInLeapYear(): boolean {
         throw new Error('Method not implemented.');
         // return (Jalaali.isLeapJalaaliYear(this._value.year));
     }
 
     get quarter(): number {
         return Math.floor(this.month / 4) + 1;
+    }
+
+    get daysInMonth(): number {
+        throw new Error('Method not implemented.');
+    }
+    
+    get daysInYear(): number {
+        throw new Error('Method not implemented.');
+    }
+
+    get isValid(): boolean {
+        throw new Error('Method not implemented.');
     }
 }
