@@ -1,6 +1,6 @@
 import { Locale } from './locale';
 
-/** DateTime values. */
+/** DateTime values.  */
 export interface DateTimeValues {
     year: number;
     month: number;
