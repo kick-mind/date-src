@@ -17,6 +17,7 @@ export abstract class DateTime {
     private static _defaultLocale: string;
     private _values: DateTimeValues;
     private _locale: string;
+    private _isValid: boolean;
 
     /** Get the locale of a DateTime, such 'en-GB'. */
     get locale(): string {
@@ -82,12 +83,14 @@ export abstract class DateTime {
     abstract get isInLeapYear(): boolean;
 
     /** Returns whether the DateTime is valid. */
-    abstract get isValid(): boolean;
+    get isValid(): boolean {
+        return this._isValid;
+    };
 
     /** Get the quarter. */
     abstract get quarter(): number;
 
-    /** Createa a new DateTime. */
+    /** Create a new DateTime. */
     constructor(values: DateTimeValues, locale?: string) {
         this._values = values;
         this._locale = locale ?? DateTime.getDefaultLocale();
