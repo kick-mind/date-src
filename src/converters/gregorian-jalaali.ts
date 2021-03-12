@@ -1,10 +1,10 @@
-import { GregorianDate } from '../gregorian';
-import { PersianDate } from '../dates/persian/persian';
+import { GregorianDate } from "../dates/gregorian";
+import { PersianDate } from "../dates/persian";
 
-export function gregorianToJalaali(date: GregorianDate): PersianDate {
+export function gregorianToPersian(date: GregorianDate): PersianDate {
     throw new Error('Method not implemented.');
 }
 
-export function jalaaliToGregorian(date: PersianDate): GregorianDate {
+export function persianToGregorian(date: PersianDate): GregorianDate {
     throw new Error('Method not implemented.');
 }
