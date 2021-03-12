@@ -1,4 +1,3 @@
-import { throwError } from 'rxjs';
 
 export enum CalendarAlgorithmType {
   Unknown = 0,
@@ -191,7 +190,7 @@ export abstract class Calendar {
 
   static checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
     if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
-      throwError('Clanedar wrong range exception');
+      throw "Clanedar wrong range exception";
     }
   }
 
@@ -200,7 +199,7 @@ export abstract class Calendar {
     if (
       !(millis > -Number(this._maxMillis) && millis < Number(this._maxMillis))
     ) {
-      throwError('ArgumentOutOfRange_AddValue');
+      throw 'ArgumentOutOfRange_AddValue';
     }
     // ticks in milliseconds
     const ticks: number = time.getTime() + millis;
@@ -378,7 +377,7 @@ export abstract class Calendar {
     firstDayOfWeek: DayOfWeek
   ): number {
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
-      throwError('firstDayOfWeek: ArgumentOutOfRange_Range');
+      throw 'firstDayOfWeek: ArgumentOutOfRange_Range';
     }
 
     switch (rule) {
@@ -389,7 +388,7 @@ export abstract class Calendar {
       case CalendarWeekRule.FirstFourDayWeek:
         return this.getWeekOfYearFullDays(time, firstDayOfWeek, 4);
     }
-    throwError('rule: ArgumentOutOfRange_Range');
+    throw 'rule: ArgumentOutOfRange_Range';
   }
 
   abstract getYear(time: Date): number;
@@ -551,19 +550,19 @@ export abstract class Calendar {
       second < 60
     ) {
       if (millisecond < 0 || millisecond >= this._millisPerSecond) {
-        throwError('ArgumentOutOfRange_Range');
+        throw 'ArgumentOutOfRange_Range';
       }
       return (
         this.timeSpan_TimeToTicks(hour, minute, second) +
         millisecond * Calendar._ticksPerMillisecond
       );
     }
-    throwError('ArgumentOutOfRange_BadHourMinuteSecond');
+    throw 'ArgumentOutOfRange_BadHourMinuteSecond';
   }
 
   toFourDigitYear(year: number): number {
     if (year < 0) {
-      throwError('year:ArgumentOutOfRange_NeedNonNegNum');
+      throw 'year:ArgumentOutOfRange_NeedNonNegNum';
     }
 
     if (year < 100) {
@@ -576,7 +575,6 @@ export abstract class Calendar {
     }
     return year;
   }
-  چ;
 
   private timeSpan_TimeToTicks(
     hour: number,
@@ -587,7 +585,7 @@ export abstract class Calendar {
     // which is less than 2^44, meaning we won't overflow totalSeconds.
     const totalSeconds = hour * 3600 + minute * 60 + second;
     if (totalSeconds > Number.MAX_VALUE || totalSeconds < Number.MIN_VALUE) {
-      throwError('Overflow_TimeSpanTooLong');
+      throw 'Overflow_TimeSpanTooLong';
     }
     return totalSeconds * Calendar._ticksPerSecond;
   }
