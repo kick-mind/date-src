@@ -1,15 +1,17 @@
 import { Locale } from './locale';
 
+/** DateTime values. */
 export interface DateTimeValues {
     year: number;
     month: number;
-    day: number; // "day" or "date" ? moment is using "date"
+    day: number;
     hour: number;
     minute: number;
     second: number;
     ms: number;
 }
 
+/** An abstract base class for all JS-Sugar DateTime classes.  */
 export abstract class DateTime {
     private static _locales = new Array<Locale>();
     private static _defaultLocale: string;
