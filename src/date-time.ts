@@ -16,11 +16,13 @@ export abstract class DateTime {
     private _values: DateTimeValues;
     private _locale: string;
 
+    /** */
     constructor(values: DateTimeValues, locale?: string) {
         this._values = values;
         this._locale = locale ?? DateTime.defaultLocale;
     }
 
+    /** */
     static addLocale(locale: Locale): void {
         this._locales.push({ ...locale });
 
@@ -29,27 +31,37 @@ export abstract class DateTime {
         }
     }
 
+    /** */
     static getLocale(localeName: string): Locale {
         const l = this._locales.find(x => x.name === localeName);
         return l ? { ...l } : null;
     }
 
+    /** */
     static set defaultLocale(value: string) {
         this._defaultLocale = value;
     }
 
+    /** */
     static get defaultLocale(): string {
         return this._defaultLocale;
     }
 
+    /** */
     abstract add(amounts: DateTimeValues): DateTime;
+
+    /** */
     abstract subtract(amounts: DateTimeValues): DateTime;
-    abstract clone(): DateTime;
+
+    /** */
     abstract diff(datetime: DateTime): number;
+
+    /** */
     format(format: string): string {
         throw new Error('not implemented.');
     }
 
+    /** */
     isSame(dateTime: DateTime): boolean {
         const d1 = this._values;
         const d2 = dateTime.values;
@@ -63,6 +75,7 @@ export abstract class DateTime {
             d1.ms === d2.ms;
     }
 
+    /** */
     isAfter(dateTime: DateTime): boolean {
         const d1 = this._values;
         const d2 = dateTime.values;
@@ -76,10 +89,12 @@ export abstract class DateTime {
             d1.ms > d2.ms;
     }
 
+    /** */
     isSameOrAfter(dateTime: DateTime): boolean {
         return this.isAfter(dateTime) || this.isSame(dateTime);
     }
 
+    /** */
     isBefore(dateTime: DateTime): boolean {
         const d1 = this.values;
         const d2 = dateTime.values;
@@ -97,49 +112,68 @@ export abstract class DateTime {
         return this.isBefore(dateTime) || this.isSame(dateTime);
     }
 
+    /** */
     set locale(value: string) {
         this._locale = value;
     }
 
+    /** */
     get locale(): string {
         return this._locale;
     }
 
+    /** */
     get values(): DateTimeValues {
         return { ...this._values };
     }
 
+    /** */
     get year(): number {
         return this._values.year;
     }
 
+    /** */
     get month(): number {
         return this._values.month;
     }
 
+    /** */
     get day(): number {
         return this._values.day;
     }
 
+    /** */
     get hour(): number {
         return this._values.hour;
     }
 
+    /** */
     get minute(): number {
         return this._values.minute;
     }
 
+    /** */
     get second(): number {
         return this._values.second;
     }
 
+    /** */
     get ms(): number {
         return this._values.year;
     }
 
+    /** */
     abstract get dayOfWeek(): number;
+
+    /** */
     abstract get weeksInYear(): number;
+
+    /** */
     abstract get weekYear(): number;
+
+    /** */
     abstract get isLeapYear(): boolean;
+
+    /** */
     abstract get quarter(): number;
 }

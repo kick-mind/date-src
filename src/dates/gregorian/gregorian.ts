@@ -1,7 +1,6 @@
-import { DateTime, DateTimeValues } from './date-time';
+import { DateTime, DateTimeValues } from '../../date-time';
 
-export class JalaaliDateTime extends DateTime {
-
+export class GregorianDate extends DateTime {
     constructor(date?: DateTimeValues) {
         // year: date?.year ?? d.getFullYear(),
         // month: date?.month ?? d.getMonth(),
@@ -10,7 +9,6 @@ export class JalaaliDateTime extends DateTime {
         // minute: date?.minute ?? 0,
         // second: date?.second ?? 0,
         // ms: date?.ms ?? 0,
-
         super(date);
     }
 

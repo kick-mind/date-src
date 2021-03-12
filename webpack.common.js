@@ -3,8 +3,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     entry: {
-        jalaali: './src/date/jalaali/jalaali-date-time.ts',
-        gregorian: './src/date/gregorian/gregorian-date-time.ts'
+        jalaali: './src/dates/persian/persian.ts',
+        gregorian: './src/dates/gregorian/gregorian.ts'
     },
     plugins: [
        // new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
