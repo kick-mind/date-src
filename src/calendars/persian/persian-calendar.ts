@@ -1,4 +1,4 @@
-import { throwError } from 'rxjs/internal/observable/throwError';
+
 import { Calendar, CalendarAlgorithmType, DayOfWeek } from '../calendar';
 import { CalHelper } from './cal-helper';
 
@@ -89,25 +89,25 @@ export class PersianCalendar extends Calendar {
       yearStart += ordinalDay;
       return yearStart;
     }
-    throwError('ArgumentOutOfRange_BadYearMonthDay');
+    throw 'ArgumentOutOfRange_BadYearMonthDay';
   }
 
   static checkTicksRange(ticks: number) {
     if (ticks < this.minDate.getTime() || ticks > this.maxDate.getTime()) {
-      throwError('time ArgumentOutOfRange_CalendarRange');
+      throw 'time ArgumentOutOfRange_CalendarRange';
     }
   }
 
   static checkEraRange(era: number) {
     if (era != this._currentEra && era != this._persianEra) {
-      throwError('era ArgumentOutOfRange_InvalidEraValue');
+      throw 'era ArgumentOutOfRange_InvalidEraValue';
     }
   }
 
   static checkYearRange(year: number, era: number) {
     this.checkEraRange(era);
     if (year < 1 || year > this._maxCalendarYear) {
-      throwError('year ArgumentOutOfRange_Range');
+      throw 'year ArgumentOutOfRange_Range';
     }
   }
 
@@ -115,12 +115,12 @@ export class PersianCalendar extends Calendar {
     this.checkYearRange(year, era);
     if (year == this._maxCalendarYear) {
       if (month > this._maxCalendarMonth) {
-        throwError('month ArgumentOutOfRange_Range');
+        throw 'month ArgumentOutOfRange_Range';
       }
     }
 
     if (month < 1 || month > 12) {
-      throwError('month ArgumentOutOfRange_Month');
+      throw 'month ArgumentOutOfRange_Month';
     }
   }
 
@@ -181,12 +181,12 @@ export class PersianCalendar extends Calendar {
     }
 
     // Incorrect part value.
-    throwError('InvalidOperation_DateTimeParsing');
+    throw 'InvalidOperation_DateTimeParsing';
   }
 
   addMonths(time: Date, months: number): Date {
     if (months < -120000 || months > 120000) {
-      throwError('months ArgumentOutOfRange_Range');
+      throw 'months ArgumentOutOfRange_Range';
     }
     // Get the date in Persian calendar.
     let timeTotalTicks = CalHelper.getTimeTicks(time);
@@ -313,7 +313,7 @@ export class PersianCalendar extends Calendar {
     // The year/month/era value checking is done in GetDaysInMonth().
     const daysInMonth = this.getDaysInMonth_era(year, month, era);
     if (day < 1 || day > daysInMonth) {
-      throwError('day ArgumentOutOfRange_Day');
+      throw 'day ArgumentOutOfRange_Day';
     }
     return this.isLeapYear_era(year, era) && month == 12 && day == 30;
   }
@@ -355,7 +355,7 @@ export class PersianCalendar extends Calendar {
     // The year/month/era checking is done in GetDaysInMonth().
     const daysInMonth = this.getDaysInMonth_era(year, month, era);
     if (day < 1 || day > daysInMonth) {
-      throwError('ArgumentOutOfRange_Day');
+      throw 'ArgumentOutOfRange_Day';
     }
 
     const lDate = this.getAbsoluteDatePersian(year, month, day);
@@ -366,7 +366,7 @@ export class PersianCalendar extends Calendar {
           super.timeToTicks(hour, minute, second, millisecond)
       );
     } else {
-      throwError('ArgumentOutOfRange_BadYearMonthDay');
+      throw 'ArgumentOutOfRange_BadYearMonthDay';
     }
   }
 
@@ -374,7 +374,7 @@ export class PersianCalendar extends Calendar {
 
   toFourDigitYear(year: number): number {
     if (year < 0) {
-      throwError('yeaer ArgumentOutOfRange_NeedNonNegNum');
+      throw 'yeaer ArgumentOutOfRange_NeedNonNegNum';
     }
 
     if (year < 100) {
@@ -382,7 +382,7 @@ export class PersianCalendar extends Calendar {
     }
 
     if (year > PersianCalendar._maxCalendarYear) {
-      throwError('year ArgumentOutOfRange_Range');
+      throw 'year ArgumentOutOfRange_Range';
     }
     return year;
   }
