@@ -161,11 +161,7 @@ export class CalHelper {
 
   /// Important ***
   static getNumberOfDays(date: Date): number {
-    //  debugger;
-    //  let x=Math.trunc(this.getTimeTicks(date) / GregorianCalendar._ticksPerDay);
-    //  let y= Math.trunc(date.getTime() / GregorianCalendar._ticksPerDay);
     return Math.trunc(date.getTime() / Calendar._ticksPerDay);
-    // return Math.trunc(this.getTimeTicks(date) / GregorianCalendar._ticksPerDay);
   }
 
   /// Important ***
@@ -218,7 +214,6 @@ export class CalHelper {
   }
 
   static defaultEphemerisCorrection(gregorianYear: number): number {
-    // debugger;
     const january1stOfYear = Math.trunc(
       this.getNumberOfDays(new Date(`${gregorianYear}/1/1`))
     );
