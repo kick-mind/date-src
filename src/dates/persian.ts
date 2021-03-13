@@ -1,3 +1,4 @@
+import { CalendarWeekRule, DayOfWeek } from '../calendars/calendar';
 import { PersianCalendar } from '../calendars/persian/persian-calendar';
 import { DateTime, DateTimeValues } from '../date-time';
 
@@ -13,11 +14,10 @@ export class PersianDate extends DateTime {
 
     super(date);
   }
+  private _cal = new PersianCalendar();
 
-  private addTime(amounts: DateTimeValues, sign: number) {
-    let cal = new PersianCalendar();
-
-    let d = cal.toDateTime(
+  private getGDate(): Date {
+    return this._cal.toDateTime(
       this.values.year,
       this.values.month,
       this.values.day,
@@ -26,39 +26,44 @@ export class PersianDate extends DateTime {
       this.values.second,
       this.values.ms
     );
+  }
+
+  private addTime(amounts: DateTimeValues, sign: number) {
+    let d = this.getGDate();
 
     if (amounts?.year) {
-      d = cal.addYears(d, amounts.year * sign);
+      d = this._cal.addYears(d, amounts.year * sign);
     }
     if (amounts?.month) {
-      d = cal.addMonths(d, amounts.month * sign);
+      d = this._cal.addMonths(d, amounts.month * sign);
     }
     if (amounts?.day) {
-      d = cal.addDays(d, amounts.day * sign);
+      d = this._cal.addDays(d, amounts.day * sign);
     }
     if (amounts?.hour) {
-      d = cal.addHours(d, amounts.hour * sign);
+      d = this._cal.addHours(d, amounts.hour * sign);
     }
     if (amounts?.minute) {
-      d = cal.addMinutes(d, amounts.minute * sign);
+      d = this._cal.addMinutes(d, amounts.minute * sign);
     }
     if (amounts?.second) {
-      d = cal.addSeconds(d, amounts.second * sign);
+      d = this._cal.addSeconds(d, amounts.second * sign);
     }
     if (amounts?.ms) {
-      d = cal.addMinutes(d, amounts.ms * sign);
+      d = this._cal.addMinutes(d, amounts.ms * sign);
     }
 
     return new Jalaali({
-      year: cal.getYear(d),
-      month: cal.getMonth(d),
-      day: cal.getDayOfMonth(d),
-      hour: cal.getHour(d),
-      minute: cal.getMinute(d),
-      second: cal.getSecond(d),
-      ms: cal.getMilliseconds(d),
+      year: this._cal.getYear(d),
+      month: this._cal.getMonth(d),
+      day: this._cal.getDayOfMonth(d),
+      hour: this._cal.getHour(d),
+      minute: this._cal.getMinute(d),
+      second: this._cal.getSecond(d),
+      ms: this._cal.getMilliseconds(d),
     });
   }
+
   add(amounts: DateTimeValues): DateTime {
     return this.addTime(amounts, 1);
   }
@@ -68,14 +73,18 @@ export class PersianDate extends DateTime {
   }
 
   diff(datetime: DateTime): number {
-    throw new Error('Method not implemented.');
+    let curGDate = this.getGDate();
+    let tempGDate = this._cal.toDateTime(
+      datetime.year,
+      datetime.month,
+      datetime.day,
+      datetime.hour,
+      datetime.minute,
+      datetime.second,
+      datetime.ms
+    );
 
-    // const gDate = new Date(this.toGregorian(this));
-    // const jDatetime = Jalaali.toGregorian(datetime.get('year'),
-    //     datetime.get('month'),
-    //     datetime.get('day'));
-    // const gStartDayOfTheYear = new Date(jDatetime.gy, jDatetime.gm, jDatetime.gd);
-    // return ((gDate.getTime() - gStartDayOfTheYear.getTime()));
+    return curGDate.getTime() - tempGDate.getTime();
   }
 
   clone(): DateTime {
@@ -83,52 +92,19 @@ export class PersianDate extends DateTime {
   }
 
   get weekDay(): number {
-    let cal = new PersianCalendar();
-
-    let d = cal.toDateTime(
-      this.values.year,
-      this.values.month,
-      this.values.day,
-      this.values.hour,
-      this.values.minute,
-      this.values.second,
-      this.values.ms
-    );
-
-    return cal.getDayOfWeek(d);
+    return this._cal.getDayOfWeek(this.getGDate());
   }
 
   get weeksInYear(): number {
-    throw new Error('Method not implemented.');
-
-    // const lastDayOfYear = new JalaaliDateTime2();
-    // lastDayOfYear.year = this.year;
-    // lastDayOfYear.month = 12;
-    // lastDayOfYear.day = 29;
-    // if (this.isLeapYear) {
-    //     lastDayOfYear.day = 30;
-    // }
-    // const gDate = new Date(this.toGregorian(lastDayOfYear));
-    // const startDayOfTheYear = Jalaali.toGregorian(this._value.year, 1, 1);
-    // const gStartDayOfTheYear = new Date(startDayOfTheYear.gy, startDayOfTheYear.gm, startDayOfTheYear.gd);
-    // const week1 = gDate.getTime() + (1000 * 60 * 60 * 24);
-    // const week2 = gStartDayOfTheYear.getTime();
-    // return Math.ceil((week1 - week2) / (1000 * 60 * 60 * 24 * 7));
+    return Math.trunc(this._cal.getDaysInYear(this.year) / 7);
   }
 
   get weekNumber(): number {
-    throw new Error('Method not implemented.');
-    // const gDate = new Date(this.toGregorian(this));
-    // const startDayOfTheYear = Jalaali.toGregorian(this._value.year, 1, 1);
-    // const gStartDayOfTheYear = new Date(startDayOfTheYear.gy, startDayOfTheYear.gm, startDayOfTheYear.gd);
-    // const week1 = gDate.getTime() + (1000 * 60 * 60 * 24);
-    // const week2 = gStartDayOfTheYear.getTime();
-    // return Math.ceil((week1 - week2) / (1000 * 60 * 60 * 24 * 7));
+      return this._cal.getWeekOfYear(this.getGDate(),CalendarWeekRule.FirstDay, DayOfWeek.Saturday);
   }
 
   get isInLeapYear(): boolean {
-    throw new Error('Method not implemented.');
-    // return (Jalaali.isLeapJalaaliYear(this._value.year));
+        return this._cal.isLeapYear(this.year);
   }
 
   get quarter(): number {
@@ -136,11 +112,11 @@ export class PersianDate extends DateTime {
   }
 
   get daysInMonth(): number {
-    throw new Error('Method not implemented.');
+    return this._cal.getDaysInMonth(this.year,this.month);
   }
 
   get daysInYear(): number {
-    throw new Error('Method not implemented.');
+    return this._cal.getDaysInYear(this.year);
   }
 
   get isValid(): boolean {
