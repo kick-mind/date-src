@@ -1,3 +1,4 @@
+import { PersianCalendar } from '../calendars/persian/persian-calendar';
 import { DateTime, DateTimeValues } from '../date-time';
 
 export class PersianDate extends DateTime {
@@ -14,67 +15,81 @@ export class PersianDate extends DateTime {
     }
 
     add(amounts: DateTimeValues): DateTime {
-        throw new Error('Method not implemented.');
-        // const { gy, gm, gd } = Jalaali.toGregorian(this._value.year, this._value.month, this._value.day);
-        // const d = new Date(gy, gm, gd);
+        let cal = new PersianCalendar();
 
-        // if (amounts?.years) {
-        //     d.setFullYear(Math.abs(d.getFullYear() + amounts.years));
-        // }
-        // if (amounts?.months) {
-        //     d.setMonth(Math.abs(d.getMonth() + amounts.months));
-        // }
-        // if (amounts?.days) {
-        //     d.setDate(Math.abs(d.getDate() + amounts.days));
-        // }
-        // if (amounts?.hours) {
-        //     d.setHours(Math.abs(d.getHours() + amounts.hours));
-        // }
-        // if (amounts?.minutes) {
-        //     d.setHours(Math.abs(d.getMinutes() + amounts.minutes));
-        // }
-        // if (amounts?.seconds) {
-        //     d.setHours(Math.abs(d.getSeconds() + amounts.seconds));
-        // }
-        // if (amounts?.milliseconds) {
-        //     d.setHours(Math.abs(d.getMilliseconds() + amounts.milliseconds));
-        // }
+        let d = cal.toDateTime(this.values.year, this.values.month, this.values.day
+            ,this.values.hour, this.values.minute, this.values.second, this.values.ms);
 
-        // return new JalaaliDateTime2({
-        //     year: d.getFullYear(),
-        //     month: d.getMonth(),
-        //     day: d.getDate(),
-        //     hour: d.getHours(),
-        //     minute: d.getMinutes(),
-        //     second: d.getSeconds(),
-        //     ms: d.getMilliseconds(),
-        // });
+        if (amounts?.year) {
+            d = cal.addYears(d, amounts.year);
+        }
+        if (amounts?.month) {
+            d = cal.addMonths(d, amounts.month);
+        }
+        if (amounts?.day) {
+            d = cal.addDays(d, amounts.day);
+        }
+        if (amounts?.hour) {
+            d = cal.addHours(d, amounts.hour);
+        }
+        if (amounts?.minute) {
+            d = cal.addMinutes(d, amounts.minute);
+        }
+        if (amounts?.second) {
+            d = cal.addSeconds(d, amounts.second);
+        }
+        if (amounts?.ms) {
+            d = cal.addMinutes(d, amounts.ms);
+        }
+
+        return new Jalaali({
+            year: cal.getYear(d) ,
+            month: cal.getMonth(d) ,
+            day: cal.getDayOfMonth(d),
+            hour: cal.getHour(d),
+            minute: cal.getMinute(d),
+            second: cal.getSecond(d),
+            ms: cal.getMilliseconds(d),
+        });
     }
 
     subtract(amounts: DateTimeValues): DateTime {
-        throw new Error('Method not implemented.');
+        let cal = new PersianCalendar();
 
-        // const gDateTemp = Jalaali.toGregorian(this.year, this.month, this.day);
-        // const gDate = new Date(gDateTemp.gy, gDateTemp.gm, gDateTemp.gd);
-        // if (amounts.days !== 0) {
-        //     gDate.setDate(gDate.getDate() - amounts.days);
-        // }
-        // if (amounts.months !== 0) {
-        //     gDate.setMonth(gDate.getMonth() - amounts.months);
-        // }
-        // if (amounts.years !== 0) {
-        //     gDate.setFullYear(gDate.getFullYear() - amounts.years);
-        // }
-        // const result = new JalaaliDateTime();
-        // const jdate = Jalaali.toJalaali(gDate.getFullYear(), gDate.getMonth(), gDate.getDate());
-        // result.year = jdate.jy;
-        // result.month = jdate.jm;
-        // result.day = jdate.jd;
-        // result.hour = this.hour;
-        // result.minute = this.minute;
-        // result.second = this.second;
-        // result.millisecond = this.millisecond;
-        // return result;
+        let d = cal.toDateTime(this.values.year, this.values.month, this.values.day
+            ,this.values.hour, this.values.minute, this.values.second, this.values.ms);
+
+        if (amounts?.year) {
+            d = cal.addYears(d, -amounts.year);
+        }
+        if (amounts?.month) {
+            d = cal.addMonths(d, -amounts.month);
+        }
+        if (amounts?.day) {
+            d = cal.addDays(d, -amounts.day);
+        }
+        if (amounts?.hour) {
+            d = cal.addHours(d, -amounts.hour);
+        }
+        if (amounts?.minute) {
+            d = cal.addMinutes(d, -amounts.minute);
+        }
+        if (amounts?.second) {
+            d = cal.addSeconds(d, -amounts.second);
+        }
+        if (amounts?.ms) {
+            d = cal.addMinutes(d, -amounts.ms);
+        }
+
+        return new Jalaali({
+            year: cal.getYear(d) ,
+            month: cal.getMonth(d) ,
+            day: cal.getDayOfMonth(d),
+            hour: cal.getHour(d),
+            minute: cal.getMinute(d),
+            second: cal.getSecond(d),
+            ms: cal.getMilliseconds(d),
+        });
     }
 
     diff(datetime: DateTime): number {
@@ -93,13 +108,17 @@ export class PersianDate extends DateTime {
     }
 
     get weekDay(): number {
-        throw new Error('Method not implemented.');
-        // const gDate = new Date(this.toGregorian(this));
-        // return gDate.getDate() % 7;
+        let cal = new PersianCalendar();
+
+        let d = cal.toDateTime(this.values.year, this.values.month, this.values.day
+            ,this.values.hour, this.values.minute, this.values.second, this.values.ms);
+
+        return cal.getDayOfWeek(d);
     }
 
     get weeksInYear(): number {
         throw new Error('Method not implemented.');
+        
         // const lastDayOfYear = new JalaaliDateTime2();
         // lastDayOfYear.year = this.year;
         // lastDayOfYear.month = 12;
