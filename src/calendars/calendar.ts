@@ -29,28 +29,28 @@ export abstract class Calendar {
   static readonly _ticksPerMinute = Calendar._ticksPerSecond * 60;
   static readonly _ticksPerHour = Calendar._ticksPerMinute * 60;
   static readonly _ticksPerDay = Calendar._ticksPerHour * 24;
-  readonly _millisPerSecond = 1000;
-  readonly _millisPerMinute = this._millisPerSecond * 60;
-  readonly _millisPerHour = this._millisPerMinute * 60;
-  readonly _millisPerDay = this._millisPerHour * 24;
-  readonly _daysPerYear = 365;
-  readonly _daysPer4Years = this._daysPerYear * 4 + 1;
-  readonly _daysPer100Years = this._daysPer4Years * 25 - 1;
-  readonly _daysPer400Years = this._daysPer100Years * 4 + 1;
-  readonly _daysTo10000 = this._daysPer400Years * 25 - 366;
-  readonly _maxMillis = this._daysTo10000 * this._millisPerDay;
+  private readonly _millisPerSecond = 1000;
+  private readonly _millisPerMinute = this._millisPerSecond * 60;
+  private readonly _millisPerHour = this._millisPerMinute * 60;
+  private readonly _millisPerDay = this._millisPerHour * 24;
+  private readonly _daysPerYear = 365;
+  private readonly _daysPer4Years = this._daysPerYear * 4 + 1;
+  private readonly _daysPer100Years = this._daysPer4Years * 25 - 1;
+  private readonly _daysPer400Years = this._daysPer100Years * 4 + 1;
+  private readonly _daysTo10000 = this._daysPer400Years * 25 - 366;
+  private readonly _maxMillis = this._daysTo10000 * this._millisPerDay;
 
-  readonly _cal_GREGORIAN = 1;
-  readonly _cal_PERSIAN = 22;
+  protected readonly _cal_GREGORIAN = 1;
+  protected readonly _cal_PERSIAN = 22;
 
   m_currentEraValue = -1;
 
   static readonly _minSupportedDateTime = new Date('100/1/1');
   static readonly _maxSupportedDateTime = new Date('9999/12/31');
 
-  readonly _id = -1;
-  readonly _baseCalendarID = this._id;
-  readonly _algorithmType = CalendarAlgorithmType.Unknown;
+  private readonly _id = -1;
+  private readonly _baseCalendarID = this._id;
+  private readonly _algorithmType = CalendarAlgorithmType.Unknown;
 
   get currentEraValue(): number {
     // The following code assumes that the current era value can not be -1.
@@ -61,7 +61,6 @@ export abstract class Calendar {
   }
 
   static readonly _currentEra: number = 0;
-  _twoDigitYearMax = -1;
 
   static checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
     if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
@@ -401,15 +400,6 @@ export abstract class Calendar {
     );
   }
 
-  get getTwoDigitYearMax(): number {
-    return this._twoDigitYearMax;
-  }
-
-  set setTwoDigitYearMax(twoDigitYearMax: number) {
-    // VerifyWritable();
-    this._twoDigitYearMax = twoDigitYearMax;
-  }
-
   timeToTicks(
     hour: number,
     minute: number,
@@ -435,21 +425,6 @@ export abstract class Calendar {
     throw 'ArgumentOutOfRange_BadHourMinuteSecond';
   }
 
-  toFourDigitYear(year: number): number {
-    if (year < 0) {
-      throw 'year:ArgumentOutOfRange_NeedNonNegNum';
-    }
-
-    if (year < 100) {
-      return (
-        (this.getTwoDigitYearMax / 100 -
-          (year > this.getTwoDigitYearMax % 100 ? 1 : 0)) *
-          100 +
-        year
-      );
-    }
-    return year;
-  }
 
   private timeSpan_TimeToTicks(
     hour: number,

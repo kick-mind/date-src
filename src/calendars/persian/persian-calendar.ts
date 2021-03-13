@@ -370,23 +370,6 @@ export class PersianCalendar extends Calendar {
     }
   }
 
-  private static readonly DEFAULT_TWO_DIGIT_YEAR_MAX = 1410;
-
-  toFourDigitYear(year: number): number {
-    if (year < 0) {
-      throw 'yeaer ArgumentOutOfRange_NeedNonNegNum';
-    }
-
-    if (year < 100) {
-      return super.toFourDigitYear(year);
-    }
-
-    if (year > PersianCalendar._maxCalendarYear) {
-      throw 'year ArgumentOutOfRange_Range';
-    }
-    return year;
-  }
-
   static getDateFromTicks(ticks: number): Date {
     return new Date(
       ticks + CalHelper.getTimeZoonOffSetFromTicks(ticks) - CalHelper._jsEpoch
