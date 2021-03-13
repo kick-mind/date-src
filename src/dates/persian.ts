@@ -3,28 +3,21 @@ import { PersianCalendar } from '../calendars/persian/persian-calendar';
 import { DateTime, DateTimeValues } from '../date-time';
 
 export class PersianDate extends DateTime {
-  constructor(date?: DateTimeValues) {
-    // year: date?.year ?? d.getFullYear(),
-    // month: date?.month ?? d.getMonth(),
-    // day: date?.day ?? d.getDate(),
-    // hour: date?.hour ?? 0,
-    // minute: date?.minute ?? 0,
-    // second: date?.second ?? 0,
-    // ms: date?.ms ?? 0,
-
-    super(date);
-  }
   private _cal = new PersianCalendar();
+
+  constructor(date?: DateTimeValues) {
+    super(date, true); // Replace with: super(date, _cal.isValidPersianDate(...));
+  }
 
   private getGDate(): Date {
     return this._cal.toDateTime(
-      this.values.year,
-      this.values.month,
-      this.values.day,
-      this.values.hour,
-      this.values.minute,
-      this.values.second,
-      this.values.ms
+      this._date.year,
+      this._date.month,
+      this._date.day,
+      this._date.hour,
+      this._date.minute,
+      this._date.second,
+      this._date.ms
     );
   }
 
@@ -87,10 +80,6 @@ export class PersianDate extends DateTime {
     return curGDate.getTime() - tempGDate.getTime();
   }
 
-  clone(): DateTime {
-    throw new Error('Method not implemented.');
-  }
-
   get weekDay(): number {
     return this._cal.getDayOfWeek(this.getGDate());
   }
@@ -100,11 +89,11 @@ export class PersianDate extends DateTime {
   }
 
   get weekNumber(): number {
-      return this._cal.getWeekOfYear(this.getGDate(),CalendarWeekRule.FirstDay, DayOfWeek.Saturday);
+    return this._cal.getWeekOfYear(this.getGDate(), CalendarWeekRule.FirstDay, DayOfWeek.Saturday);
   }
 
   get isInLeapYear(): boolean {
-        return this._cal.isLeapYear(this.year);
+    return this._cal.isLeapYear(this.year);
   }
 
   get quarter(): number {
@@ -112,7 +101,7 @@ export class PersianDate extends DateTime {
   }
 
   get daysInMonth(): number {
-    return this._cal.getDaysInMonth(this.year,this.month);
+    return this._cal.getDaysInMonth(this.year, this.month);
   }
 
   get daysInYear(): number {
