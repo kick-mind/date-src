@@ -40,6 +40,7 @@ export abstract class Calendar {
   readonly _daysTo10000 = this._daysPer400Years * 25 - 366;
   readonly _maxMillis = this._daysTo10000 * this._millisPerDay;
 
+  readonly _cal_GREGORIAN = 1;
   readonly _cal_PERSIAN = 22;
 
   m_currentEraValue = -1;
