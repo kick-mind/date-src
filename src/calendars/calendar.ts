@@ -1,4 +1,3 @@
-
 export enum CalendarAlgorithmType {
   Unknown = 0,
   SolarCalendar = 1,
@@ -22,175 +21,50 @@ export enum CalendarWeekRule {
   FirstFourDayWeek = 2,
 }
 // tslint:disable: member-ordering
+// tslint:disable: triple-equals
+// tslint:disable: variable-name
 export abstract class Calendar {
-  // Number of 100ns (10E-7 second) ticks per time unit
-  static get _ticksPerMillisecond(): number {
-    return 1;
-  }
-  // private get TicksPerMillisecond() :number {return 10000}
-  static get _ticksPerSecond(): number {
-    return this._ticksPerMillisecond * 1000;
-  }
-  static get _ticksPerMinute(): number {
-    return this._ticksPerSecond * 60;
-  }
-  static get _ticksPerHour(): number {
-    return this._ticksPerMinute * 60;
-  }
-  static get _ticksPerDay(): number {
-    return this._ticksPerHour * 24;
-  }
+  static readonly _ticksPerMillisecond = 1;
+  static readonly _ticksPerSecond = Calendar._ticksPerMillisecond * 1000;
+  static readonly _ticksPerMinute = Calendar._ticksPerSecond * 60;
+  static readonly _ticksPerHour = Calendar._ticksPerMinute * 60;
+  static readonly _ticksPerDay = Calendar._ticksPerHour * 24;
+  readonly _millisPerSecond = 1000;
+  readonly _millisPerMinute = this._millisPerSecond * 60;
+  readonly _millisPerHour = this._millisPerMinute * 60;
+  readonly _millisPerDay = this._millisPerHour * 24;
+  readonly _daysPerYear = 365;
+  readonly _daysPer4Years = this._daysPerYear * 4 + 1;
+  readonly _daysPer100Years = this._daysPer4Years * 25 - 1;
+  readonly _daysPer400Years = this._daysPer100Years * 4 + 1;
+  readonly _daysTo10000 = this._daysPer400Years * 25 - 366;
+  readonly _maxMillis = this._daysTo10000 * this._millisPerDay;
 
-  // Number of milliseconds per time unit
-  get _millisPerSecond(): number {
-    return 1000;
-  }
-  get _millisPerMinute(): number {
-    return this._millisPerSecond * 60;
-  }
-  get _millisPerHour(): number {
-    return this._millisPerMinute * 60;
-  }
-  get _millisPerDay(): number {
-    return this._millisPerHour * 24;
-  }
+  readonly _cal_PERSIAN = 22;
 
-  // Number of days in a non-leap year
-  get _daysPerYear(): number {
-    return 365;
-  }
-  // Number of days in 4 years
-  get _daysPer4Years(): number {
-    return this._daysPerYear * 4 + 1;
-  }
-  // Number of days in 100 years
-  get _daysPer100Years(): number {
-    return this._daysPer4Years * 25 - 1;
-  }
-  // Number of days in 400 years
-  get _daysPer400Years(): number {
-    return this._daysPer100Years * 4 + 1;
-  }
-
-  // Number of days from 1/1/0001 to 1/1/10000
-  get _daysTo10000(): number {
-    return this._daysPer400Years * 25 - 366;
-  }
-
-  get _maxMillis(): number {
-    return this._daysTo10000 * this._millisPerDay;
-  }
-
-  get _cal_GREGORIAN(): number {
-    return 1;
-  } // Gregorian (localized) calendar
-  get _cal_GREGORIAN_US(): number {
-    return 2;
-  } // Gregorian (U.S.) calendar
-  get _cal_JAPAN(): number {
-    return 3;
-  } // Japanese Emperor Era calendar
-  get _cal_TAIWAN(): number {
-    return 4;
-  } // Taiwan Era calendar
-  get _cal_KOREA(): number {
-    return 5;
-  } // Korean Tangun Era calendar
-  get _cal_HIJRI(): number {
-    return 6;
-  } // Hijri (Arabic Lunar) calendar
-  get _cal_THAI(): number {
-    return 7;
-  } // Thai calendar
-  get _cal_HEBREW(): number {
-    return 8;
-  } // Hebrew (Lunar) calendar
-  get _cal_GREGORIAN_ME_FRENCH(): number {
-    return 9;
-  } // Gregorian Middle East French calendar
-  get _cal_GREGORIAN_ARABIC(): number {
-    return 10;
-  } // Gregorian Arabic calendar
-  get _cal_GREGORIAN_XLIT_ENGLISH(): number {
-    return 11;
-  } // Gregorian Transliterated English calendar
-  get _cal_GREGORIAN_XLIT_FRENCH(): number {
-    return 12;
-  }
-  get _cal_JULIAN(): number {
-    return 13;
-  }
-  get _cal_JAPANESELUNISOLAR(): number {
-    return 14;
-  }
-  get _cal_CHINESELUNISOLAR(): number {
-    return 15;
-  }
-  get _cal_SAKA(): number {
-    return 16;
-  } // reserved to match Office but not implemented in our code
-  get _cal_LUNAR_ETO_CHN(): number {
-    return 17;
-  } // reserved to match Office but not implemented in our code
-  get _cal_LUNAR_ETO_KOR(): number {
-    return 18;
-  } // reserved to match Office but not implemented in our code
-  get _cal_LUNAR_ETO_ROKUYOU(): number {
-    return 19;
-  } // reserved to match Office but not implemented in our code
-  get _cal_KOREANLUNISOLAR(): number {
-    return 20;
-  }
-  get _cal_TAIWANLUNISOLAR(): number {
-    return 21;
-  }
-  get _cal_PERSIAN(): number {
-    return 22;
-  }
-  get _cal_UMALQURA(): number {
-    return 23;
-  }
-
-  // tslint:disable-next-line: variable-name
   m_currentEraValue = -1;
 
-  static get _minSupportedDateTime(): Date {
-    return new Date('100/1/1');
-  }
-  static get _maxSupportedDateTime(): Date {
-    return new Date('9999/12/31');
-  }
+  static readonly _minSupportedDateTime = new Date('100/1/1');
+  static readonly _maxSupportedDateTime = new Date('9999/12/31');
 
-  get _id(): number {
-    return -1;
-  }
-
-  get _baseCalendarID(): number {
-    return this._id;
-  }
-
-  get _algorithmType(): CalendarAlgorithmType {
-    return CalendarAlgorithmType.Unknown;
-  }
+  readonly _id = -1;
+  readonly _baseCalendarID = this._id;
+  readonly _algorithmType = CalendarAlgorithmType.Unknown;
 
   get currentEraValue(): number {
     // The following code assumes that the current era value can not be -1.
-    // tslint:disable-next-line: triple-equals
     if (this.m_currentEraValue == -1) {
       this.m_currentEraValue = 1;
     }
     return this.m_currentEraValue;
   }
 
-  // tslint:disable-next-line: variable-name
   static readonly _currentEra: number = 0;
-
-  // tslint:disable-next-line: variable-name
   _twoDigitYearMax = -1;
 
   static checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
     if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
-      throw "Clanedar wrong range exception";
+      throw 'Clanedar wrong range exception';
     }
   }
 
