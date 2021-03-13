@@ -15,9 +15,9 @@ export interface DateTimeValues {
 export abstract class DateTime {
     private static _locales = new Array<Locale>();
     private static _defaultLocale: string;
-    private _values: DateTimeValues;
+    protected _date: DateTimeValues;
+    protected _isValid: boolean;
     private _locale: string;
-    private _isValid: boolean;
 
     /** Get the locale of a DateTime, such 'en-GB'. */
     get locale(): string {
@@ -26,42 +26,42 @@ export abstract class DateTime {
 
     /** Returns a JavaScript object with the values of this DateTime. */
     get values(): DateTimeValues {
-        return { ...this._values };
+        return { ...this._date };
     }
 
     /** Get the year. */
     get year(): number {
-        return this._values.year;
+        return this._date.year;
     }
 
     /** Get the month (1-12). */
     get month(): number {
-        return this._values.month;
+        return this._date.month;
     }
 
     /** Get the day of the month (1-30ish). */
     get day(): number {
-        return this._values.day;
+        return this._date.day;
     }
 
     /** Get the hour of the day (0-23). */
     get hour(): number {
-        return this._values.hour;
+        return this._date.hour;
     }
 
     /** Get the minute of the hour (0-59). */
     get minute(): number {
-        return this._values.minute;
+        return this._date.minute;
     }
 
     /** Get the second of the minute (0-59). */
     get second(): number {
-        return this._values.second;
+        return this._date.second;
     }
 
     /** Get the millisecond of the second (0-999). */
     get ms(): number {
-        return this._values.year;
+        return this._date.year;
     }
 
     /** Returns the number of days in this DateTime's month. */
@@ -91,8 +91,9 @@ export abstract class DateTime {
     abstract get quarter(): number;
 
     /** Create a new DateTime. */
-    constructor(values: DateTimeValues, locale?: string) {
-        this._values = values;
+    constructor(date: DateTimeValues, isValid: boolean, locale?: string) {
+        this._date = date;
+        this._isValid = isValid;
         this._locale = locale ?? DateTime.getDefaultLocale();
     }
 
@@ -137,7 +138,7 @@ export abstract class DateTime {
 
     /** Returns whether this DateTime is same as another DateTime. */
     isSame(dateTime: DateTime): boolean {
-        const d1 = this._values;
+        const d1 = this._date;
         const d2 = dateTime.values;
         return d1.year === d2.year &&
             d1.month === d2.month &&
@@ -151,7 +152,7 @@ export abstract class DateTime {
 
     /** Returns whether this DateTime is after another DateTime. */
     isAfter(dateTime: DateTime): boolean {
-        const d1 = this._values;
+        const d1 = this._date;
         const d2 = dateTime.values;
         return d1.year > d2.year ||
             d1.month > d2.month ||

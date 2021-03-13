@@ -9,7 +9,7 @@ export class GregorianDate extends DateTime {
         // minute: date?.minute ?? 0,
         // second: date?.second ?? 0,
         // ms: date?.ms ?? 0,
-        super(date);
+        super(date, true);
     }
 
     add(amounts: DateTimeValues): DateTime {
@@ -85,10 +85,6 @@ export class GregorianDate extends DateTime {
         //     datetime.get('day'));
         // const gStartDayOfTheYear = new Date(jDatetime.gy, jDatetime.gm, jDatetime.gd);
         // return ((gDate.getTime() - gStartDayOfTheYear.getTime()));
-    }
-
-    clone(): DateTime {
-        throw new Error('Method not implemented.');
     }
 
     get weekDay(): number {
