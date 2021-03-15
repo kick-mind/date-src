@@ -43,24 +43,10 @@ export abstract class Calendar {
   protected readonly _cal_GREGORIAN = 1;
   protected readonly _cal_PERSIAN = 22;
 
-  m_currentEraValue = -1;
-
   static readonly _minSupportedDateTime = new Date('100/1/1');
   static readonly _maxSupportedDateTime = new Date('9999/12/31');
 
-  private readonly _id = -1;
-  private readonly _baseCalendarID = this._id;
   private readonly _algorithmType = CalendarAlgorithmType.Unknown;
-
-  get currentEraValue(): number {
-    // The following code assumes that the current era value can not be -1.
-    if (this.m_currentEraValue == -1) {
-      this.m_currentEraValue = 1;
-    }
-    return this.m_currentEraValue;
-  }
-
-  static readonly _currentEra: number = 0;
 
   static checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
     if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
@@ -113,28 +99,11 @@ export abstract class Calendar {
   }
 
   abstract addYears(time: Date, years: number): Date;
-
   abstract getDayOfMonth(time: Date): number;
-
   abstract getDayOfWeek(time: Date): DayOfWeek;
-
   abstract getDayOfYear(time: Date): number;
-  getDaysInMonth(year: number, month: number): number {
-    return this.getDaysInMonth_era(year, month, Calendar._currentEra);
-  }
-
-  abstract getDaysInMonth_era(year: number, month: number, era: number): number;
-
-  getDaysInYear(year: number): number {
-    return this.getDaysInYear_era(year, Calendar._currentEra);
-  }
-
-  abstract getDaysInYear_era(year: number, era: number): number;
-
-  // Returns the era for the specified DateTime value.
-  abstract getEra(time: Date): number;
-
-  abstract get eras(): number[];
+  abstract getDaysInMonth(year: number, month: number): number;
+  abstract getDaysInYear(year: number): number;
 
   getHour(time: Date): number {
     return Math.trunc((time.getTime() / Calendar._ticksPerHour) % 24);
@@ -149,14 +118,7 @@ export abstract class Calendar {
   }
 
   abstract getMonth(time: Date): number;
-
-  // Returns the number of months in the specified year in the current era.
-  getMonthsInYear(year: number): number {
-    return this.getMonthsInYear_era(year, Calendar._currentEra);
-  }
-
-  // Returns the number of months in the specified year and era.
-  abstract getMonthsInYear_era(year: number, era: number): number;
+  abstract getMonthsInYear(year: number): number;
 
   getSecond(time: Date): number {
     return Math.trunc((time.getTime() / Calendar._ticksPerSecond) % 60);
@@ -164,10 +126,8 @@ export abstract class Calendar {
 
   getFirstDayWeekOfYear(time: Date, firstDayOfWeek: number): number {
     const dayOfYear = this.getDayOfYear(time) - 1;
-
     const dayForJan1 = this.getDayOfWeek(time) - (dayOfYear % 7);
     const offset = (dayForJan1 - firstDayOfWeek + 14) % 7;
-
     return (dayOfYear + offset) / 7 + 1;
   }
 
@@ -180,28 +140,24 @@ export abstract class Calendar {
     let offset: number;
     let day: number;
 
-    const dayOfYear = this.getDayOfYear(time) - 1; // Make the day of year to be 0-based, so that 1/1 is day 0.
+    const dayOfYear = this.getDayOfYear(time) - 1;
 
     dayForJan1 = this.getDayOfWeek(time) - (dayOfYear % 7);
 
-    // Now, calculate the offset.  Subtract the first day of week from the dayForJan1.  And make it a positive value.
     offset = (firstDayOfWeek - dayForJan1 + 14) % 7;
-    // tslint:disable-next-line: triple-equals
+
     if (offset != 0 && offset >= fullDays) {
       offset -= 7;
     }
-    //
-    // Calculate the day of year for specified time by taking offset into account.
-    //
+
     day = dayOfYear - offset;
     if (day >= 0) {
       return day / 7 + 1;
     }
-    // Review
+
     if (time <= this.addDays(Calendar._minSupportedDateTime, dayOfYear)) {
       return this.getWeekOfYearOfMinSupportedDateTime(firstDayOfWeek, fullDays);
     }
-    // Review
     return this.getWeekOfYearFullDays(
       this.addDays(time, -(dayOfYear + 1)),
       firstDayOfWeek,
@@ -213,20 +169,17 @@ export abstract class Calendar {
     firstDayOfWeek: number,
     minimumDaysInFirstWeek: number
   ): number {
-    const dayOfYear = this.getDayOfYear(Calendar._minSupportedDateTime) - 1; // Make the day of year to be 0-based, so that 1/1 is day 0.
+    const dayOfYear = this.getDayOfYear(Calendar._minSupportedDateTime) - 1;
     const dayOfWeekOfFirstOfYear =
       this.getDayOfWeek(Calendar._minSupportedDateTime) - (dayOfYear % 7);
 
-    // Calculate the offset (how many days from the start of the year to the start of the week)
     const offset = (firstDayOfWeek + 7 - dayOfWeekOfFirstOfYear) % 7;
-    // tslint:disable-next-line: triple-equals
     if (offset == 0 || offset >= minimumDaysInFirstWeek) {
-      // First of year falls in the first week of the year
       return 1;
     }
 
     const daysInYearBeforeMinSupportedYear =
-      this.daysInYearBeforeMinSupportedYear - 1; // Make the day of year to be 0-based, so that 1/1 is day 0.
+      this.daysInYearBeforeMinSupportedYear - 1;
     const dayOfWeekOfFirstOfPreviousYear =
       dayOfWeekOfFirstOfYear - 1 - (daysInYearBeforeMinSupportedYear % 7);
 
@@ -240,7 +193,6 @@ export abstract class Calendar {
     return day / 7 + 1;
   }
 
-  // it would be nice to make this abstract but we can't since that would break previous implementations
   protected get daysInYearBeforeMinSupportedYear(): number {
     return 365;
   }
@@ -266,36 +218,17 @@ export abstract class Calendar {
   }
 
   abstract getYear(time: Date): number;
-
-  isLeapDay(year: number, month: number, day: number): boolean {
-    return this.isLeapDay_era(year, month, day, Calendar._currentEra);
-  }
-
-  abstract isLeapDay_era(
-    year: number,
-    month: number,
-    day: number,
-    era: number
-  ): boolean;
-
-  isLeapMonth(year: number, month: number): boolean {
-    return this.isLeapMonth_era(year, month, Calendar._currentEra);
-  }
-
-  abstract isLeapMonth_era(year: number, month: number, era: number): boolean;
+  abstract isLeapDay(year: number, month: number, day: number): boolean;
+  abstract isLeapMonth(year: number, month: number): boolean;
 
   getLeapMonth(year: number): number {
-    return this.getLeapMonth_era(year, Calendar._currentEra);
-  }
-
-  getLeapMonth_era(year: number, era: number): number {
-    if (!this.isLeapYear_era(year, era)) {
+    if (!this.isLeapYear(year)) {
       return 0;
     }
 
-    const monthsCount = this.getMonthsInYear_era(year, era);
+    const monthsCount = this.getMonthsInYear(year);
     for (let month = 1; month <= monthsCount; month++) {
-      if (this.isLeapMonth_era(year, month, era)) {
+      if (this.isLeapMonth(year, month)) {
         return month;
       }
     }
@@ -303,13 +236,8 @@ export abstract class Calendar {
     return 0;
   }
 
-  isLeapYear(year: number): boolean {
-    return this.isLeapYear_era(year, Calendar._currentEra);
-  }
-
-  abstract isLeapYear_era(year: number, era: number): boolean;
-
-  toDateTime(
+  abstract isLeapYear(year: number): boolean;
+  abstract toDateTime(
     year: number,
     month: number,
     day: number,
@@ -317,86 +245,28 @@ export abstract class Calendar {
     minute: number,
     second: number,
     millisecond: number
-  ): Date {
-    return this.toDateTime_era(
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      second,
-      millisecond,
-      Calendar._currentEra
-    );
-  }
-
-  abstract toDateTime_era(
-    year: number,
-    month: number,
-    day: number,
-    hour: number,
-    minute: number,
-    second: number,
-    millisecond: number,
-    era: number
   ): Date;
 
-  tryToDateTime(
-    year: number,
-    month: number,
-    day: number,
-    hour: number,
-    minute: number,
-    second: number,
-    millisecond: number,
-    era: number
-  ): { result: boolean; date: Date } {
-    let result = Calendar._minSupportedDateTime;
-    let sucess: boolean;
-    try {
-      result = this.toDateTime_era(
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-        millisecond,
-        era
-      );
-      sucess = true;
-    } catch (ArgumentException) {
-      sucess = false;
-    }
-
-    return { result: sucess, date: result };
-  }
-
-  isValidYear_era(year: number): boolean {
+  isValidYear(year: number): boolean {
     return (
       year >= this.getYear(Calendar._minSupportedDateTime) &&
       year <= this.getYear(Calendar._maxSupportedDateTime)
     );
   }
 
-  isValidMonth_era(year: number, month: number, era: number): boolean {
+  isValidMonth(year: number, month: number): boolean {
     return (
-      this.isValidYear_era(year) &&
+      this.isValidYear(year) &&
       month >= 1 &&
-      month <= this.getMonthsInYear_era(year, era)
+      month <= this.getMonthsInYear(year)
     );
   }
 
-  isValidDay_era(
-    year: number,
-    month: number,
-    day: number,
-    era: number
-  ): boolean {
+  isValidDay(year: number, month: number, day: number): boolean {
     return (
-      this.isValidMonth_era(year, month, era) &&
+      this.isValidMonth(year, month) &&
       day >= 1 &&
-      day <= this.getDaysInMonth_era(year, month, era)
+      day <= this.getDaysInMonth(year, month)
     );
   }
 
@@ -425,14 +295,11 @@ export abstract class Calendar {
     throw 'ArgumentOutOfRange_BadHourMinuteSecond';
   }
 
-
   private timeSpan_TimeToTicks(
     hour: number,
     minute: number,
     second: number
   ): number {
-    // totalSeconds is bounded by 2^31 * 2^12 + 2^31 * 2^8 + 2^31,
-    // which is less than 2^44, meaning we won't overflow totalSeconds.
     const totalSeconds = hour * 3600 + minute * 60 + second;
     if (totalSeconds > Number.MAX_VALUE || totalSeconds < Number.MIN_VALUE) {
       throw 'Overflow_TimeSpanTooLong';
