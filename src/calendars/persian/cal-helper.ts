@@ -1,6 +1,5 @@
 import { Calendar } from "../calendar";
 
-
 // tslint:disable: variable-name
 enum CorrectionAlgorithm {
   Default,
@@ -35,7 +34,7 @@ export class CalHelper {
     CalHelper._meanTropicalYearInDays / CalHelper._fullCircleOfArc;
   static readonly _longitudeSpring: number = 0.0;
   static readonly _twoDegreesAfterSpring: number = 2.0;
-  static readonly _secondsPerDay: number = 24 * 60 * 60; // 24 hours * 60 minutes * 60 seconds
+  static readonly _secondsPerDay: number = 24 * 60 * 60; 
 
   static readonly _daysInUniformLengthCentury: number = 36525;
   static readonly _millisecondsPerSecond: number = 1000;
@@ -104,7 +103,6 @@ export class CalHelper {
   static _jsEpoch = 62135596800000;
 
   static _ephemerisCorrectionTable: EphemerisCorrectionAlgorithmMap[] = [
-    // lowest year that starts algorithm, algorithm to use
     new EphemerisCorrectionAlgorithmMap(2020, CorrectionAlgorithm.Default),
     new EphemerisCorrectionAlgorithmMap(
       1988,
@@ -126,11 +124,10 @@ export class CalHelper {
       1620,
       CorrectionAlgorithm.Year1620to1699
     ),
-    // new EphemerisCorrectionAlgorithmMap(int.MinValue, CorrectionAlgorithm.Default) // default must be last
     new EphemerisCorrectionAlgorithmMap(
       Number.MIN_VALUE,
       CorrectionAlgorithm.Default
-    ), // default must be last
+    ),
   ];
 
   private static radiansFromDegrees(degree: number): number {
@@ -159,12 +156,10 @@ export class CalHelper {
     return this.polynomialSum(this._coefficients, julianCenturies);
   }
 
-  /// Important ***
   static getNumberOfDays(date: Date): number {
     return Math.trunc(date.getTime() / Calendar._ticksPerDay);
   }
 
-  /// Important ***
   static getGregorianYear(numberOfDays: number): number {
     const date = new Date(
       Math.min(
@@ -252,7 +247,6 @@ export class CalHelper {
     );
   }
 
-  // ephemeris-correction: correction to account for the slowing down of the rotation of the earth
   static ephemerisCorrection(time: number): number {
     const year = this.getGregorianYear(time);
     this._ephemerisCorrectionTable.forEach((map) => {
@@ -271,8 +265,6 @@ export class CalHelper {
           case CorrectionAlgorithm.Year1620to1699:
             return this.ephemerisCorrection1620to1699(year);
         }
-
-        //  break; // break the loop and assert eventually
       }
     });
 
@@ -287,12 +279,10 @@ export class CalHelper {
   }
 
   static isNegative(value: number): boolean {
-    // tslint:disable-next-line: triple-equals
     return Math.sign(value) == -1;
   }
 
   static copySign(value: number, sign: number): number {
-    // tslint:disable-next-line: triple-equals
     return this.isNegative(value) == this.isNegative(sign) ? value : -value;
   }
 
@@ -327,9 +317,7 @@ export class CalHelper {
       1.25 * Math.pow(eccentricity, 2) * this.sinOfDegree(2 * anomaly);
     const divisor = 2 * Math.PI;
     const equation = dividend / divisor;
-
-    // approximation of equation of time is not valid for dates that are many millennia in the past or future
-    // thus limited to a half day
+    
     return this.copySign(
       Math.min(Math.abs(equation), this._twelveHours),
       equation
@@ -337,7 +325,6 @@ export class CalHelper {
   }
 
   static asLocalTime(apparentMidday: number, longitude: number): number {
-    // slightly inaccurate since equation of time takes mean time not apparent time as its argument, but the difference is negligible
     const universalTime = apparentMidday - this.asDayFraction(longitude);
     return apparentMidday - this.equationOfTime(universalTime);
   }
@@ -358,7 +345,7 @@ export class CalHelper {
 
   // midday-in-tehran
   static middayAtPersianObservationSite(date: number): number {
-    return this.midday(date, this.initLongitude(52.5)); // 52.5 degrees east - longitude of UTC+3:30 which defines Iranian Standard Time
+    return this.midday(date, this.initLongitude(52.5)); 
   }
 
   static periodicTerm(
@@ -472,7 +459,6 @@ export class CalHelper {
 
   static PersianNewYearOnOrBefore(numberOfDays: number): number {
     const date = numberOfDays;
-    //  debugger;
     const approx = this.estimatePrior(
       this._longitudeSpring,
       this.middayAtPersianObservationSite(date)
@@ -480,7 +466,7 @@ export class CalHelper {
     const lowerBoundNewYearDay = Math.trunc(Math.floor(approx)) - 1;
     const upperBoundNewYearDay = lowerBoundNewYearDay + 3;
     let day = lowerBoundNewYearDay;
-    // tslint:disable-next-line: triple-equals
+
     while (day != upperBoundNewYearDay) {
       const midday = this.middayAtPersianObservationSite(day);
       const l = this.compute(midday);
