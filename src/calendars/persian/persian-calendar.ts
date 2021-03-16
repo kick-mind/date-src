@@ -7,7 +7,8 @@ import { CalHelper } from './cal-helper';
 // tslint:disable: prefer-const
 export class PersianCalendar extends Calendar {
   static readonly _tehranTimeTicks = 12600000;
-  static _persianEpoch: number = 19603728000000 / Calendar._ticksPerDay;
+  static _persianEpoch: number =
+    19603728000000 / Calendar._ticksPerDay;
   static readonly _approximateHalfYear: number = 180;
 
   static readonly _datePartYear = 0;
@@ -35,6 +36,7 @@ export class PersianCalendar extends Calendar {
   static readonly _maxCalendarYear = 9378;
   static readonly _maxCalendarMonth = 10;
   static readonly _maxCalendarDay = 13;
+
   static minDate: Date = new Date('622/3/22');
   static maxDate: Date = new Date('9999/12/31');
 
@@ -50,6 +52,10 @@ export class PersianCalendar extends Calendar {
     return CalendarAlgorithmType.SolarCalendar;
   }
 
+    /*=================================GetAbsoluteDatePersian==========================
+    **Action: Gets the Absolute date for the given Persian date.  The absolute date means
+    **       the number of days from January 1st, 1 A.D.
+    ============================================================================*/
   private getAbsoluteDatePersian(
     year: number,
     month: number,
@@ -62,6 +68,7 @@ export class PersianCalendar extends Calendar {
       month <= 12
     ) {
       const ordinalDay = PersianCalendar.daysInPreviousMonths(month) + day - 1;
+      // day is one based, make 0 based since this will be the number of days we add to beginning of year below
       const approximateDaysFromEpochForYearStart = Math.trunc(
         CalHelper._meanTropicalYearInDays * (year - 1)
       );
@@ -73,18 +80,19 @@ export class PersianCalendar extends Calendar {
       yearStart += ordinalDay;
       return yearStart;
     }
-    throw 'ArgumentOutOfRange_BadYearMonthDay';
+    throw new Error('ArgumentOutOfRange_BadYearMonthDay');
   }
 
   static checkTicksRange(ticks: number) {
     if (ticks < this.minDate.getTime() || ticks > this.maxDate.getTime()) {
-      throw 'time ArgumentOutOfRange_CalendarRange';
+      throw new Error('time ArgumentOutOfRange_CalendarRange');
     }
   }
 
+
   static checkYearRange(year: number) {
     if (year < 1 || year > this._maxCalendarYear) {
-      throw 'year ArgumentOutOfRange_Range';
+      throw new Error('year ArgumentOutOfRange_Range');
     }
   }
 
@@ -92,12 +100,12 @@ export class PersianCalendar extends Calendar {
     this.checkYearRange(year);
     if (year == this._maxCalendarYear) {
       if (month > this._maxCalendarMonth) {
-        throw 'month ArgumentOutOfRange_Range';
+        throw new Error('month ArgumentOutOfRange_Range');
       }
     }
 
     if (month < 1 || month > 12) {
-      throw 'month ArgumentOutOfRange_Month';
+      throw new Error('month ArgumentOutOfRange_Month');
     }
   }
 
@@ -137,7 +145,8 @@ export class PersianCalendar extends Calendar {
 
     //  Calculate the Persian Month.
     const ordinalDay = Math.trunc(
-      NumDays - CalHelper.getNumberOfDays(this.toDateTime(y, 1, 1, 0, 0, 0, 0))
+      NumDays -
+        CalHelper.getNumberOfDays(this.toDateTime(y, 1, 1, 0, 0, 0, 0))
     );
 
     if (part == PersianCalendar._datePartDayOfYear) {
@@ -155,12 +164,14 @@ export class PersianCalendar extends Calendar {
     if (part == PersianCalendar._datePartDay) {
       return d;
     }
-    throw 'InvalidOperation_DateTimeParsing';
+
+    // Incorrect part value.
+    throw new Error('InvalidOperation_DateTimeParsing');
   }
 
   addMonths(time: Date, months: number): Date {
     if (months < -120000 || months > 120000) {
-      throw 'months ArgumentOutOfRange_Range';
+      throw new Error('months ArgumentOutOfRange_Range');
     }
     // Get the date in Persian calendar.
     let timeTotalTicks = CalHelper.getTimeTicks(time);
@@ -247,6 +258,7 @@ export class PersianCalendar extends Calendar {
     return this.isLeapYear(year) ? 366 : 365;
   }
 
+
   getMonth(time: Date): number {
     return this.getDatePart(
       CalHelper.getTimeTicks(time),
@@ -269,10 +281,11 @@ export class PersianCalendar extends Calendar {
     );
   }
 
-  isLeapDay(year: number, month: number, day: number): boolean {
+  isLeapDay(year: number,month: number,day: number): boolean {
+    // The year/month value checking is done in GetDaysInMonth().
     const daysInMonth = this.getDaysInMonth(year, month);
     if (day < 1 || day > daysInMonth) {
-      throw 'day ArgumentOutOfRange_Day';
+      throw new Error('day ArgumentOutOfRange_Day');
     }
     return this.isLeapYear(year) && month == 12 && day == 30;
   }
@@ -308,11 +321,12 @@ export class PersianCalendar extends Calendar {
     hour: number,
     minute: number,
     second: number,
-    millisecond: number
+    millisecond: number,
   ): Date {
+    // The year/month checking is done in GetDaysInMonth().
     const daysInMonth = this.getDaysInMonth(year, month);
     if (day < 1 || day > daysInMonth) {
-      throw 'ArgumentOutOfRange_Day';
+      throw new Error('ArgumentOutOfRange_Day');
     }
 
     const lDate = this.getAbsoluteDatePersian(year, month, day);
@@ -323,7 +337,7 @@ export class PersianCalendar extends Calendar {
           super.timeToTicks(hour, minute, second, millisecond)
       );
     } else {
-      throw 'ArgumentOutOfRange_BadYearMonthDay';
+      throw new Error('ArgumentOutOfRange_BadYearMonthDay');
     }
   }
 

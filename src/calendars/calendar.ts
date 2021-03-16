@@ -21,36 +21,81 @@ export enum CalendarWeekRule {
   FirstFourDayWeek = 2,
 }
 // tslint:disable: member-ordering
-// tslint:disable: triple-equals
-// tslint:disable: variable-name
 export abstract class Calendar {
-  static readonly _ticksPerMillisecond = 1;
-  static readonly _ticksPerSecond = Calendar._ticksPerMillisecond * 1000;
-  static readonly _ticksPerMinute = Calendar._ticksPerSecond * 60;
-  static readonly _ticksPerHour = Calendar._ticksPerMinute * 60;
-  static readonly _ticksPerDay = Calendar._ticksPerHour * 24;
-  private readonly _millisPerSecond = 1000;
-  private readonly _millisPerMinute = this._millisPerSecond * 60;
-  private readonly _millisPerHour = this._millisPerMinute * 60;
-  private readonly _millisPerDay = this._millisPerHour * 24;
-  private readonly _daysPerYear = 365;
-  private readonly _daysPer4Years = this._daysPerYear * 4 + 1;
-  private readonly _daysPer100Years = this._daysPer4Years * 25 - 1;
-  private readonly _daysPer400Years = this._daysPer100Years * 4 + 1;
-  private readonly _daysTo10000 = this._daysPer400Years * 25 - 366;
-  private readonly _maxMillis = this._daysTo10000 * this._millisPerDay;
+  // Number of 100ns (10E-7 second) ticks per time unit
+  static get _ticksPerMillisecond(): number {
+    return 1;
+  }
+  // private get TicksPerMillisecond() :number {return 10000}
+  static get _ticksPerSecond(): number {
+    return this._ticksPerMillisecond * 1000;
+  }
+  static get _ticksPerMinute(): number {
+    return this._ticksPerSecond * 60;
+  }
+  static get _ticksPerHour(): number {
+    return this._ticksPerMinute * 60;
+  }
+  static get _ticksPerDay(): number {
+    return this._ticksPerHour * 24;
+  }
 
-  protected readonly _cal_GREGORIAN = 1;
-  protected readonly _cal_PERSIAN = 22;
+  // Number of milliseconds per time unit
+  get _millisPerSecond(): number {
+    return 1000;
+  }
+  get _millisPerMinute(): number {
+    return this._millisPerSecond * 60;
+  }
+  get _millisPerHour(): number {
+    return this._millisPerMinute * 60;
+  }
+  get _millisPerDay(): number {
+    return this._millisPerHour * 24;
+  }
 
-  static readonly _minSupportedDateTime = new Date('100/1/1');
-  static readonly _maxSupportedDateTime = new Date('9999/12/31');
+  // Number of days in a non-leap year
+  get _daysPerYear(): number {
+    return 365;
+  }
+  // Number of days in 4 years
+  get _daysPer4Years(): number {
+    return this._daysPerYear * 4 + 1;
+  }
+  // Number of days in 100 years
+  get _daysPer100Years(): number {
+    return this._daysPer4Years * 25 - 1;
+  }
+  // Number of days in 400 years
+  get _daysPer400Years(): number {
+    return this._daysPer100Years * 4 + 1;
+  }
 
-  private readonly _algorithmType = CalendarAlgorithmType.Unknown;
+  // Number of days from 1/1/0001 to 1/1/10000
+  get _daysTo10000(): number {
+    return this._daysPer400Years * 25 - 366;
+  }
+
+  get _maxMillis(): number {
+    return this._daysTo10000 * this._millisPerDay;
+  }
+
+  // tslint:disable-next-line: variable-name
+
+  static get _minSupportedDateTime(): Date {
+    return new Date('100/1/1');
+  }
+  static get _maxSupportedDateTime(): Date {
+    return new Date('9999/12/31');
+  }
+
+  get _algorithmType(): CalendarAlgorithmType {
+    return CalendarAlgorithmType.Unknown;
+  }
 
   static checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
     if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
-      throw 'Clanedar wrong range exception';
+      throw new Error('Clanedar wrong range exception');
     }
   }
 
@@ -59,7 +104,7 @@ export abstract class Calendar {
     if (
       !(millis > -Number(this._maxMillis) && millis < Number(this._maxMillis))
     ) {
-      throw 'ArgumentOutOfRange_AddValue';
+      throw new Error('ArgumentOutOfRange_AddValue');
     }
     // ticks in milliseconds
     const ticks: number = time.getTime() + millis;
@@ -99,10 +144,15 @@ export abstract class Calendar {
   }
 
   abstract addYears(time: Date, years: number): Date;
+
   abstract getDayOfMonth(time: Date): number;
+
   abstract getDayOfWeek(time: Date): DayOfWeek;
+
   abstract getDayOfYear(time: Date): number;
+
   abstract getDaysInMonth(year: number, month: number): number;
+
   abstract getDaysInYear(year: number): number;
 
   getHour(time: Date): number {
@@ -118,6 +168,7 @@ export abstract class Calendar {
   }
 
   abstract getMonth(time: Date): number;
+
   abstract getMonthsInYear(year: number): number;
 
   getSecond(time: Date): number {
@@ -126,8 +177,10 @@ export abstract class Calendar {
 
   getFirstDayWeekOfYear(time: Date, firstDayOfWeek: number): number {
     const dayOfYear = this.getDayOfYear(time) - 1;
+
     const dayForJan1 = this.getDayOfWeek(time) - (dayOfYear % 7);
     const offset = (dayForJan1 - firstDayOfWeek + 14) % 7;
+
     return (dayOfYear + offset) / 7 + 1;
   }
 
@@ -140,24 +193,28 @@ export abstract class Calendar {
     let offset: number;
     let day: number;
 
-    const dayOfYear = this.getDayOfYear(time) - 1;
+    const dayOfYear = this.getDayOfYear(time) - 1; // Make the day of year to be 0-based, so that 1/1 is day 0.
 
     dayForJan1 = this.getDayOfWeek(time) - (dayOfYear % 7);
 
+    // Now, calculate the offset.  Subtract the first day of week from the dayForJan1.  And make it a positive value.
     offset = (firstDayOfWeek - dayForJan1 + 14) % 7;
-
+    // tslint:disable-next-line: triple-equals
     if (offset != 0 && offset >= fullDays) {
       offset -= 7;
     }
-
+    //
+    // Calculate the day of year for specified time by taking offset into account.
+    //
     day = dayOfYear - offset;
     if (day >= 0) {
       return day / 7 + 1;
     }
-
+    // Review
     if (time <= this.addDays(Calendar._minSupportedDateTime, dayOfYear)) {
       return this.getWeekOfYearOfMinSupportedDateTime(firstDayOfWeek, fullDays);
     }
+    // Review
     return this.getWeekOfYearFullDays(
       this.addDays(time, -(dayOfYear + 1)),
       firstDayOfWeek,
@@ -169,17 +226,20 @@ export abstract class Calendar {
     firstDayOfWeek: number,
     minimumDaysInFirstWeek: number
   ): number {
-    const dayOfYear = this.getDayOfYear(Calendar._minSupportedDateTime) - 1;
+    const dayOfYear = this.getDayOfYear(Calendar._minSupportedDateTime) - 1; // Make the day of year to be 0-based, so that 1/1 is day 0.
     const dayOfWeekOfFirstOfYear =
       this.getDayOfWeek(Calendar._minSupportedDateTime) - (dayOfYear % 7);
 
+    // Calculate the offset (how many days from the start of the year to the start of the week)
     const offset = (firstDayOfWeek + 7 - dayOfWeekOfFirstOfYear) % 7;
+    // tslint:disable-next-line: triple-equals
     if (offset == 0 || offset >= minimumDaysInFirstWeek) {
+      // First of year falls in the first week of the year
       return 1;
     }
 
     const daysInYearBeforeMinSupportedYear =
-      this.daysInYearBeforeMinSupportedYear - 1;
+      this.daysInYearBeforeMinSupportedYear - 1; // Make the day of year to be 0-based, so that 1/1 is day 0.
     const dayOfWeekOfFirstOfPreviousYear =
       dayOfWeekOfFirstOfYear - 1 - (daysInYearBeforeMinSupportedYear % 7);
 
@@ -193,6 +253,7 @@ export abstract class Calendar {
     return day / 7 + 1;
   }
 
+  // it would be nice to make this abstract but we can't since that would break previous implementations
   protected get daysInYearBeforeMinSupportedYear(): number {
     return 365;
   }
@@ -203,7 +264,7 @@ export abstract class Calendar {
     firstDayOfWeek: DayOfWeek
   ): number {
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
-      throw 'firstDayOfWeek: ArgumentOutOfRange_Range';
+      throw new Error('firstDayOfWeek: ArgumentOutOfRange_Range');
     }
 
     switch (rule) {
@@ -214,12 +275,15 @@ export abstract class Calendar {
       case CalendarWeekRule.FirstFourDayWeek:
         return this.getWeekOfYearFullDays(time, firstDayOfWeek, 4);
     }
-    throw 'rule: ArgumentOutOfRange_Range';
+    throw new Error('rule: ArgumentOutOfRange_Range');
   }
 
   abstract getYear(time: Date): number;
-  abstract isLeapDay(year: number, month: number, day: number): boolean;
+
+  abstract isLeapDay(year: number,month: number,day: number): boolean;
+
   abstract isLeapMonth(year: number, month: number): boolean;
+
 
   getLeapMonth(year: number): number {
     if (!this.isLeapYear(year)) {
@@ -237,6 +301,7 @@ export abstract class Calendar {
   }
 
   abstract isLeapYear(year: number): boolean;
+
   abstract toDateTime(
     year: number,
     month: number,
@@ -262,7 +327,11 @@ export abstract class Calendar {
     );
   }
 
-  isValidDay(year: number, month: number, day: number): boolean {
+  isValidDay(
+    year: number,
+    month: number,
+    day: number
+  ): boolean {
     return (
       this.isValidMonth(year, month) &&
       day >= 1 &&
@@ -285,14 +354,14 @@ export abstract class Calendar {
       second < 60
     ) {
       if (millisecond < 0 || millisecond >= this._millisPerSecond) {
-        throw 'ArgumentOutOfRange_Range';
+        throw new Error('ArgumentOutOfRange_Range');
       }
       return (
         this.timeSpan_TimeToTicks(hour, minute, second) +
         millisecond * Calendar._ticksPerMillisecond
       );
     }
-    throw 'ArgumentOutOfRange_BadHourMinuteSecond';
+    throw new Error('ArgumentOutOfRange_BadHourMinuteSecond');
   }
 
   private timeSpan_TimeToTicks(
@@ -300,9 +369,11 @@ export abstract class Calendar {
     minute: number,
     second: number
   ): number {
+    // totalSeconds is bounded by 2^31 * 2^12 + 2^31 * 2^8 + 2^31,
+    // which is less than 2^44, meaning we won't overflow totalSeconds.
     const totalSeconds = hour * 3600 + minute * 60 + second;
-    if (totalSeconds > Number.MAX_VALUE || totalSeconds < Number.MIN_VALUE) {
-      throw 'Overflow_TimeSpanTooLong';
+    if (totalSeconds > Number.MAX_SAFE_INTEGER || totalSeconds < Number.MIN_SAFE_INTEGER) {
+      throw new Error('Overflow_TimeSpanTooLong');
     }
     return totalSeconds * Calendar._ticksPerSecond;
   }
