@@ -48,14 +48,9 @@ export class PersianCalendar extends Calendar {
     return PersianCalendar.maxDate;
   }
 
-  get algorithmType(): CalendarAlgorithmType {
-    return CalendarAlgorithmType.SolarCalendar;
-  }
+  private readonly algorithmType = CalendarAlgorithmType.SolarCalendar;
 
-    /*=================================GetAbsoluteDatePersian==========================
-    **Action: Gets the Absolute date for the given Persian date.  The absolute date means
-    **       the number of days from January 1st, 1 A.D.
-    ============================================================================*/
+ // The absolute date means the number of days from January 1st, 1 A.D.
   private getAbsoluteDatePersian(
     year: number,
     month: number,

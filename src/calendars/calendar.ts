@@ -20,78 +20,34 @@ export enum CalendarWeekRule {
   FirstFullWeek = 1,
   FirstFourDayWeek = 2,
 }
+  // tslint:disable: variable-name
 // tslint:disable: member-ordering
 export abstract class Calendar {
-  // Number of 100ns (10E-7 second) ticks per time unit
-  static get _ticksPerMillisecond(): number {
-    return 1;
-  }
-  // private get TicksPerMillisecond() :number {return 10000}
-  static get _ticksPerSecond(): number {
-    return this._ticksPerMillisecond * 1000;
-  }
-  static get _ticksPerMinute(): number {
-    return this._ticksPerSecond * 60;
-  }
-  static get _ticksPerHour(): number {
-    return this._ticksPerMinute * 60;
-  }
-  static get _ticksPerDay(): number {
-    return this._ticksPerHour * 24;
-  }
 
-  // Number of milliseconds per time unit
-  get _millisPerSecond(): number {
-    return 1000;
-  }
-  get _millisPerMinute(): number {
-    return this._millisPerSecond * 60;
-  }
-  get _millisPerHour(): number {
-    return this._millisPerMinute * 60;
-  }
-  get _millisPerDay(): number {
-    return this._millisPerHour * 24;
-  }
+  static readonly _ticksPerMillisecond = 1;
+  static readonly _ticksPerSecond = Calendar._ticksPerMillisecond * 1000;
+  static readonly _ticksPerMinute = Calendar._ticksPerSecond * 60;
+  static readonly _ticksPerHour = Calendar._ticksPerMinute * 60;
+  static readonly _ticksPerDay = Calendar._ticksPerHour * 24;
 
+  private readonly _millisPerSecond = 1000;
+  private readonly _millisPerMinute = this._millisPerSecond * 60;
+  private readonly _millisPerHour = this._millisPerMinute * 60;
+  private readonly _millisPerDay = this._millisPerHour * 24;
   // Number of days in a non-leap year
-  get _daysPerYear(): number {
-    return 365;
-  }
+  private readonly _daysPerYear = 365;
   // Number of days in 4 years
-  get _daysPer4Years(): number {
-    return this._daysPerYear * 4 + 1;
-  }
+  private readonly _daysPer4Years = this._daysPerYear * 4 + 1;
   // Number of days in 100 years
-  get _daysPer100Years(): number {
-    return this._daysPer4Years * 25 - 1;
-  }
+  private readonly _daysPer100Years = this._daysPer4Years * 25 - 1;
   // Number of days in 400 years
-  get _daysPer400Years(): number {
-    return this._daysPer100Years * 4 + 1;
-  }
-
+  private readonly _daysPer400Years = this._daysPer100Years * 4 + 1;
   // Number of days from 1/1/0001 to 1/1/10000
-  get _daysTo10000(): number {
-    return this._daysPer400Years * 25 - 366;
-  }
-
-  get _maxMillis(): number {
-    return this._daysTo10000 * this._millisPerDay;
-  }
-
-  // tslint:disable-next-line: variable-name
-
-  static get _minSupportedDateTime(): Date {
-    return new Date('100/1/1');
-  }
-  static get _maxSupportedDateTime(): Date {
-    return new Date('9999/12/31');
-  }
-
-  get _algorithmType(): CalendarAlgorithmType {
-    return CalendarAlgorithmType.Unknown;
-  }
+  private readonly _daysTo10000 = this._daysPer400Years * 25 - 366;
+  private readonly _maxMillis = this._daysTo10000 * this._millisPerDay;
+  static readonly _minSupportedDateTime = new Date('100/1/1');
+  static readonly _maxSupportedDateTime = new Date('9999/12/31');
+  private readonly _algorithmType = CalendarAlgorithmType.Unknown;
 
   static checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
     if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
@@ -280,10 +236,9 @@ export abstract class Calendar {
 
   abstract getYear(time: Date): number;
 
-  abstract isLeapDay(year: number,month: number,day: number): boolean;
+  abstract isLeapDay(year: number, month: number, day: number): boolean;
 
   abstract isLeapMonth(year: number, month: number): boolean;
-
 
   getLeapMonth(year: number): number {
     if (!this.isLeapYear(year)) {
@@ -327,11 +282,7 @@ export abstract class Calendar {
     );
   }
 
-  isValidDay(
-    year: number,
-    month: number,
-    day: number
-  ): boolean {
+  isValidDay(year: number, month: number, day: number): boolean {
     return (
       this.isValidMonth(year, month) &&
       day >= 1 &&
@@ -372,7 +323,10 @@ export abstract class Calendar {
     // totalSeconds is bounded by 2^31 * 2^12 + 2^31 * 2^8 + 2^31,
     // which is less than 2^44, meaning we won't overflow totalSeconds.
     const totalSeconds = hour * 3600 + minute * 60 + second;
-    if (totalSeconds > Number.MAX_SAFE_INTEGER || totalSeconds < Number.MIN_SAFE_INTEGER) {
+    if (
+      totalSeconds > Number.MAX_SAFE_INTEGER ||
+      totalSeconds < Number.MIN_SAFE_INTEGER
+    ) {
       throw new Error('Overflow_TimeSpanTooLong');
     }
     return totalSeconds * Calendar._ticksPerSecond;

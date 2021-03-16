@@ -159,16 +159,10 @@ export class CalHelper {
     return this.polynomialSum(this._coefficients, julianCenturies);
   }
 
-  /// Important ***
   static getNumberOfDays(date: Date): number {
-    //  debugger;
-    //  let x=Math.trunc(this.getTimeTicks(date) / GregorianCalendar._ticksPerDay);
-    //  let y= Math.trunc(date.getTime() / GregorianCalendar._ticksPerDay);
     return Math.trunc(date.getTime() / Calendar._ticksPerDay);
-    // return Math.trunc(this.getTimeTicks(date) / GregorianCalendar._ticksPerDay);
   }
 
-  /// Important ***
   static getGregorianYear(numberOfDays: number): number {
     const date = new Date(
       Math.min(
@@ -276,8 +270,6 @@ export class CalHelper {
           case CorrectionAlgorithm.Year1620to1699:
             return this.ephemerisCorrection1620to1699(year);
         }
-
-        //  break; // break the loop and assert eventually
       }
     });
 
@@ -292,12 +284,10 @@ export class CalHelper {
   }
 
   static isNegative(value: number): boolean {
-    // tslint:disable-next-line: triple-equals
     return Math.sign(value) == -1;
   }
 
   static copySign(value: number, sign: number): number {
-    // tslint:disable-next-line: triple-equals
     return this.isNegative(value) == this.isNegative(sign) ? value : -value;
   }
 
