@@ -1,14 +1,17 @@
 {
   "include": [
     // "index.ts",
-    "src/**/*.ts"
+    "src/**/*.ts",
+  ],
+  "exclude": [
   ],
   "compilerOptions": {
     "baseUrl": "./",
-    // "rootDir": "./src/",
+    "rootDir": "src/",
     "outDir": "dist/",
     "noImplicitAny": true,
-    "module": "es6",
+    "esModuleInterop": true,
+    "module": "CommonJS",
     "target": "es6",
     "sourceMap": true,
     "removeComments": true,
