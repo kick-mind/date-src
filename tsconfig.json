@@ -1,11 +1,18 @@
 {
-    "compilerOptions": {
-      "outDir": "./dist/",
-      "noImplicitAny": true,
-      "module": "es6",
-      "target": "es6",
-      "sourceMap": true,
-      "allowJs": true,
-      "allowSyntheticDefaultImports": true
-    }
+  "include": [
+    // "index.ts",
+    "src/**/*.ts"
+  ],
+  "compilerOptions": {
+    "baseUrl": "./",
+    // "rootDir": "./src/",
+    "outDir": "dist/",
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es6",
+    "sourceMap": true,
+    "removeComments": true,
+    "moduleResolution": "node"
+    // "allowSyntheticDefaultImports": true
   }
+}

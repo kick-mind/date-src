@@ -46,7 +46,7 @@ export class PersianDate extends DateTime {
       d = this._cal.addMinutes(d, amounts.ms * sign);
     }
 
-    return new Jalaali({
+    return new PersianDate({
       year: this._cal.getYear(d),
       month: this._cal.getMonth(d),
       day: this._cal.getDayOfMonth(d),
