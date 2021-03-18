@@ -2,6 +2,10 @@ import { Locale } from './locale';
 
 const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
 
+function padNumber(value: number, length: number) {
+    value.toString().slice(-length).padStart(length, '0');
+}
+
 /** DateTime values.  */
 export interface DateTimeValues {
     year: number;
@@ -134,30 +138,33 @@ export abstract class DateTime {
     abstract diff(datetime: DateTime): number;
 
     /** Returns a string representation of this DateTime formatted according to the specified format string. */
-      format(format: string): string {
+    format(format: string): string {
         const matches: any = {
-            Y: `${this.year}`,
-            Y2: this.year.toString().slice(-2),
-            // M: $M + 1,
-            // MM: Utils.s($M + 1, 2, '0'),
+            Y: this.year,
+            Y2: padNumber(this.year, 2),
+            Y4: padNumber(this.year, 4),
+            M: this.month,
+            MM: padNumber(this.month, 2),
             // MMM: getShort(locale.monthsShort, $M, months, 3),
             // MMMM: getShort(months, $M),
-            // D: this.$D,
-            // DD: Utils.s(this.$D, 2, '0'),
+            D: this.day,
+            D2: padNumber(this.day, 2),
             // d: String(this.$W),
             // dd: getShort(locale.weekdaysMin, this.$W, weekdays, 2),
             // ddd: getShort(locale.weekdaysShort, this.$W, weekdays, 3),
             // dddd: weekdays[this.$W],
-            // H: String($H),
-            // HH: Utils.s($H, 2, '0'),
+            H: this.hour,
+            H2: padNumber(this.hour, 2),
             // h: get$H(1),
             // hh: get$H(2),
             // a: meridiemFunc($H, $m, true),
             // A: meridiemFunc($H, $m, false),
-            // m: String($m),
-            // mm: Utils.s($m, 2, '0'),
-            // s: String(this.$s),
-            // ss: Utils.s(this.$s, 2, '0'),
+            m: this.minute,
+            m2: padNumber(this.minute, 2),
+            s: this.second,
+            s2: padNumber(this.second, 2),
+            ms: this.ms,
+            ms3: padNumber(this.ms, 3),
             // SSS: Utils.s(this.$ms, 3, '0'),
             // Z: zoneStr // 'ZZ' logic below
         };
