@@ -1,12 +1,13 @@
-// const assert = require("assert");
-// const Jalaali = require("date/index");
+import { DateTime } from './date-time';
 
-// describe("Demo", () => {
-//   it("should add correctly", () => assert.equal(2, 2));
-// });
-import { PersianDate } from './dates/persian';
+describe('DateTime class', () => {
+  it('can add a locale', () => {
+    expect(4).toEqual(4);
+    DateTime.addLocale(null);
+  });
 
-const p = new PersianDate()
-console.log('asd');
-console.log('asd');
-
+  it('can find a locale by name', () => {
+    const l = DateTime.findLocale('L1');
+    expect(l).toBeDefined();
+  });
+});

@@ -7,7 +7,7 @@
   ],
   "compilerOptions": {
     "baseUrl": "./",
-    "rootDir": "src/",
+    "rootDir": "./src",
     "outDir": "dist/",
     "noImplicitAny": true,
     "esModuleInterop": true,
