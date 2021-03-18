@@ -5,7 +5,7 @@ import { DateTime, DateTimeValues } from '../date-time';
 export class PersianDate extends DateTime {
   private _cal = new PersianCalendar();
 
-  constructor(date?: DateTimeValues) {
+  constructor(date: DateTimeValues) {
     super(date, true); // Replace with: super(date, _cal.isValidPersianDate(...));
   }
 

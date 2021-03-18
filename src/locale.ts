@@ -11,5 +11,5 @@ export interface Locale {
     /** month names */
     months: {
         [calendar: string]: Array<Array<string>>;
-    }
+    };
 }
