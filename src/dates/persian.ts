@@ -1,3 +1,4 @@
+import { Zone } from 'src/zone/zone';
 import { CalendarWeekRule, DayOfWeek } from '../calendars/calendar';
 import { PersianCalendar } from '../calendars/persian/persian-calendar';
 import { DateTime, DateTimeUnits } from '../date-time';
@@ -5,10 +6,19 @@ import { DateTime, DateTimeUnits } from '../date-time';
 export class PersianDate extends DateTime {
   private _cal = new PersianCalendar();
 
-  constructor(date: DateTimeUnits) {
-    super(date, true); // Replace with: super(date, _cal.isValidPersianDate(...));
+  //#region Creation
+  constructor(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, timeZone?: Zone) {
+    super(date, 0, true); // Replace with: super(date, _cal.isValidPersianDate(...));
   }
 
+  static local() {
+
+  }
+
+  //#endregion
+
+  //#region Get
+  /** @private */
   private getGDate(): Date {
     const d = this.toObject();
     return this._cal.toDateTime(
@@ -22,6 +32,42 @@ export class PersianDate extends DateTime {
     );
   }
 
+  get weekDay(): number {
+    return this._cal.getDayOfWeek(this.getGDate());
+  }
+
+  get weeksInYear(): number {
+    return Math.trunc(this._cal.getDaysInYear(this.year) / 7);
+  }
+
+  get weekNumber(): number {
+    return this._cal.getWeekOfYear(this.getGDate(), CalendarWeekRule.FirstDay, DayOfWeek.Saturday);
+  }
+
+  get isInLeapYear(): boolean {
+    return this._cal.isLeapYear(this.year);
+  }
+
+  get quarter(): number {
+    return Math.floor(this.month / 4) + 1;
+  }
+
+  get daysInMonth(): number {
+    return this._cal.getDaysInMonth(this.year, this.month);
+  }
+
+  get daysInYear(): number {
+    return this._cal.getDaysInYear(this.year);
+  }
+
+  get dayOfYear(): number {
+    throw new Error('Method not implemented.');
+  }
+
+  //#endregion
+
+  //#region Manipulate
+  /** @private */
   private addTime(amounts: DateTimeUnits, sign: number) {
     let d = this.getGDate();
 
@@ -66,43 +112,35 @@ export class PersianDate extends DateTime {
     return this.addTime(amounts, -1);
   }
 
-  get weekDay(): number {
-    return this._cal.getDayOfWeek(this.getGDate());
-  }
-
-  get weeksInYear(): number {
-    return Math.trunc(this._cal.getDaysInYear(this.year) / 7);
-  }
-
-  get weekNumber(): number {
-    return this._cal.getWeekOfYear(this.getGDate(), CalendarWeekRule.FirstDay, DayOfWeek.Saturday);
-  }
-
-  get isInLeapYear(): boolean {
-    return this._cal.isLeapYear(this.year);
-  }
-
-  get quarter(): number {
-    return Math.floor(this.month / 4) + 1;
-  }
-
-  get daysInMonth(): number {
-    return this._cal.getDaysInMonth(this.year, this.month);
-  }
-
-  get daysInYear(): number {
-    return this._cal.getDaysInYear(this.year);
-  }
-
-  get dayOfYear(): number {
-    throw new Error('Method not implemented.');
-  }
-
   clone(newValues?: Partial<DateTimeUnits>): DateTime {
     throw new Error('Method not implemented.');
   }
+  //#endregion
 
+  //#region Query
+
+  //#endregion
+
+  //#region Display + Convert
   toUtcTimestamp(): number {
     throw new Error('Method not implemented.');
   }
+
+  //#endregion
+
+  //#region Locale
+
+  //#endregion
+
+  //#region TimeZone
+
+  //#endregion DateTime support
+  static get min(): DateTime {
+    throw new Error('Method not implemented.');
+  }
+
+  static get max(): DateTime {
+    throw new Error('Method not implemented.');
+  }
+  //#region
 }

@@ -1,4 +1,5 @@
-import { Locale } from './locale';
+import { Locale } from './locale/locale';
+import { Zone } from './zone/zone';
 
 const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
 
@@ -22,19 +23,26 @@ export abstract class DateTime {
     private static _locales = new Array<Locale>();
     private static _defaultLocale: string;
     private _date: DateTimeUnits;
-    private _zone: number;
-    private _locale: string;
+
+    /** Time zone offset (in minutes) */
+    private _zone: Zone;
+    private _locale: Locale;
     private _isValid: boolean;
 
     /**
      * Create a new DateTime.
      * @constructor
      */
-    constructor(date: DateTimeUnits, isValid: boolean, locale?: string) {
+    constructor(date: DateTimeUnits, timeZone: Zone, isValid: boolean, locale?: string) {
         this._date = date;
+        this._zone = timeZone;
         this._isValid = isValid;
-        this._locale = locale ?? DateTime.getDefaultLocale();
+        // this._locale = locale ?? DateTime.getDefaultLocale();
     }
+
+    //#region Creation
+
+    //#endregion
 
     //#region Get
     /**
@@ -117,7 +125,7 @@ export abstract class DateTime {
 
     /** Get the quarter. */
     abstract get quarter(): number;
-    //#endregion GET
+    //#endregion
 
     //#region Manipulate
     /** Adds a period of time to this DateTime and returns the resulting DateTime. */
