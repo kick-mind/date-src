@@ -1,7 +1,8 @@
-import { DateTime, DateTimeValues } from '../date-time';
+import { DateTime, DateTimeUnits } from '../date-time';
 
 export class GregorianDate extends DateTime {
-    constructor(date?: DateTimeValues) {
+
+    constructor(date?: DateTimeUnits) {
         // year: date?.year ?? d.getFullYear(),
         // month: date?.month ?? d.getMonth(),
         // day: date?.day ?? d.getDate(),
@@ -12,7 +13,7 @@ export class GregorianDate extends DateTime {
         super(date, true);
     }
 
-    add(amounts: DateTimeValues): DateTime {
+    add(amounts: DateTimeUnits): DateTime {
         throw new Error('Method not implemented.');
         // const { gy, gm, gd } = Jalaali.toGregorian(this._value.year, this._value.month, this._value.day);
         // const d = new Date(gy, gm, gd);
@@ -50,7 +51,7 @@ export class GregorianDate extends DateTime {
         // });
     }
 
-    subtract(amounts: DateTimeValues): DateTime {
+    subtract(amounts: DateTimeUnits): DateTime {
         throw new Error('Method not implemented.');
 
         // const gDateTemp = Jalaali.toGregorian(this.year, this.month, this.day);
@@ -132,12 +133,20 @@ export class GregorianDate extends DateTime {
     get daysInMonth(): number {
         throw new Error('Method not implemented.');
     }
-    
+
     get daysInYear(): number {
         throw new Error('Method not implemented.');
     }
 
     get isValid(): boolean {
+        throw new Error('Method not implemented.');
+    }
+
+    get dayOfYear(): number {
+        throw new Error('Method not implemented.');
+    }
+
+    clone(newValues?: Partial<DateTimeUnits>): DateTime {
         throw new Error('Method not implemented.');
     }
 }

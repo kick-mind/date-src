@@ -7,7 +7,7 @@ function padNumber(value: number, length: number) {
 }
 
 /** DateTime values.  */
-export interface DateTimeValues {
+export interface DateTimeUnits {
     year: number;
     month: number;
     day: number;
@@ -21,7 +21,7 @@ export interface DateTimeValues {
 export abstract class DateTime {
     private static _locales = new Array<Locale>();
     private static _defaultLocale: string;
-    protected _date: DateTimeValues;
+    protected _date: DateTimeUnits;
     protected _isValid: boolean;
     private _locale: string;
 
@@ -36,7 +36,7 @@ export abstract class DateTime {
     }
 
     /** Create a new DateTime. */
-    constructor(date: DateTimeValues, isValid: boolean, locale?: string) {
+    constructor(date: DateTimeUnits, isValid: boolean, locale?: string) {
         this._date = date;
         this._isValid = isValid;
         this._locale = locale ?? DateTime.getDefaultLocale();
@@ -67,18 +67,7 @@ export abstract class DateTime {
         return this._defaultLocale;
     }
 
-    /** Add a period of time to this DateTime and return the resulting DateTime. */
-    abstract add(amounts: DateTimeValues): DateTime;
-
-    /** Subtract a period of time from this DateTime and return the resulting DateTime. */
-    abstract subtract(amounts: DateTimeValues): DateTime;
-
-    /** */
-    abstract diff(datetime: DateTime): number;
-
-
     //#region Get
-
     /** Gets a unit value of this DateTime. */
     get(unit: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'ms'): number {
         return this._date[unit];
@@ -152,11 +141,89 @@ export abstract class DateTime {
 
     /** Get the quarter. */
     abstract get quarter(): number;
-
     //#endregion GET
 
-    //#region Display
+    //#region Manipulate
+    /** Adds a period of time to this DateTime and returns the resulting DateTime. */
+    abstract add(amounts: DateTimeUnits): DateTime;
 
+    /** Subtracts a period of time from this DateTime and returns the resulting DateTime. */
+    abstract subtract(amounts: DateTimeUnits): DateTime;
+
+    /** Returns a new DateTime same as this DateTime but with time units set to zero (hour = minute = second = ms = 0)  */
+    clearTime(): DateTime {
+        throw new Error('Method not implemented.');
+    }
+
+    /** Clones this DateTime with overwritten values. */
+    abstract clone(newValues?: Partial<DateTimeUnits>): DateTime;
+    //#endregion
+
+    //#region Query
+    /** Returns whether a variable is a JS-Sugar DateTime or not. */
+    isJsSugar(obj: any) {
+        return obj instanceof DateTime;
+    }
+
+    /** Returns whether this DateTime is same as another DateTime. */
+    isSame(dateTime: DateTime): boolean {
+        const d1 = this._date;
+        const d2 = dateTime.toObject();
+        return d1.year === d2.year &&
+            d1.month === d2.month &&
+            d1.day === d2.day &&
+            d1.hour === d2.hour &&
+            d1.second === d2.second &&
+            d1.minute === d2.minute &&
+            d1.second === d2.second &&
+            d1.ms === d2.ms;
+    }
+
+    /** Returns whether this DateTime is after another DateTime. */
+    isAfter(dateTime: DateTime): boolean {
+        const d1 = this._date;
+        const d2 = dateTime.toObject();
+        return d1.year > d2.year ||
+            d1.month > d2.month ||
+            d1.day > d2.day ||
+            d1.hour > d2.hour ||
+            d1.second > d2.second ||
+            d1.minute > d2.minute ||
+            d1.second > d2.second ||
+            d1.ms > d2.ms;
+    }
+
+    /** Returns whether this DateTime is same or after another DateTime. */
+    isSameOrAfter(dateTime: DateTime): boolean {
+        return this.isAfter(dateTime) || this.isSame(dateTime);
+    }
+
+    /** Returns whether this DateTime is before another DateTime. */
+    isBefore(dateTime: DateTime): boolean {
+        const d1 = this._date;
+        const d2 = dateTime.toObject();
+        return d1.year < d2.year ||
+            d1.month < d2.month ||
+            d1.day < d2.day ||
+            d1.hour < d2.hour ||
+            d1.second < d2.second ||
+            d1.minute < d2.minute ||
+            d1.second < d2.second ||
+            d1.ms < d2.ms;
+    }
+
+    /** Returns whether this DateTime is same or before another DateTime. */
+    isSameOrBefore(dateTime: DateTime): boolean {
+        return this.isBefore(dateTime) || this.isSame(dateTime);
+    }
+
+    /** Returns whether this DateTime is between the specified DateTimes. */
+    isBetween(first: DateTime, second: DateTime): boolean {
+        return this.isAfter(first) && this.isBefore(second);
+    }
+    //#endregion
+
+    //#region Display + Convert
     /** Returns a string representation of this DateTime formatted according to the specified format string. */
     format(format: string): string {
         const matches: any = {
@@ -192,69 +259,25 @@ export abstract class DateTime {
         return format.replace(REGEX_FORMAT, (match, $1) => $1 || matches[match]);
     }
 
-    //#endregion
-
-    //#region Query
-
-    /** Returns whether this DateTime is same as another DateTime. */
-    isSame(dateTime: DateTime): boolean {
-        const d1 = this._date;
-        const d2 = dateTime.toObject;
-        return d1.year === d2.year &&
-            d1.month === d2.month &&
-            d1.day === d2.day &&
-            d1.hour === d2.hour &&
-            d1.second === d2.second &&
-            d1.minute === d2.minute &&
-            d1.second === d2.second &&
-            d1.ms === d2.ms;
-    }
-
-    /** Returns whether this DateTime is after another DateTime. */
-    isAfter(dateTime: DateTime): boolean {
-        const d1 = this._date;
-        const d2 = dateTime.toObject;
-        return d1.year > d2.year ||
-            d1.month > d2.month ||
-            d1.day > d2.day ||
-            d1.hour > d2.hour ||
-            d1.second > d2.second ||
-            d1.minute > d2.minute ||
-            d1.second > d2.second ||
-            d1.ms > d2.ms;
-    }
-
-    /** Returns whether this DateTime is same or after another DateTime. */
-    isSameOrAfter(dateTime: DateTime): boolean {
-        return this.isAfter(dateTime) || this.isSame(dateTime);
-    }
-
-    /** Returns whether this DateTime is before another DateTime. */
-    isBefore(dateTime: DateTime): boolean {
-        const d1 = this.toObject;
-        const d2 = dateTime.toObject;
-        return d1.year < d2.year ||
-            d1.month < d2.month ||
-            d1.day < d2.day ||
-            d1.hour < d2.hour ||
-            d1.second < d2.second ||
-            d1.minute < d2.minute ||
-            d1.second < d2.second ||
-            d1.ms < d2.ms;
-    }
-
-    /** Returns whether this DateTime is same or before another DateTime. */
-    isSameOrBefore(dateTime: DateTime): boolean {
-        return this.isBefore(dateTime) || this.isSame(dateTime);
-    }
-    //#endregion
-
-    //#region Convert
-
-    /** Returns a JavaScript object with the values of this DateTime. */
-    get toObject(): DateTimeValues {
+    /** Returns an object with the values of this DateTime. */
+    toObject(): DateTimeUnits {
         return { ...this._date };
     }
 
+    /** Returns an Array with the values of this DateTime. */
+    toArray(): number[] {
+        const d = this._date;
+        return [d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms];
+    }
+
+    /** Returns the number of milliseconds since the minimum supported DateTime of this instance. */
+    toTimestamp(): number[] {
+        throw new Error('Method not implemented.');
+    }
+
+    /** Formats this DateTime to ISO8601 standard. */
+    toIso(keepTimeZone = false): number[] {
+        throw new Error('Method not implemented.');
+    }
     //#endregion
 }

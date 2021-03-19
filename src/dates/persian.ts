@@ -1,11 +1,11 @@
 import { CalendarWeekRule, DayOfWeek } from '../calendars/calendar';
 import { PersianCalendar } from '../calendars/persian/persian-calendar';
-import { DateTime, DateTimeValues } from '../date-time';
+import { DateTime, DateTimeUnits } from '../date-time';
 
 export class PersianDate extends DateTime {
   private _cal = new PersianCalendar();
 
-  constructor(date: DateTimeValues) {
+  constructor(date: DateTimeUnits) {
     super(date, true); // Replace with: super(date, _cal.isValidPersianDate(...));
   }
 
@@ -21,7 +21,7 @@ export class PersianDate extends DateTime {
     );
   }
 
-  private addTime(amounts: DateTimeValues, sign: number) {
+  private addTime(amounts: DateTimeUnits, sign: number) {
     let d = this.getGDate();
 
     if (amounts?.year) {
@@ -57,27 +57,12 @@ export class PersianDate extends DateTime {
     });
   }
 
-  add(amounts: DateTimeValues): DateTime {
+  add(amounts: DateTimeUnits): DateTime {
     return this.addTime(amounts, 1);
   }
 
-  subtract(amounts: DateTimeValues): DateTime {
+  subtract(amounts: DateTimeUnits): DateTime {
     return this.addTime(amounts, -1);
-  }
-
-  diff(datetime: DateTime): number {
-    let curGDate = this.getGDate();
-    let tempGDate = this._cal.toDateTime(
-      datetime.year,
-      datetime.month,
-      datetime.day,
-      datetime.hour,
-      datetime.minute,
-      datetime.second,
-      datetime.ms
-    );
-
-    return curGDate.getTime() - tempGDate.getTime();
   }
 
   get weekDay(): number {
@@ -113,6 +98,10 @@ export class PersianDate extends DateTime {
   }
 
   get dayOfYear(): number {
+    throw new Error('Method not implemented.');
+  }
+
+  clone(newValues?: Partial<DateTimeUnits>): DateTime {
     throw new Error('Method not implemented.');
   }
 }
