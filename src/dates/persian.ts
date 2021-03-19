@@ -111,4 +111,8 @@ export class PersianDate extends DateTime {
   get isValid(): boolean {
     throw new Error('Method not implemented.');
   }
+
+  get dayOfYear(): number {
+    throw new Error('Method not implemented.');
+  }
 }

@@ -3,6 +3,7 @@ import { PersianDate } from './persian';
 describe('PersianDate class', () => {
   it('can be created via constructor', () => {
     const pd = new PersianDate(null);
+    pd.toObject.day = 23;
     expect(pd).toBeDefined();
   });
 

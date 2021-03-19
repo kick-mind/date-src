@@ -30,71 +30,10 @@ export abstract class DateTime {
         return this._locale;
     }
 
-    /** Returns a JavaScript object with the values of this DateTime. */
-    get values(): DateTimeValues {
-        return { ...this._date };
-    }
-
-    /** Get the year. */
-    get year(): number {
-        return this._date.year;
-    }
-
-    /** Get the month (1-12). */
-    get month(): number {
-        return this._date.month;
-    }
-
-    /** Get the day of the month (1-30ish). */
-    get day(): number {
-        return this._date.day;
-    }
-
-    /** Get the hour of the day (0-23). */
-    get hour(): number {
-        return this._date.hour;
-    }
-
-    /** Get the minute of the hour (0-59). */
-    get minute(): number {
-        return this._date.minute;
-    }
-
-    /** Get the second of the minute (0-59). */
-    get second(): number {
-        return this._date.second;
-    }
-
-    /** Get the millisecond of the second (0-999). */
-    get ms(): number {
-        return this._date.year;
-    }
-
-    /** Returns the number of days in this DateTime's month. */
-    abstract get daysInMonth(): number;
-
-    /** Returns the number of days in this DateTime's year. */
-    abstract get daysInYear(): number;
-
-    /** Get the day of the week. */
-    abstract get weekDay(): number;
-
-    /** Returns the number of weeks in this DateTime's year. */
-    abstract get weeksInYear(): number;
-
-    /** Get the week number of the week year (1-52ish). */
-    abstract get weekNumber(): number;
-
-    /** Returns true if this DateTime is in a leap year, false otherwise. */
-    abstract get isInLeapYear(): boolean;
-
     /** Returns whether the DateTime is valid. */
     get isValid(): boolean {
         return this._isValid;
     }
-
-    /** Get the quarter. */
-    abstract get quarter(): number;
 
     /** Create a new DateTime. */
     constructor(date: DateTimeValues, isValid: boolean, locale?: string) {
@@ -137,6 +76,87 @@ export abstract class DateTime {
     /** */
     abstract diff(datetime: DateTime): number;
 
+
+    //#region Get
+
+    /** Gets a unit value of this DateTime. */
+    get(unit: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'ms'): number {
+        return this._date[unit];
+    }
+
+    /** Get the year. */
+    get year(): number {
+        return this._date.year;
+    }
+
+    /** Get the month (1-12). */
+    get month(): number {
+        return this._date.month;
+    }
+
+    /** Get the day of the month (1 to 30). */
+    get day(): number {
+        return this._date.day;
+    }
+
+    /** Get the hour of the day (0 to 23). */
+    get hour(): number {
+        return this._date.hour;
+    }
+
+    /** Get the minute of the hour (0 to 59). */
+    get minute(): number {
+        return this._date.minute;
+    }
+
+    /** Get the second of the minute (0 to 59). */
+    get second(): number {
+        return this._date.second;
+    }
+
+    /** Get the millisecond of the second (0 to 999). */
+    get ms(): number {
+        return this._date.year;
+    }
+
+    /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
+    abstract get weekDay(): number;
+
+    /** Get the day of the week with respect of this DateTime's locale (locale aware) */
+    get weekDayLocale(): number {
+        throw new Error('Method not implemented.');
+    }
+
+    /** Gets the human readable weekday name (locale aware). */
+    weekDayName(format: 'S' | 'L' = 'L'): string {
+        throw new Error('Method not implemented.');
+    }
+
+    /** Gets the day of the year (1 to 366). */
+    abstract get dayOfYear(): number;
+
+    /** Get the week number of the week year (1 to 52). */
+    abstract get weekNumber(): number;
+
+    /** Returns the number of days in this DateTime's month. */
+    abstract get daysInMonth(): number;
+
+    /** Returns the number of days in this DateTime's year. */
+    abstract get daysInYear(): number;
+
+    /** Returns the number of weeks in this DateTime's year. */
+    abstract get weeksInYear(): number;
+
+    /** Returns true if this DateTime is in a leap year, false otherwise. */
+    abstract get isInLeapYear(): boolean;
+
+    /** Get the quarter. */
+    abstract get quarter(): number;
+
+    //#endregion GET
+
+    //#region Display
+
     /** Returns a string representation of this DateTime formatted according to the specified format string. */
     format(format: string): string {
         const matches: any = {
@@ -172,10 +192,14 @@ export abstract class DateTime {
         return format.replace(REGEX_FORMAT, (match, $1) => $1 || matches[match]);
     }
 
+    //#endregion
+
+    //#region Query
+
     /** Returns whether this DateTime is same as another DateTime. */
     isSame(dateTime: DateTime): boolean {
         const d1 = this._date;
-        const d2 = dateTime.values;
+        const d2 = dateTime.toObject;
         return d1.year === d2.year &&
             d1.month === d2.month &&
             d1.day === d2.day &&
@@ -189,7 +213,7 @@ export abstract class DateTime {
     /** Returns whether this DateTime is after another DateTime. */
     isAfter(dateTime: DateTime): boolean {
         const d1 = this._date;
-        const d2 = dateTime.values;
+        const d2 = dateTime.toObject;
         return d1.year > d2.year ||
             d1.month > d2.month ||
             d1.day > d2.day ||
@@ -207,8 +231,8 @@ export abstract class DateTime {
 
     /** Returns whether this DateTime is before another DateTime. */
     isBefore(dateTime: DateTime): boolean {
-        const d1 = this.values;
-        const d2 = dateTime.values;
+        const d1 = this.toObject;
+        const d2 = dateTime.toObject;
         return d1.year < d2.year ||
             d1.month < d2.month ||
             d1.day < d2.day ||
@@ -223,4 +247,14 @@ export abstract class DateTime {
     isSameOrBefore(dateTime: DateTime): boolean {
         return this.isBefore(dateTime) || this.isSame(dateTime);
     }
+    //#endregion
+
+    //#region Convert
+
+    /** Returns a JavaScript object with the values of this DateTime. */
+    get toObject(): DateTimeValues {
+        return { ...this._date };
+    }
+
+    //#endregion
 }

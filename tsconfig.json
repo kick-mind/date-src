@@ -15,7 +15,8 @@
     "target": "es6",
     "sourceMap": true,
     "removeComments": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "skipLibCheck": true
     // "allowSyntheticDefaultImports": true
   }
 }

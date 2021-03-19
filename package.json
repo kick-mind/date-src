@@ -22,6 +22,7 @@
   "scripts": {
     "test": "jasmine-ts --config=jasmine.json",
     "watch": "webpack --watch",
+    "build-tsc": "tsc",
     "build": "webpack --config webpack.prod.js",
     "start": "webpack serve --open --config webpack.dev.js",
     "server": "node server.js"
