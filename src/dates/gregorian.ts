@@ -138,15 +138,15 @@ export class GregorianDate extends DateTime {
         throw new Error('Method not implemented.');
     }
 
-    get isValid(): boolean {
-        throw new Error('Method not implemented.');
-    }
-
     get dayOfYear(): number {
         throw new Error('Method not implemented.');
     }
 
     clone(newValues?: Partial<DateTimeUnits>): DateTime {
+        throw new Error('Method not implemented.');
+    }
+
+    toUtcTimestamp(): number {
         throw new Error('Method not implemented.');
     }
 }

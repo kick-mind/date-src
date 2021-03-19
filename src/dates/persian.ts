@@ -10,14 +10,15 @@ export class PersianDate extends DateTime {
   }
 
   private getGDate(): Date {
+    const d = this.toObject();
     return this._cal.toDateTime(
-      this._date.year,
-      this._date.month,
-      this._date.day,
-      this._date.hour,
-      this._date.minute,
-      this._date.second,
-      this._date.ms
+      d.year,
+      d.month,
+      d.day,
+      d.hour,
+      d.minute,
+      d.second,
+      d.ms
     );
   }
 
@@ -93,15 +94,15 @@ export class PersianDate extends DateTime {
     return this._cal.getDaysInYear(this.year);
   }
 
-  get isValid(): boolean {
-    throw new Error('Method not implemented.');
-  }
-
   get dayOfYear(): number {
     throw new Error('Method not implemented.');
   }
 
   clone(newValues?: Partial<DateTimeUnits>): DateTime {
+    throw new Error('Method not implemented.');
+  }
+
+  toUtcTimestamp(): number {
     throw new Error('Method not implemented.');
   }
 }

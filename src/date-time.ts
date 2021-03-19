@@ -6,7 +6,7 @@ function padNumber(value: number, length: number) {
     value.toString().slice(-length).padStart(length, '0');
 }
 
-/** DateTime values.  */
+/** DateTime units. */
 export interface DateTimeUnits {
     year: number;
     month: number;
@@ -21,64 +21,40 @@ export interface DateTimeUnits {
 export abstract class DateTime {
     private static _locales = new Array<Locale>();
     private static _defaultLocale: string;
-    protected _date: DateTimeUnits;
-    protected _isValid: boolean;
+    private _date: DateTimeUnits;
+    private _zone: number;
     private _locale: string;
+    private _isValid: boolean;
 
-    /** Get the locale of a DateTime, such 'en-GB'. */
-    get locale(): string {
-        return this._locale;
-    }
-
-    /** Returns whether the DateTime is valid. */
-    get isValid(): boolean {
-        return this._isValid;
-    }
-
-    /** Create a new DateTime. */
+    /**
+     * Create a new DateTime.
+     * @constructor
+     */
     constructor(date: DateTimeUnits, isValid: boolean, locale?: string) {
         this._date = date;
         this._isValid = isValid;
         this._locale = locale ?? DateTime.getDefaultLocale();
     }
 
-    /** Adds a Locale. */
-    static addLocale(locale: Locale): void {
-        this._locales.push({ ...locale });
-
-        if (this._locales.length === 0) {
-            this._defaultLocale = locale.name;
-        }
-    }
-
-    /** Finds a Locale by name. */
-    static findLocale(localeName: string): Locale {
-        const l = this._locales.find(x => x.name === localeName);
-        return l ? { ...l } : null;
-    }
-
-    /** Sets the default Locale. */
-    static setDefaultLocale(value: string) {
-        this._defaultLocale = value;
-    }
-
-    /** Gets the default Locale name. */
-    static getDefaultLocale(): string {
-        return this._defaultLocale;
-    }
-
     //#region Get
-    /** Gets a unit value of this DateTime. */
+    /**
+     * Gets a unit value of this DateTime.
+     * @public
+     */
     get(unit: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'ms'): number {
         return this._date[unit];
     }
 
-    /** Get the year. */
+    /** Get the year.
+     * @public
+     */
     get year(): number {
         return this._date.year;
     }
 
-    /** Get the month (1-12). */
+    /** Get the month (1-12).
+     * @public
+     */
     get month(): number {
         return this._date.month;
     }
@@ -150,9 +126,10 @@ export abstract class DateTime {
     /** Subtracts a period of time from this DateTime and returns the resulting DateTime. */
     abstract subtract(amounts: DateTimeUnits): DateTime;
 
-    /** Returns a new DateTime same as this DateTime but with time units set to zero (hour = minute = second = ms = 0)  */
-    clearTime(): DateTime {
-        throw new Error('Method not implemented.');
+    /** Clones this DateTime with time units (hour, minute, second, ms) set to zero. */
+    date(): DateTime {
+        const { year, month, day } = this._date;
+        return this.clone({ year, month, day, hour: 0, minute: 0, second: 0, ms: 0 });
     }
 
     /** Clones this DateTime with overwritten values. */
@@ -160,61 +137,34 @@ export abstract class DateTime {
     //#endregion
 
     //#region Query
-    /** Returns whether a variable is a JS-Sugar DateTime or not. */
-    isJsSugar(obj: any) {
-        return obj instanceof DateTime;
-    }
-
     /** Returns whether this DateTime is same as another DateTime. */
     isSame(dateTime: DateTime): boolean {
-        const d1 = this._date;
-        const d2 = dateTime.toObject();
-        return d1.year === d2.year &&
-            d1.month === d2.month &&
-            d1.day === d2.day &&
-            d1.hour === d2.hour &&
-            d1.second === d2.second &&
-            d1.minute === d2.minute &&
-            d1.second === d2.second &&
-            d1.ms === d2.ms;
+        return this.toUtcTimestamp() === dateTime.toUtcTimestamp();
+    }
+
+    /** Returns whether the type of this DateTime is same as the type of another DateTime. */
+    isSameType(dateTime: DateTime): boolean {
+        throw new Error('Method not implemented.');
     }
 
     /** Returns whether this DateTime is after another DateTime. */
     isAfter(dateTime: DateTime): boolean {
-        const d1 = this._date;
-        const d2 = dateTime.toObject();
-        return d1.year > d2.year ||
-            d1.month > d2.month ||
-            d1.day > d2.day ||
-            d1.hour > d2.hour ||
-            d1.second > d2.second ||
-            d1.minute > d2.minute ||
-            d1.second > d2.second ||
-            d1.ms > d2.ms;
+        return this.toUtcTimestamp() > dateTime.toUtcTimestamp();
     }
 
     /** Returns whether this DateTime is same or after another DateTime. */
     isSameOrAfter(dateTime: DateTime): boolean {
-        return this.isAfter(dateTime) || this.isSame(dateTime);
+        return this.toUtcTimestamp() >= dateTime.toUtcTimestamp();
     }
 
     /** Returns whether this DateTime is before another DateTime. */
     isBefore(dateTime: DateTime): boolean {
-        const d1 = this._date;
-        const d2 = dateTime.toObject();
-        return d1.year < d2.year ||
-            d1.month < d2.month ||
-            d1.day < d2.day ||
-            d1.hour < d2.hour ||
-            d1.second < d2.second ||
-            d1.minute < d2.minute ||
-            d1.second < d2.second ||
-            d1.ms < d2.ms;
+        return this.toUtcTimestamp() < dateTime.toUtcTimestamp();
     }
 
     /** Returns whether this DateTime is same or before another DateTime. */
     isSameOrBefore(dateTime: DateTime): boolean {
-        return this.isBefore(dateTime) || this.isSame(dateTime);
+        return this.toUtcTimestamp() <= dateTime.toUtcTimestamp();
     }
 
     /** Returns whether this DateTime is between the specified DateTimes. */
@@ -270,14 +220,66 @@ export abstract class DateTime {
         return [d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms];
     }
 
-    /** Returns the number of milliseconds since the minimum supported DateTime of this instance. */
-    toTimestamp(): number[] {
-        throw new Error('Method not implemented.');
-    }
+    /** Returns the numeric UTC timestamp of this DateTime. */
+    abstract toUtcTimestamp(): number;
 
     /** Formats this DateTime to ISO8601 standard. */
-    toIso(keepTimeZone = false): number[] {
+    toISO(keepTimeZone = false): number[] {
         throw new Error('Method not implemented.');
+    }
+    //#endregion
+
+    //#region Locale
+    /** Get the locale of a DateTime, such 'en-GB'. */
+    get locale(): string {
+        return this._locale;
+    }
+
+    /** Adds a Locale. */
+    // tslint:disable-next-line: member-ordering
+    static addLocale(locale: Locale): void {
+        this._locales.push({ ...locale });
+
+        if (this._locales.length === 0) {
+            this._defaultLocale = locale.name;
+        }
+    }
+
+    /** Finds a Locale by name. */
+    // tslint:disable-next-line: member-ordering
+    static findLocale(localeName: string): Locale {
+        const l = this._locales.find(x => x.name === localeName);
+        return l ? { ...l } : null;
+    }
+
+    /** Sets the default Locale. */
+    // tslint:disable-next-line: member-ordering
+    static setDefaultLocale(value: string) {
+        this._defaultLocale = value;
+    }
+
+    /** Gets the default Locale name. */
+    // tslint:disable-next-line: member-ordering
+    static getDefaultLocale(): string {
+        return this._defaultLocale;
+    }
+
+    //#endregion
+
+    //#region TimeZone
+
+    //#endregion
+
+    //#region Misc
+    /** Returns whether the DateTime is valid. */
+    get isValid(): boolean {
+        return this._isValid;
+    }
+
+    /** Returns whether a variable is a JS-Sugar DateTime or not. */
+    // tslint:disable-next-line: member-ordering
+    static isJSSugar(obj: any) {
+        return obj instanceof DateTime;
     }
     //#endregion
 }
