@@ -1,3 +1,4 @@
+import { FixedZone } from 'src/zone/FixedZone';
 import { Zone } from 'src/zone/zone';
 import { CalendarWeekRule, DayOfWeek } from '../calendars/calendar';
 import { PersianCalendar } from '../calendars/persian/persian-calendar';
@@ -7,12 +8,31 @@ export class PersianDate extends DateTime {
   private _cal = new PersianCalendar();
 
   //#region Creation
-  constructor(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, timeZone?: Zone) {
-    super(date, 0, true); // Replace with: super(date, _cal.isValidPersianDate(...));
+  constructor(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, timeZone?: Zone, locale?: string) {
+    super({ year, month, day, hour, minute, second, ms }, timeZone, locale);
   }
 
-  static local() {
+  /** Creates a PersianDate from an object */
+  static fromObject(date: DateTimeUnits, timeZone?: Zone, locale?: string): PersianDate {
+    const { year, month, day, hour, minute, second, ms } = date;
+    return new PersianDate(year, month, day, hour, minute, second, ms, timeZone, locale);
+  }
 
+  /** Creates a PersianDate by parsing a string with respect to the given 'format' string. */
+  static parse(date: string, format: string, timeZone?: Zone, locale?: string): PersianDate {
+    throw new Error('Method not implemented.');
+  }
+
+  /** Creates a PersianDate object that is set to the current date and time on this computer, expressed as the local time */
+  now(locale?: string) {
+    const n: number = null;
+    return new PersianDate(n, n, n, n, n, n, n, null, locale);
+  }
+
+  /** Creates a PersianDate object that is set to the current date and time on this computer, expressed as the Coordinated Universal Time (UTC). */
+  utcNow(locale?: string) {
+    const n: number = null;
+    return new PersianDate(n, n, n, n, n, n, n, FixedZone.utc, locale);
   }
 
   //#endregion
@@ -48,10 +68,6 @@ export class PersianDate extends DateTime {
     return this._cal.isLeapYear(this.year);
   }
 
-  get quarter(): number {
-    return Math.floor(this.month / 4) + 1;
-  }
-
   get daysInMonth(): number {
     return this._cal.getDaysInMonth(this.year, this.month);
   }
@@ -68,7 +84,7 @@ export class PersianDate extends DateTime {
 
   //#region Manipulate
   /** @private */
-  private addTime(amounts: DateTimeUnits, sign: number) {
+  private addTime(amounts: DateTimeUnits, sign: number): PersianDate {
     let d = this.getGDate();
 
     if (amounts?.year) {
@@ -93,26 +109,28 @@ export class PersianDate extends DateTime {
       d = this._cal.addMinutes(d, amounts.ms * sign);
     }
 
-    return new PersianDate({
-      year: this._cal.getYear(d),
-      month: this._cal.getMonth(d),
-      day: this._cal.getDayOfMonth(d),
-      hour: this._cal.getHour(d),
-      minute: this._cal.getMinute(d),
-      second: this._cal.getSecond(d),
-      ms: this._cal.getMilliseconds(d),
-    });
+    return new PersianDate(
+      this._cal.getYear(d),
+      this._cal.getMonth(d),
+      this._cal.getDayOfMonth(d),
+      this._cal.getHour(d),
+      this._cal.getMinute(d),
+      this._cal.getSecond(d),
+      this._cal.getMilliseconds(d),
+      this.zone,
+      this.locale
+    );
   }
 
-  add(amounts: DateTimeUnits): DateTime {
+  add(amounts: DateTimeUnits): PersianDate {
     return this.addTime(amounts, 1);
   }
 
-  subtract(amounts: DateTimeUnits): DateTime {
+  subtract(amounts: DateTimeUnits): PersianDate {
     return this.addTime(amounts, -1);
   }
 
-  clone(newValues?: Partial<DateTimeUnits>): DateTime {
+  clone(newValues?: Partial<DateTimeUnits>): PersianDate {
     throw new Error('Method not implemented.');
   }
   //#endregion
@@ -132,9 +150,13 @@ export class PersianDate extends DateTime {
 
   //#endregion
 
-  //#region TimeZone
+  //#region Misc
+  get isValid(): boolean {
+    throw new Error('Method not implemented.');
+  }
+  //#endregion
 
-  //#endregion DateTime support
+  //#endregion DateTime Range support
   static get min(): DateTime {
     throw new Error('Method not implemented.');
   }

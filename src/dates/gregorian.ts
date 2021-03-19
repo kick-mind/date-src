@@ -1,7 +1,6 @@
 import { DateTime, DateTimeUnits } from '../date-time';
 
 export class GregorianDate extends DateTime {
-
     constructor(date?: DateTimeUnits) {
         // year: date?.year ?? d.getFullYear(),
         // month: date?.month ?? d.getMonth(),
@@ -10,7 +9,7 @@ export class GregorianDate extends DateTime {
         // minute: date?.minute ?? 0,
         // second: date?.second ?? 0,
         // ms: date?.ms ?? 0,
-        super(date, true);
+        super({ year: 0, month: 0, day: 0, hour: 0, minute: 0, second: 0, ms: 0 });
     }
 
     add(amounts: DateTimeUnits): DateTime {
@@ -77,17 +76,6 @@ export class GregorianDate extends DateTime {
         // return result;
     }
 
-    diff(datetime: DateTime): number {
-        throw new Error('Method not implemented.');
-
-        // const gDate = new Date(this.toGregorian(this));
-        // const jDatetime = Jalaali.toGregorian(datetime.get('year'),
-        //     datetime.get('month'),
-        //     datetime.get('day'));
-        // const gStartDayOfTheYear = new Date(jDatetime.gy, jDatetime.gm, jDatetime.gd);
-        // return ((gDate.getTime() - gStartDayOfTheYear.getTime()));
-    }
-
     get weekDay(): number {
         throw new Error('Method not implemented.');
         // const gDate = new Date(this.toGregorian(this));
@@ -126,10 +114,6 @@ export class GregorianDate extends DateTime {
         // return (Jalaali.isLeapJalaaliYear(this._value.year));
     }
 
-    get quarter(): number {
-        return Math.floor(this.month / 4) + 1;
-    }
-
     get daysInMonth(): number {
         throw new Error('Method not implemented.');
     }
@@ -147,6 +131,10 @@ export class GregorianDate extends DateTime {
     }
 
     toUtcTimestamp(): number {
+        throw new Error('Method not implemented.');
+    }
+
+    get isValid(): boolean {
         throw new Error('Method not implemented.');
     }
 }

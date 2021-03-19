@@ -33,10 +33,9 @@ export abstract class DateTime {
      * Create a new DateTime.
      * @constructor
      */
-    constructor(date: DateTimeUnits, timeZone: Zone, isValid: boolean, locale?: string) {
+    constructor(date: DateTimeUnits, timeZone?: Zone, locale?: string) {
         this._date = date;
         this._zone = timeZone;
-        this._isValid = isValid;
         // this._locale = locale ?? DateTime.getDefaultLocale();
     }
 
@@ -124,7 +123,9 @@ export abstract class DateTime {
     abstract get isInLeapYear(): boolean;
 
     /** Get the quarter. */
-    abstract get quarter(): number;
+    get quarter(): number {
+        return Math.floor(this.month / 4) + 1;
+    }
     //#endregion
 
     //#region Manipulate
@@ -240,7 +241,7 @@ export abstract class DateTime {
     //#region Locale
     /** Get the locale of a DateTime, such 'en-GB'. */
     get locale(): string {
-        return this._locale;
+        return this._locale.name;
     }
 
     /** Adds a Locale. */
@@ -275,14 +276,14 @@ export abstract class DateTime {
     //#endregion
 
     //#region TimeZone
-
+    get zone(): Zone {
+        return this._zone;
+    }
     //#endregion
 
     //#region Misc
     /** Returns whether the DateTime is valid. */
-    get isValid(): boolean {
-        return this._isValid;
-    }
+    abstract get isValid(): boolean;
 
     /** Returns whether a variable is a JS-Sugar DateTime or not. */
     // tslint:disable-next-line: member-ordering
