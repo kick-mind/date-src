@@ -45,15 +45,7 @@ export class PersianDate extends DateTime {
   /** @private */
   private getGDate(): Date {
     const d = this.toObject();
-    return this._cal.toDateTime(
-      d.year,
-      d.month,
-      d.day,
-      d.hour,
-      d.minute,
-      d.second,
-      d.ms
-    );
+    return this._cal.toDateTime(d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms);
   }
 
   get weekDay(): number {
@@ -83,12 +75,11 @@ export class PersianDate extends DateTime {
   get dayOfYear(): number {
     throw new Error('Method not implemented.');
   }
-
   //#endregion
 
   //#region Manipulate
   /** @private */
-  private addTime(amounts: DateTimeUnits, sign: number): PersianDate {
+  private _add(amounts: DateTimeUnits, sign: number): PersianDate {
     let d = this.getGDate();
 
     if (amounts?.year) {
@@ -126,11 +117,11 @@ export class PersianDate extends DateTime {
   }
 
   add(amounts: DateTimeUnits): PersianDate {
-    return this.addTime(amounts, 1);
+    return this._add(amounts, 1);
   }
 
   subtract(amounts: DateTimeUnits): PersianDate {
-    return this.addTime(amounts, -1);
+    return this._add(amounts, -1);
   }
 
   date(): PersianDate {
@@ -140,10 +131,6 @@ export class PersianDate extends DateTime {
   clone(newValues?: Partial<DateTimeUnits>): PersianDate {
     throw new Error('Method not implemented.');
   }
-  //#endregion
-
-  //#region Query
-
   //#endregion
 
   //#region Display + Convert

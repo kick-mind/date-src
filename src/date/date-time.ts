@@ -244,7 +244,7 @@ export abstract class DateTime {
         return [d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms];
     }
 
-    /** Returns the numeric UTC timestamp of this DateTime. */
+    /** Returns UTC timestamp of this object (milliseconds past from the minimum supported DateTime). */
     abstract toUtcTimestamp(): number;
 
     /** Formats this DateTime to ISO8601 standard. */
