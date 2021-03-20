@@ -9,7 +9,7 @@ export class GregorianDate extends DateTime {
         // minute: date?.minute ?? 0,
         // second: date?.second ?? 0,
         // ms: date?.ms ?? 0,
-        super({ year: 0, month: 0, day: 0, hour: 0, minute: 0, second: 0, ms: 0 });
+        super(0);
     }
 
     add(amounts: DateTimeUnits): DateTime {
@@ -135,6 +135,10 @@ export class GregorianDate extends DateTime {
     }
 
     get isValid(): boolean {
+        throw new Error('Method not implemented.');
+    }
+
+    date(): DateTime {
         throw new Error('Method not implemented.');
     }
 }

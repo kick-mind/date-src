@@ -2,39 +2,41 @@ import { FixedZone } from 'src/zone/FixedZone';
 import { Zone } from 'src/zone/zone';
 import { CalendarWeekRule, DayOfWeek } from '../calendars/calendar';
 import { PersianCalendar } from '../calendars/persian/persian-calendar';
-import { DateTime, DateTimeUnits } from '../date-time';
+import { CreateOptions, DateTime, DateTimeUnits } from '../date-time';
 
 export class PersianDate extends DateTime {
   private _cal = new PersianCalendar();
 
   //#region Creation
-  constructor(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, timeZone?: Zone, locale?: string) {
-    super({ year, month, day, hour, minute, second, ms }, timeZone, locale);
+  /**
+   * Creates a new PersianDate.
+   * @constructor
+   */
+  constructor(year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: CreateOptions) {
+    super(year, month, day, hour, minute, second, ms, opts);
   }
 
   /** Creates a PersianDate from an object */
-  static fromObject(date: DateTimeUnits, timeZone?: Zone, locale?: string): PersianDate {
+  static fromObject(date: DateTimeUnits, opts?: CreateOptions): PersianDate {
     const { year, month, day, hour, minute, second, ms } = date;
-    return new PersianDate(year, month, day, hour, minute, second, ms, timeZone, locale);
+    return new PersianDate(year, month, day, hour, minute, second, ms, opts);
   }
 
   /** Creates a PersianDate by parsing a string with respect to the given 'format' string. */
-  static parse(date: string, format: string, timeZone?: Zone, locale?: string): PersianDate {
-    throw new Error('Method not implemented.');
+  static parse(date: string, format: string, opts?: CreateOptions): PersianDate {
+    const result = DateTime.parseDate(date, format);
+    return PersianDate.fromObject(result, opts);
   }
 
   /** Creates a PersianDate object that is set to the current date and time on this computer, expressed as the local time */
-  now(locale?: string) {
-    const n: number = null;
-    return new PersianDate(n, n, n, n, n, n, n, null, locale);
+  local(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: string): PersianDate {
+    return new PersianDate(year, month, day, hour, minute, second, ms, { zone: FixedZone.utc, locale });
   }
 
   /** Creates a PersianDate object that is set to the current date and time on this computer, expressed as the Coordinated Universal Time (UTC). */
-  utcNow(locale?: string) {
-    const n: number = null;
-    return new PersianDate(n, n, n, n, n, n, n, FixedZone.utc, locale);
+  utc(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: string): PersianDate {
+    return new PersianDate(year, month, day, hour, minute, second, ms, { zone: FixedZone.utc, locale });
   }
-
   //#endregion
 
   //#region Get
@@ -117,8 +119,7 @@ export class PersianDate extends DateTime {
       this._cal.getMinute(d),
       this._cal.getSecond(d),
       this._cal.getMilliseconds(d),
-      this.zone,
-      this.locale
+      { zone: this.zone, locale: this.locale }
     );
   }
 
@@ -128,6 +129,10 @@ export class PersianDate extends DateTime {
 
   subtract(amounts: DateTimeUnits): PersianDate {
     return this.addTime(amounts, -1);
+  }
+
+  date(): PersianDate {
+    throw new Error('Method not implemented.');
   }
 
   clone(newValues?: Partial<DateTimeUnits>): PersianDate {
@@ -157,11 +162,11 @@ export class PersianDate extends DateTime {
   //#endregion
 
   //#endregion DateTime Range support
-  static get min(): DateTime {
+  static get min(): PersianDate {
     throw new Error('Method not implemented.');
   }
 
-  static get max(): DateTime {
+  static get max(): PersianDate {
     throw new Error('Method not implemented.');
   }
   //#region

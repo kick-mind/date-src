@@ -18,6 +18,18 @@ export interface DateTimeUnits {
     ms: number;
 }
 
+
+/** DateTime build options. */
+export interface CreateOptions {
+    zone?: Zone;
+    locale?: string;
+}
+
+/** DateTime parse result. */
+export interface DateParseResult extends DateTimeUnits {
+    offset: number;
+}
+
 /** An abstract base class for all JS-Sugar DateTime classes.  */
 export abstract class DateTime {
     private static _locales = new Array<Locale>();
@@ -33,13 +45,25 @@ export abstract class DateTime {
      * Create a new DateTime.
      * @constructor
      */
-    constructor(date: DateTimeUnits, timeZone?: Zone, locale?: string) {
-        this._date = date;
-        this._zone = timeZone;
+    constructor(year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: CreateOptions) {
+        this._date = {
+            year,
+            month: month ?? 1,
+            day: day ?? 1,
+            hour: hour ?? 0,
+            minute: minute ?? 0,
+            second: second ?? 0,
+            ms: ms ?? 0
+        };
+        this._zone = opts.zone;
         // this._locale = locale ?? DateTime.getDefaultLocale();
     }
 
-    //#region Creation
+    //#region Utils
+    /** Parses a date */
+    static parseDate(date: string, format: string): DateParseResult {
+        throw new Error('Method not implemented.');
+    }
 
     //#endregion
 
@@ -136,10 +160,7 @@ export abstract class DateTime {
     abstract subtract(amounts: DateTimeUnits): DateTime;
 
     /** Clones this DateTime with time units (hour, minute, second, ms) set to zero. */
-    date(): DateTime {
-        const { year, month, day } = this._date;
-        return this.clone({ year, month, day, hour: 0, minute: 0, second: 0, ms: 0 });
-    }
+    abstract date(): DateTime;
 
     /** Clones this DateTime with overwritten values. */
     abstract clone(newValues?: Partial<DateTimeUnits>): DateTime;
