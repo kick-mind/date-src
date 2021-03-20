@@ -12,7 +12,7 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "module": "CommonJS",
-    "target": "ES5",
+    "target": "ES6",
     "sourceMap": true,
     "removeComments": true,
     "moduleResolution": "node",

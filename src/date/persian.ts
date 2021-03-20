@@ -1,8 +1,8 @@
 import { CreateOptions, DateTime, DateTimeUnits } from './date-time';
 import { Locale } from '../locale';
 import { FixedZone } from '../zone';
-import { DayOfWeek } from '../calendar/calendar';
-import { Persia } from 'src/calendar/persian/persia';
+// import { DayOfWeek } from '../calendar/calendar';
+import { Persia } from '../calendar/persian/persia';
 
 export class PersianDate extends DateTime {
   private _cal = new Persia();

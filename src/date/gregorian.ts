@@ -1,5 +1,5 @@
-import { Locale } from 'src/locale';
-import { FixedZone } from 'src/zone';
+import { Locale } from '../locale';
+import { FixedZone } from '../zone';
 import { CreateOptions, DateTime, DateTimeUnits } from './date-time';
 
 export class GregorianDate extends DateTime {
