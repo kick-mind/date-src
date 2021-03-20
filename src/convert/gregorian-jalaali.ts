@@ -1,5 +1,5 @@
-import { GregorianDate } from "../dates/gregorian";
-import { PersianDate } from "../dates/persian";
+import { GregorianDate } from '../date/gregorian';
+import { PersianDate } from '../date/persian';
 
 export function gregorianToPersian(date: GregorianDate): PersianDate {
     throw new Error('Method not implemented.');
