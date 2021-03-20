@@ -1,5 +1,5 @@
-import { Locale } from './locale/locale';
-import { Zone } from './zone/zone';
+import { Locale } from '../locale';
+import { Zone } from '../zone';
 
 const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
 
@@ -22,7 +22,7 @@ export interface DateTimeUnits {
 /** DateTime build options. */
 export interface CreateOptions {
     zone?: Zone;
-    locale?: string;
+    locale?: Locale;
 }
 
 /** DateTime parse result. */
@@ -30,16 +30,11 @@ export interface DateParseResult extends DateTimeUnits {
     offset: number;
 }
 
-/** An abstract base class for all JS-Sugar DateTime classes.  */
+/** An abstract base class for all JS-Sugar DateTime classes. */
 export abstract class DateTime {
-    private static _locales = new Array<Locale>();
-    private static _defaultLocale: string;
     private _date: DateTimeUnits;
-
-    /** Time zone offset (in minutes) */
     private _zone: Zone;
     private _locale: Locale;
-    private _isValid: boolean;
 
     /**
      * Create a new DateTime.
@@ -64,7 +59,6 @@ export abstract class DateTime {
     static parseDate(date: string, format: string): DateParseResult {
         throw new Error('Method not implemented.');
     }
-
     //#endregion
 
     //#region Get
@@ -261,39 +255,9 @@ export abstract class DateTime {
 
     //#region Locale
     /** Get the locale of a DateTime, such 'en-GB'. */
-    get locale(): string {
-        return this._locale.name;
+    get locale(): Locale {
+        return this._locale;
     }
-
-    /** Adds a Locale. */
-    // tslint:disable-next-line: member-ordering
-    static addLocale(locale: Locale): void {
-        this._locales.push({ ...locale });
-
-        if (this._locales.length === 0) {
-            this._defaultLocale = locale.name;
-        }
-    }
-
-    /** Finds a Locale by name. */
-    // tslint:disable-next-line: member-ordering
-    static findLocale(localeName: string): Locale {
-        const l = this._locales.find(x => x.name === localeName);
-        return l ? { ...l } : null;
-    }
-
-    /** Sets the default Locale. */
-    // tslint:disable-next-line: member-ordering
-    static setDefaultLocale(value: string) {
-        this._defaultLocale = value;
-    }
-
-    /** Gets the default Locale name. */
-    // tslint:disable-next-line: member-ordering
-    static getDefaultLocale(): string {
-        return this._defaultLocale;
-    }
-
     //#endregion
 
     //#region TimeZone

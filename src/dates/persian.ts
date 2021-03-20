@@ -1,8 +1,8 @@
-import { FixedZone } from 'src/zone/FixedZone';
-import { Zone } from 'src/zone/zone';
+import { CreateOptions, DateTime, DateTimeUnits } from './date-time';
+import { Locale } from '../locale';
+import { FixedZone } from '../zone';
 import { CalendarWeekRule, DayOfWeek } from '../calendars/calendar';
 import { PersianCalendar } from '../calendars/persian/persian-calendar';
-import { CreateOptions, DateTime, DateTimeUnits } from '../date-time';
 
 export class PersianDate extends DateTime {
   private _cal = new PersianCalendar();
@@ -28,13 +28,15 @@ export class PersianDate extends DateTime {
     return PersianDate.fromObject(result, opts);
   }
 
-  /** Creates a PersianDate object that is set to the current date and time on this computer, expressed as the local time */
-  local(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: string): PersianDate {
+  /** Creates a PersianDate, expressed as the local time */
+  local(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: Locale): PersianDate {
+    // compute persian date here ...
+    // ...
     return new PersianDate(year, month, day, hour, minute, second, ms, { zone: FixedZone.utc, locale });
   }
 
-  /** Creates a PersianDate object that is set to the current date and time on this computer, expressed as the Coordinated Universal Time (UTC). */
-  utc(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: string): PersianDate {
+  /** Creates a PersianDate, expressed as the Coordinated Universal Time (UTC). */
+  utc(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: Locale): PersianDate {
     return new PersianDate(year, month, day, hour, minute, second, ms, { zone: FixedZone.utc, locale });
   }
   //#endregion

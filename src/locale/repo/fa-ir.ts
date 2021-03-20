@@ -1,6 +1,7 @@
-import { DateTime } from '../date-time';
+import { Locale } from '../locale';
+import { LocaleManager } from '../locale-manager';
 
-DateTime.addLocale({
+LocaleManager.addLocale(new Locale({
     name: 'fa-IR',
     weekStart: 6,
     weekdays: [
@@ -16,4 +17,4 @@ DateTime.addLocale({
             'فروردین_اردیبهشت_خرداد_تیر_مرداد_شهریور_مهر_آبان_آذر_دی_بهمن_اسفند'.split('_'),
         ]
     }
-});
+}));

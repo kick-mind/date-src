@@ -1,4 +1,4 @@
-import { DateTime, DateTimeUnits } from '../date-time';
+import { DateTime, DateTimeUnits } from './date-time';
 
 export class GregorianDate extends DateTime {
     constructor(date?: DateTimeUnits) {

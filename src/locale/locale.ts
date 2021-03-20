@@ -1,4 +1,4 @@
-export interface Locale {
+export interface LocaleData {
     /** Locale name */
     name: string;
 
@@ -12,4 +12,12 @@ export interface Locale {
     months: {
         [calendar: string]: Array<Array<string>>;
     };
+}
+
+export class Locale {
+    private _data: LocaleData;
+
+    constructor(data: LocaleData) {
+        this._data = data;
+    }
 }
