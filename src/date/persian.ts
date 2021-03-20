@@ -1,26 +1,28 @@
 import { CreateOptions, DateTime, DateTimeUnits } from './date-time';
 import { Locale } from '../locale';
 import { FixedZone } from '../zone';
-import { CalendarWeekRule, DayOfWeek } from '../calendar/calendar';
-import { PersianCalendar } from '../calendar/persian/persian-calendar';
+import { DayOfWeek } from '../calendar/calendar';
+import { Persia } from 'src/calendar/persian/persia';
 
 export class PersianDate extends DateTime {
-  private _cal = new PersianCalendar();
-  private _ts: number; // utc time stamp
+  private _cal = new Persia();
 
   //#region Creation
   /**
-   * Creates a new PersianDate.
+   * Creates a PersianDate from a timestamp
    * @constructor
    */
-  constructor(year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: CreateOptions) {
-    super(year, month, day, hour, minute, second, ms, opts);
+  constructor(ts: number, opts?: CreateOptions) {
+    super(ts, opts);
   }
 
   /** Creates a PersianDate from an object */
   static fromObject(date: DateTimeUnits, opts?: CreateOptions): PersianDate {
     const { year, month, day, hour, minute, second, ms } = date;
-    return new PersianDate(year, month, day, hour, minute, second, ms, opts);
+    // compute timestamp here
+    // ...
+    const timestamp = 0;
+    return new PersianDate(timestamp, opts);
   }
 
   /** Creates a PersianDate by parsing a string with respect to the given 'format' string. */
@@ -30,50 +32,54 @@ export class PersianDate extends DateTime {
   }
 
   /** Creates a PersianDate, expressed as the local time */
-  local(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: Locale): PersianDate {
-    // compute persian date here ...
-    // ...
-    return new PersianDate(year, month, day, hour, minute, second, ms, { zone: FixedZone.utc, locale });
+  static local(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: Locale): PersianDate {
+    return PersianDate.fromObject({ year, month, day, hour, minute, second, ms }, { zone: FixedZone.utc, locale });
   }
 
   /** Creates a PersianDate, expressed as the Coordinated Universal Time (UTC). */
-  utc(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: Locale): PersianDate {
-    return new PersianDate(year, month, day, hour, minute, second, ms, { zone: FixedZone.utc, locale });
+  static utc(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: Locale): PersianDate {
+    return PersianDate.fromObject({ year, month, day, hour, minute, second, ms }, { zone: FixedZone.utc, locale });
   }
   //#endregion
 
   //#region Get
   /** @private */
   private getGDate(): Date {
-    const d = this.toObject();
-    return this._cal.toDateTime(d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms);
+    throw new Error('Method not implemented.');
+    // const d = this.toObject();
+    // return this._cal.toDateTime(d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms);
   }
 
-  get weekDay(): number {
-    return this._cal.getDayOfWeek(this.getGDate());
+  protected compute(): DateTimeUnits {
+    throw new Error('Method not implemented.');
   }
 
-  get weeksInYear(): number {
+  public get weekDay(): number {
+    return this._cal.getDayOfWeek(this.ts);
+  }
+
+  public get weeksInYear(): number {
     return Math.trunc(this._cal.getDaysInYear(this.year) / 7);
   }
 
-  get weekNumber(): number {
-    return this._cal.getWeekOfYear(this.getGDate(), CalendarWeekRule.FirstDay, DayOfWeek.Saturday);
+  public get weekNumber(): number {
+    throw new Error('Method not implemented.');
+    // return this._cal.getWeekOfYear(this.toUtcTimestamp(), CalendarWeekRule.FirstDay, DayOfWeek.Saturday);
   }
 
-  get isInLeapYear(): boolean {
+  public get isInLeapYear(): boolean {
     return this._cal.isLeapYear(this.year);
   }
 
-  get daysInMonth(): number {
+  public get daysInMonth(): number {
     return this._cal.getDaysInMonth(this.year, this.month);
   }
 
-  get daysInYear(): number {
+  public get daysInYear(): number {
     return this._cal.getDaysInYear(this.year);
   }
 
-  get dayOfYear(): number {
+  public get dayOfYear(): number {
     throw new Error('Method not implemented.');
   }
   //#endregion
@@ -81,72 +87,65 @@ export class PersianDate extends DateTime {
   //#region Manipulate
   /** @private */
   private _add(amounts: DateTimeUnits, sign: number): PersianDate {
-    let d = this.getGDate();
+    throw new Error('Method not implemented.');
+    // let d = this.getGDate();
 
-    if (amounts?.year) {
-      d = this._cal.addYears(d, amounts.year * sign);
-    }
-    if (amounts?.month) {
-      d = this._cal.addMonths(d, amounts.month * sign);
-    }
-    if (amounts?.day) {
-      d = this._cal.addDays(d, amounts.day * sign);
-    }
-    if (amounts?.hour) {
-      d = this._cal.addHours(d, amounts.hour * sign);
-    }
-    if (amounts?.minute) {
-      d = this._cal.addMinutes(d, amounts.minute * sign);
-    }
-    if (amounts?.second) {
-      d = this._cal.addSeconds(d, amounts.second * sign);
-    }
-    if (amounts?.ms) {
-      d = this._cal.addMinutes(d, amounts.ms * sign);
-    }
+    // if (amounts?.year) {
+    //   d = this._cal.addYears(d, amounts.year * sign);
+    // }
+    // if (amounts?.month) {
+    //   d = this._cal.addMonths(d, amounts.month * sign);
+    // }
+    // if (amounts?.day) {
+    //   d = this._cal.addDays(d, amounts.day * sign);
+    // }
+    // if (amounts?.hour) {
+    //   d = this._cal.addHours(d, amounts.hour * sign);
+    // }
+    // if (amounts?.minute) {
+    //   d = this._cal.addMinutes(d, amounts.minute * sign);
+    // }
+    // if (amounts?.second) {
+    //   d = this._cal.addSeconds(d, amounts.second * sign);
+    // }
+    // if (amounts?.ms) {
+    //   d = this._cal.addMinutes(d, amounts.ms * sign);
+    // }
 
-    return new PersianDate(
-      this._cal.getYear(d),
-      this._cal.getMonth(d),
-      this._cal.getDayOfMonth(d),
-      this._cal.getHour(d),
-      this._cal.getMinute(d),
-      this._cal.getSecond(d),
-      this._cal.getMilliseconds(d),
-      { zone: this.zone, locale: this.locale }
-    );
+    // return new PersianDate(
+    //   this._cal.getYear(d),
+    //   this._cal.getMonth(d),
+    //   this._cal.getDayOfMonth(d),
+    //   this._cal.getHour(d),
+    //   this._cal.getMinute(d),
+    //   this._cal.getSecond(d),
+    //   this._cal.getMilliseconds(d),
+    //   { zone: this.zone, locale: this.locale }
+    // );
   }
 
-  add(amounts: DateTimeUnits): PersianDate {
+  public add(amounts: DateTimeUnits): PersianDate {
     return this._add(amounts, 1);
   }
 
-  subtract(amounts: DateTimeUnits): PersianDate {
+  public subtract(amounts: DateTimeUnits): PersianDate {
     return this._add(amounts, -1);
   }
 
-  withoutTime(): PersianDate {
+  public withoutTime(): PersianDate {
     throw new Error('Method not implemented.');
   }
 
-  clone(newValues?: Partial<DateTimeUnits>): PersianDate {
+  public clone(newValues?: Partial<DateTimeUnits>): PersianDate {
     throw new Error('Method not implemented.');
   }
   //#endregion
 
   //#region Display + Convert
-  toUtcTimestamp(): number {
-    if (this._ts == null) {
-      // compute timestamp here ...
-      throw new Error('Method not implemented.');
-    }
-
-    return this._ts;
-  }
   //#endregion
 
   //#region Misc
-  protected valid(): boolean {
+  protected validate(): boolean {
     // compute validity here...
     throw new Error('Method not implemented.');
   }

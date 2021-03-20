@@ -1,15 +1,45 @@
-import { DateTime, DateTimeUnits } from './date-time';
+import { Locale } from 'src/locale';
+import { FixedZone } from 'src/zone';
+import { CreateOptions, DateTime, DateTimeUnits } from './date-time';
 
 export class GregorianDate extends DateTime {
-    constructor(date?: DateTimeUnits) {
-        // year: date?.year ?? d.getFullYear(),
-        // month: date?.month ?? d.getMonth(),
-        // day: date?.day ?? d.getDate(),
-        // hour: date?.hour ?? 0,
-        // minute: date?.minute ?? 0,
-        // second: date?.second ?? 0,
-        // ms: date?.ms ?? 0,
-        super(0);
+    //#region Creation
+    /**
+     * Creates a GregorianDate from a timestamp
+     * @constructor
+     */
+    constructor(ts: number, opts?: CreateOptions) {
+        super(ts, opts);
+    }
+
+    /** Creates a GregorianDate from an object */
+    static fromObject(date: DateTimeUnits, opts?: CreateOptions): GregorianDate {
+        const { year, month, day, hour, minute, second, ms } = date;
+        // compute timestamp here
+        // ...
+        const timestamp = 0;
+        return new GregorianDate(timestamp, opts);
+    }
+
+    /** Creates a GregorianDate by parsing a string with respect to the given 'format' string. */
+    static parse(date: string, format: string, opts?: CreateOptions): GregorianDate {
+        const result = DateTime.parseDate(date, format);
+        return GregorianDate.fromObject(result, opts);
+    }
+
+    /** Creates a GregorianDate, expressed as the local time */
+    static local(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: Locale): GregorianDate {
+        return GregorianDate.fromObject({ year, month, day, hour, minute, second, ms }, { zone: FixedZone.utc, locale });
+    }
+
+    /** Creates a GregorianDate, expressed as the Coordinated Universal Time (UTC). */
+    static utc(year?: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, locale?: Locale): GregorianDate {
+        return GregorianDate.fromObject({ year, month, day, hour, minute, second, ms }, { zone: FixedZone.utc, locale });
+    }
+    //#endregion
+
+    protected compute(): DateTimeUnits {
+        throw new Error('Method not implemented.');
     }
 
     add(amounts: DateTimeUnits): DateTime {
@@ -130,10 +160,6 @@ export class GregorianDate extends DateTime {
         throw new Error('Method not implemented.');
     }
 
-    toUtcTimestamp(): number {
-        throw new Error('Method not implemented.');
-    }
-
     get isValid(): boolean {
         throw new Error('Method not implemented.');
     }
@@ -142,7 +168,9 @@ export class GregorianDate extends DateTime {
         throw new Error('Method not implemented.');
     }
 
-    protected valid(): boolean {
+    protected validate(): boolean {
         throw new Error('Method not implemented.');
     }
 }
+
+export type GDate = GregorianDate;

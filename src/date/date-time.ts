@@ -36,7 +36,8 @@ export interface DateParseResult extends DateTimeUnits {
 
 /** An abstract base class for all JS-Sugar DateTime classes. */
 export abstract class DateTime {
-    private _date: DateTimeUnits;
+    private _ts: number;
+    private _cachedUnits: DateTimeUnits;
     private _zone: Zone;
     private _locale: Locale;
     private _isValid: boolean;
@@ -45,21 +46,22 @@ export abstract class DateTime {
      * Create a new DateTime.
      * @constructor
      */
-    constructor(year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: CreateOptions) {
-        this._date = {
-            year,
-            month: month ?? 1,
-            day: day ?? 1,
-            hour: hour ?? 0,
-            minute: minute ?? 0,
-            second: second ?? 0,
-            ms: ms ?? 0
-        };
+    constructor(timestamp: number, opts?: CreateOptions) {
+        this._ts = timestamp;
+        // this._date = {
+        //     year,
+        //     month: month ?? 1,
+        //     day: day ?? 1,
+        //     hour: hour ?? 0,
+        //     minute: minute ?? 0,
+        //     second: second ?? 0,
+        //     ms: ms ?? 0
+        // };
         // this._zone = opts.zone;
         // this._locale = locale ?? DateTime.getDefaultLocale();
     }
 
-    //#region Utils
+    //#region Creations
     /** Parses a date */
     static parseDate(date: string, format: string): DateParseResult {
         throw new Error('Method not implemented.');
@@ -67,51 +69,74 @@ export abstract class DateTime {
     //#endregion
 
     //#region Get
+
+    /**
+     * @private
+     */
+    private get _units() {
+        if (this._cachedUnits == null) {
+            this._cachedUnits = this.compute();
+        }
+
+        return this._cachedUnits;
+    }
+
+    /**
+     * Computes DateTime units
+     * @protected
+     */
+    protected abstract compute(): DateTimeUnits;
+
     /**
      * Gets a unit value of this DateTime.
      * @public
      */
     get(unit: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'ms'): number {
-        return this._date[unit];
+        return this._units[unit];
     }
 
     /** Get the year.
      * @public
      */
     get year(): number {
-        return this._date.year;
+        return this._units.year;
     }
 
     /** Get the month (1-12).
      * @public
      */
     get month(): number {
-        return this._date.month;
+        return this._units.month;
     }
 
     /** Get the day of the month (1 to 30). */
     get day(): number {
-        return this._date.day;
+        return this._units.day;
     }
 
     /** Get the hour of the day (0 to 23). */
     get hour(): number {
-        return this._date.hour;
+        return this._units.hour;
     }
 
     /** Get the minute of the hour (0 to 59). */
     get minute(): number {
-        return this._date.minute;
+        return this._units.minute;
     }
 
     /** Get the second of the minute (0 to 59). */
     get second(): number {
-        return this._date.second;
+        return this._units.second;
     }
 
     /** Get the millisecond of the second (0 to 999). */
     get ms(): number {
-        return this._date.year;
+        return this._units.year;
+    }
+
+    /** Returns UTC timestamp of this object (milliseconds past from the minimum supported DateTime). */
+    get ts(): number {
+        return this._ts;
     }
 
     /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
@@ -147,7 +172,7 @@ export abstract class DateTime {
 
     /** Get the quarter. */
     get quarter(): number {
-        return Math.floor(this.month / 4) + 1;
+        return Math.floor(this._units.month / 4) + 1;
     }
     //#endregion
 
@@ -168,7 +193,7 @@ export abstract class DateTime {
     //#region Query
     /** Returns whether this DateTime is same as another DateTime. */
     isSame(dateTime: DateTime): boolean {
-        return this.toUtcTimestamp() === dateTime.toUtcTimestamp();
+        return this._ts === dateTime.ts;
     }
 
     /** Returns whether the type of this DateTime is same as the type of another DateTime. */
@@ -178,22 +203,22 @@ export abstract class DateTime {
 
     /** Returns whether this DateTime is after another DateTime. */
     isAfter(dateTime: DateTime): boolean {
-        return this.toUtcTimestamp() > dateTime.toUtcTimestamp();
+        return this._ts > dateTime.ts;
     }
 
     /** Returns whether this DateTime is same or after another DateTime. */
     isSameOrAfter(dateTime: DateTime): boolean {
-        return this.toUtcTimestamp() >= dateTime.toUtcTimestamp();
+        return this._ts >= dateTime.ts;
     }
 
     /** Returns whether this DateTime is before another DateTime. */
     isBefore(dateTime: DateTime): boolean {
-        return this.toUtcTimestamp() < dateTime.toUtcTimestamp();
+        return this._ts < dateTime.ts;
     }
 
     /** Returns whether this DateTime is same or before another DateTime. */
     isSameOrBefore(dateTime: DateTime): boolean {
-        return this.toUtcTimestamp() <= dateTime.toUtcTimestamp();
+        return this._ts <= dateTime.ts;
     }
 
     /** Returns whether this DateTime is between the specified DateTimes. */
@@ -239,18 +264,15 @@ export abstract class DateTime {
     }
 
     /** Returns an object with the values of this DateTime. */
-    toObject(): DateTimeDescriptor {
-        return { ...this._date, zone: this._zone.getOffset(this.toUtcTimestamp()) };
+    toObject(): DateTimeUnits {
+        return { ...this._units };
     }
 
     /** Returns an Array with the values of this DateTime. */
     toArray(): number[] {
-        const d = this._date;
-        return [d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms];
+        const u = this._units;
+        return [u.year, u.month, u.day, u.hour, u.minute, u.second, u.ms];
     }
-
-    /** Returns UTC timestamp of this object (milliseconds past from the minimum supported DateTime). */
-    abstract toUtcTimestamp(): number;
 
     /** Formats this DateTime to ISO8601 standard. */
     toISO(keepTimeZone = false): number[] {
@@ -285,16 +307,15 @@ export abstract class DateTime {
      */
     get isValid(): boolean {
         if (this._isValid == null) {
-
+            this._isValid = this.validate();
         }
-
         return this._isValid;
     }
 
     /** Computes the validity of this DateTime
      * @protected
      */
-    protected abstract valid(): boolean;
+    protected abstract validate(): boolean;
 
     /** Returns whether a variable is a JS-Sugar DateTime or not. */
     static isJssDate(obj: any) {
