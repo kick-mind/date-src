@@ -30,7 +30,7 @@
             140
         ],
         "member-ordering": [
-            true,
+            false,
             {
                 "order": [
                     "static-field",

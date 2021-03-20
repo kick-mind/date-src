@@ -6,6 +6,7 @@ import { PersianCalendar } from '../calendar/persian/persian-calendar';
 
 export class PersianDate extends DateTime {
   private _cal = new PersianCalendar();
+  private _ts: number; // utc time stamp
 
   //#region Creation
   /**
@@ -124,7 +125,7 @@ export class PersianDate extends DateTime {
     return this._add(amounts, -1);
   }
 
-  date(): PersianDate {
+  withoutTime(): PersianDate {
     throw new Error('Method not implemented.');
   }
 
@@ -135,17 +136,18 @@ export class PersianDate extends DateTime {
 
   //#region Display + Convert
   toUtcTimestamp(): number {
-    throw new Error('Method not implemented.');
+    if (this._ts == null) {
+      // compute timestamp here ...
+      throw new Error('Method not implemented.');
+    }
+
+    return this._ts;
   }
-
-  //#endregion
-
-  //#region Locale
-
   //#endregion
 
   //#region Misc
-  get isValid(): boolean {
+  protected valid(): boolean {
+    // compute validity here...
     throw new Error('Method not implemented.');
   }
   //#endregion

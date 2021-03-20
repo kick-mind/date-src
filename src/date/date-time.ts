@@ -18,11 +18,15 @@ export interface DateTimeUnits {
     ms: number;
 }
 
+export interface DateTimeDescriptor extends DateTimeUnits {
+    zone: number;
+}
+
 
 /** DateTime build options. */
 export interface CreateOptions {
-    zone?: Zone;
-    locale?: Locale;
+    zone?: Zone | string | number;
+    locale?: Locale | 'string';
 }
 
 /** DateTime parse result. */
@@ -35,6 +39,7 @@ export abstract class DateTime {
     private _date: DateTimeUnits;
     private _zone: Zone;
     private _locale: Locale;
+    private _isValid: boolean;
 
     /**
      * Create a new DateTime.
@@ -50,7 +55,7 @@ export abstract class DateTime {
             second: second ?? 0,
             ms: ms ?? 0
         };
-        this._zone = opts.zone;
+        // this._zone = opts.zone;
         // this._locale = locale ?? DateTime.getDefaultLocale();
     }
 
@@ -154,7 +159,7 @@ export abstract class DateTime {
     abstract subtract(amounts: DateTimeUnits): DateTime;
 
     /** Clones this DateTime with time units (hour, minute, second, ms) set to zero. */
-    abstract date(): DateTime;
+    abstract withoutTime(): DateTime;
 
     /** Clones this DateTime with overwritten values. */
     abstract clone(newValues?: Partial<DateTimeUnits>): DateTime;
@@ -234,8 +239,8 @@ export abstract class DateTime {
     }
 
     /** Returns an object with the values of this DateTime. */
-    toObject(): DateTimeUnits {
-        return { ...this._date };
+    toObject(): DateTimeDescriptor {
+        return { ...this._date, zone: this._zone.getOffset(this.toUtcTimestamp()) };
     }
 
     /** Returns an Array with the values of this DateTime. */
@@ -264,15 +269,35 @@ export abstract class DateTime {
     get zone(): Zone {
         return this._zone;
     }
+
+    toUtc(): DateTime {
+        throw new Error('Method not implemented.');
+    }
+
+    toJsDate(): Date {
+        throw new Error('Method not implemented.');
+    }
     //#endregion
 
     //#region Misc
-    /** Returns whether the DateTime is valid. */
-    abstract get isValid(): boolean;
+    /** Returns whether this DateTime is valid.
+     * @public
+     */
+    get isValid(): boolean {
+        if (this._isValid == null) {
+
+        }
+
+        return this._isValid;
+    }
+
+    /** Computes the validity of this DateTime
+     * @protected
+     */
+    protected abstract valid(): boolean;
 
     /** Returns whether a variable is a JS-Sugar DateTime or not. */
-    // tslint:disable-next-line: member-ordering
-    static isJSSugar(obj: any) {
+    static isJssDate(obj: any) {
         return obj instanceof DateTime;
     }
     //#endregion

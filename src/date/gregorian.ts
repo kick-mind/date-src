@@ -138,7 +138,11 @@ export class GregorianDate extends DateTime {
         throw new Error('Method not implemented.');
     }
 
-    date(): DateTime {
+    withoutTime(): DateTime {
+        throw new Error('Method not implemented.');
+    }
+
+    protected valid(): boolean {
         throw new Error('Method not implemented.');
     }
 }
