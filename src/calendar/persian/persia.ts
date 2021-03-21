@@ -1,4 +1,4 @@
-import { Calendar, DayOfWeek } from '../calendar';
+import { Calendar, DayOfWeek } from '../calendars';
 import { Helper } from './helper';
 // tslint:disable: member-ordering
 // tslint:disable: variable-name
