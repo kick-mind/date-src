@@ -83,8 +83,12 @@ export abstract class Calendar {
     return Math.trunc((time / Calendar._ticksPerHour) % 24);
   }
 
-  private getFirstDayWeekOfYear(time: number, firstDayOfWeek: number): number {
-    const dayOfYear = this.getDayOfYear(time) - 1;
+  private getFirstDayWeekOfYear(
+    time: number,
+    firstDayOfWeek: number,
+    year: number
+  ): number {
+    const dayOfYear = this.getDayOfYear(time, year) - 1;
     const dayForJan1 = this.getDayOfWeek(time) - (dayOfYear % 7);
     const offset = (dayForJan1 - firstDayOfWeek + 14) % 7;
     return (dayOfYear + offset) / 7 + 1;
@@ -93,12 +97,13 @@ export abstract class Calendar {
   private getWeekOfYearFullDays(
     time: number,
     firstDayOfWeek: number,
-    fullDays: number
+    fullDays: number,
+    year: number
   ): number {
     let dayForJan1: number;
     let offset: number;
     let day: number;
-    const dayOfYear = this.getDayOfYear(time) - 1;
+    const dayOfYear = this.getDayOfYear(time, year) - 1;
     dayForJan1 = this.getDayOfWeek(time) - (dayOfYear % 7);
     offset = (firstDayOfWeek - dayForJan1 + 14) % 7;
     if (offset != 0 && offset >= fullDays) {
@@ -109,20 +114,22 @@ export abstract class Calendar {
       return day / 7 + 1;
     }
     if (time <= this.addDays(Calendar._minDate.getTime(), dayOfYear)) {
-      return this.getWeekOfYearOfMinDate(firstDayOfWeek, fullDays);
+      return this.getWeekOfYearOfMinDate(firstDayOfWeek, fullDays, year);
     }
     return this.getWeekOfYearFullDays(
       this.addDays(time, -(dayOfYear + 1)),
       firstDayOfWeek,
-      fullDays
+      fullDays,
+      year
     );
   }
 
   private getWeekOfYearOfMinDate(
     firstDayOfWeek: number,
-    minimumDaysInFirstWeek: number
+    minimumDaysInFirstWeek: number,
+    year: number
   ): number {
-    const dayOfYear = this.getDayOfYear(Calendar._minDate.getTime()) - 1;
+    const dayOfYear = this.getDayOfYear(Calendar._minDate.getTime(), year) - 1;
     const dayOfWeekOfFirstOfYear =
       this.getDayOfWeek(Calendar._minDate.getTime()) - (dayOfYear % 7);
 
@@ -146,6 +153,7 @@ export abstract class Calendar {
 
   getWeekOfYear(
     time: number,
+    year: number,
     rule: WeekRule,
     firstDayOfWeek: DayOfWeek
   ): number {
@@ -155,11 +163,11 @@ export abstract class Calendar {
 
     switch (rule) {
       case WeekRule.FirstDay:
-        return this.getFirstDayWeekOfYear(time, firstDayOfWeek);
+        return this.getFirstDayWeekOfYear(time, firstDayOfWeek, year);
       case WeekRule.FirstFullWeek:
-        return this.getWeekOfYearFullDays(time, firstDayOfWeek, 7);
+        return this.getWeekOfYearFullDays(time, firstDayOfWeek, 7, year);
       case WeekRule.FirstFourDayWeek:
-        return this.getWeekOfYearFullDays(time, firstDayOfWeek, 4);
+        return this.getWeekOfYearFullDays(time, firstDayOfWeek, 4, year);
     }
   }
 
@@ -191,12 +199,12 @@ export abstract class Calendar {
 
   abstract addMonths(time: number, months: number): number;
   abstract addYears(time: number, years: number): number;
-  abstract getDayOfMonth(time: number): number;
+  abstract getDayOfMonth(time: number, year: number, month: number): number;
   abstract getDayOfWeek(time: number): DayOfWeek;
-  abstract getDayOfYear(time: number): number;
+  abstract getDayOfYear(time: number, year: number): number;
   abstract getDaysInMonth(year: number, month: number): number;
   abstract getDaysInYear(year: number): number;
-  abstract getMonth(time: number): number;
+  abstract getMonth(time: number, year: number): number;
   abstract getYear(time: number): number;
   abstract isLeapYear(year: number): boolean;
   abstract toDateTime(

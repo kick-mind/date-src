@@ -73,7 +73,11 @@ export class Helper {
     -0.0000266484,
   ];
   private static _coeff1620to1699: number[] = [196.58333, -4.0675, 0.0219167];
-  private static _lambdaCoefficients: number[] = [280.46645, 36000.76983, 0.0003032];
+  private static _lambdaCoefficients: number[] = [
+    280.46645,
+    36000.76983,
+    0.0003032,
+  ];
   private static _anomalyCoefficients: number[] = [
     357.5291,
     35999.0503,
@@ -119,7 +123,11 @@ export class Helper {
     return Math.tan(this.radiansFromDegrees(degree));
   }
 
-  private static angle(degrees: number, minutes: number, seconds: number): number {
+  private static angle(
+    degrees: number,
+    minutes: number,
+    seconds: number
+  ): number {
     return (
       (seconds / this._secondsPerMinute + minutes) / this._minutesPerDegree +
       degrees
@@ -130,9 +138,10 @@ export class Helper {
     return this.polynomialSum(this._coeff, jc);
   }
 
-  static getNumberOfDays(date: number): number {
+  static getNumberOfDays(jsdate: number): number {
     return Math.trunc(
-      this.getPersiaTicks(date) / (this._secondsPerDay * this._millisecondsPerSecond)
+      this.getPersiaTicks(jsdate) /
+        (this._secondsPerDay * this._millisecondsPerSecond)
     );
   }
 
@@ -264,18 +273,9 @@ export class Helper {
 
   private static equationOfTime(time: number): number {
     const jc = this.jc(time);
-    const lambda = this.polynomialSum(
-      this._lambdaCoefficients,
-      jc
-    );
-    const anomaly = this.polynomialSum(
-      this._anomalyCoefficients,
-      jc
-    );
-    const eccentricity = this.polynomialSum(
-      this._eccentricityCoefficients,
-      jc
-    );
+    const lambda = this.polynomialSum(this._lambdaCoefficients, jc);
+    const anomaly = this.polynomialSum(this._anomalyCoefficients, jc);
+    const eccentricity = this.polynomialSum(this._eccentricityCoefficients, jc);
 
     const epsilon = this.obliquity(jc);
     const tanHalfEpsilon = this.tanOfDegree(epsilon / 2);
@@ -300,7 +300,10 @@ export class Helper {
     );
   }
 
-  private static asLocalTime(apparentMidday: number, longitude: number): number {
+  private static asLocalTime(
+    apparentMidday: number,
+    longitude: number
+  ): number {
     const universalTime = apparentMidday - this.asDayFraction(longitude);
     return apparentMidday - this.equationOfTime(universalTime);
   }
@@ -384,10 +387,7 @@ export class Helper {
   }
 
   private static aberration(jc: number): number {
-    return (
-      0.0000974 * this.cosOfDegree(177.63 + 35999.01848 * jc) -
-      0.005575
-    );
+    return 0.0000974 * this.cosOfDegree(177.63 + 35999.01848 * jc) - 0.005575;
   }
 
   private static nutation(jc: number): number {
@@ -401,13 +401,9 @@ export class Helper {
     const lambda =
       282.7771834 +
       36000.76953744 * jc +
-      0.000005729577951308232 *
-        this.sumLongSequenceOfperiodicTerms(jc);
+      0.000005729577951308232 * this.sumLongSequenceOfperiodicTerms(jc);
 
-    const longitude =
-      lambda +
-      this.aberration(jc) +
-      this.nutation(jc);
+    const longitude = lambda + this.aberration(jc) + this.nutation(jc);
     return this.initLongitude(longitude);
   }
 
@@ -464,11 +460,7 @@ export class Helper {
   }
 
   static getPersiaTicks(date: number): number {
-    return (
-      date -
-      this.getZoneOffsetFromJsTicks(date) +
-      this._jsEpoch
-    );
+    return date - this.getZoneOffsetFromJsTicks(date) + this._jsEpoch;
   }
 
   static getJsTicks(ticks: number): number {
@@ -477,14 +469,18 @@ export class Helper {
 
   static getZoneOffsetFromPersiaTicks(ticks: number): number {
     const date = new Date(ticks - this._jsEpoch);
-    return  date.getTimezoneOffset() *
-    this._secondsPerMinute *
-    this._millisecondsPerSecond;
+    return (
+      date.getTimezoneOffset() *
+      this._secondsPerMinute *
+      this._millisecondsPerSecond
+    );
   }
 
-  static getZoneOffsetFromJsTicks(date: number): number{
-    return  new Date(date).getTimezoneOffset() *
-    this._secondsPerMinute *
-    this._millisecondsPerSecond;
+  static getZoneOffsetFromJsTicks(date: number): number {
+    return (
+      new Date(date).getTimezoneOffset() *
+      this._secondsPerMinute *
+      this._millisecondsPerSecond
+    );
   }
 }

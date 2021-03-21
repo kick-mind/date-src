@@ -5,14 +5,8 @@ import { Helper } from './helper';
 // tslint:disable: triple-equals
 // tslint:disable: prefer-const
 export class Persia extends Calendar {
-  private static _persianEpoch: number =
-    19603728000000 / Persia._ticksPerDay;
+  private static _persianEpoch: number = 19603728000000 / Persia._ticksPerDay;
   private static readonly _approximateHalfYear: number = 180;
-
-  private static readonly _datePartYear = 0;
-  private static readonly _datePartDayOfYear = 1;
-  private static readonly _datePartMonth = 2;
-  private static readonly _datePartDay = 3;
   private static readonly _monthsPerYear = 12;
   private static readonly _maxCalendarYear = 9378;
   private static readonly _maxCalendarMonth = 10;
@@ -75,51 +69,46 @@ export class Persia extends Calendar {
     return this.DaysToMonth[month];
   }
 
-  private getDatePart(ticks: number, part: number): number {
-    let NumDays;
-    NumDays = Math.trunc(ticks / Persia._ticksPerDay) + 1;
+  private getDatePartYear(ticks: number): number {
+    let NumDays = Math.trunc(ticks / Persia._ticksPerDay) + 1;
     const yearStart = Helper.PersianNewYearOnOrBefore(NumDays);
-    const y =
-      Math.trunc(
-        Math.floor(
-          (yearStart - Persia._persianEpoch) /
-            Helper._meanTropicalYearInDays +
-            0.5
-        )
-      ) + 1;
+    return (
+      Math.floor(
+        (yearStart - Persia._persianEpoch) / Helper._meanTropicalYearInDays +
+          0.5
+      ) + 1
+    );
+  }
 
-    if (part == Persia._datePartYear) {
-      return y;
-    }
+  private getDatePartDayOfYear(ticks: number, year: number): number {
+    let NumDays = Math.trunc(ticks / Persia._ticksPerDay) + 1;
 
     const ordinalDay = Math.trunc(
-      NumDays - Helper.getNumberOfDays(this.toDateTime(y, 1, 1, 0, 0, 0, 0))
+      NumDays - Helper.getNumberOfDays(this.toDateTime(year, 1, 1, 0, 0, 0, 0))
     );
 
-    if (part == Persia._datePartDayOfYear) {
-      return ordinalDay;
-    }
+    return ordinalDay;
+  }
 
-    const m = Persia.monthFromOrdinalDay(ordinalDay);
-    if (part == Persia._datePartMonth) {
-      return m;
-    }
+  private getDatePartMonth(ticks: number, year: number): number {
+    return Persia.monthFromOrdinalDay(this.getDatePartDayOfYear(ticks, year));
+  }
 
-    const d = ordinalDay - Persia.daysInPreviousMonths(m);
-    if (part == Persia._datePartDay) {
-      return d;
-    }
-    throw new Error();
+  private getDatePartDay(ticks: number, year: number, month: number): number {
+    return (
+      this.getDatePartDayOfYear(ticks, year) -
+      Persia.daysInPreviousMonths(month)
+    );
   }
 
   addMonths(time: number, months: number): number {
     if (months < -120000 || months > 120000) {
       throw new Error();
     }
-    let timeTotalTicks = Helper.getPersiaTicks(time);
-    let y = this.getDatePart(timeTotalTicks, Persia._datePartYear);
-    let m = this.getDatePart(timeTotalTicks, Persia._datePartMonth);
-    let d = this.getDatePart(timeTotalTicks, Persia._datePartDay);
+    let totalTicks = Helper.getPersiaTicks(time);
+    let y = this.getDatePartYear(totalTicks);
+    let m = this.getDatePartMonth(totalTicks, y);
+    let d = this.getDatePartDay(totalTicks, y, m);
     const i = m - 1 + months;
     if (i >= 0) {
       m = (i % 12) + 1;
@@ -134,12 +123,8 @@ export class Persia extends Calendar {
     }
     const ticks =
       this.getAbsoluteDatePersian(y, m, d) * Persia._ticksPerDay +
-      (timeTotalTicks % Persia._ticksPerDay);
-    Persia.checkAddResult(
-      ticks,
-      Persia.MinDate,
-      Persia.MaxDate
-    );
+      (totalTicks % Persia._ticksPerDay);
+    Persia.checkAddResult(ticks, Persia.MinDate, Persia.MaxDate);
     return Helper.getJsTicks(ticks);
   }
 
@@ -147,39 +132,26 @@ export class Persia extends Calendar {
     return this.addMonths(time, years * 12);
   }
 
-  getDayOfMonth(time: number): number {
-    return this.getDatePart(
-      Helper.getPersiaTicks(time),
-      Persia._datePartDay
-    );
+  getDayOfMonth(time: number, year: number, month: number): number {
+    return this.getDatePartDay(Helper.getPersiaTicks(time), year, month);
   }
 
   getDayOfWeek(time: number): DayOfWeek {
     const day =
-      Math.trunc(
-        Helper.getPersiaTicks(time) / Persia._ticksPerDay + 1
-      ) % 7;
+      Math.trunc(Helper.getPersiaTicks(time) / Persia._ticksPerDay + 1) % 7;
     return day as DayOfWeek;
   }
 
-  getDayOfYear(time: number): number {
-    return this.getDatePart(
-      Helper.getPersiaTicks(time),
-      Persia._datePartDayOfYear
-    );
+  getDayOfYear(time: number, year: number): number {
+    return this.getDatePartDayOfYear(Helper.getPersiaTicks(time), year);
   }
 
   getDaysInMonth(year: number, month: number): number {
-    if (
-      month == Persia._maxCalendarMonth &&
-      year == Persia._maxCalendarYear
-    ) {
+    if (month == Persia._maxCalendarMonth && year == Persia._maxCalendarYear) {
       return Persia._maxCalendarDay;
     }
 
-    let daysInMonth =
-      Persia.DaysToMonth[month] -
-      Persia.DaysToMonth[month - 1];
+    let daysInMonth = Persia.DaysToMonth[month] - Persia.DaysToMonth[month - 1];
     if (month == Persia._monthsPerYear && !this.isLeapYear(year)) {
       --daysInMonth;
     }
@@ -196,18 +168,12 @@ export class Persia extends Calendar {
     return this.isLeapYear(year) ? 366 : 365;
   }
 
-  getMonth(time: number): number {
-    return this.getDatePart(
-      Helper.getPersiaTicks(time),
-      Persia._datePartMonth
-    );
+  getMonth(time: number, year: number): number {
+    return this.getDatePartMonth(Helper.getPersiaTicks(time), year);
   }
 
   getYear(time: number): number {
-    return this.getDatePart(
-      Helper.getPersiaTicks(time),
-      Persia._datePartYear
-    );
+    return this.getDatePartYear(Helper.getPersiaTicks(time));
   }
 
   isLeapYear(year: number): boolean {
