@@ -48,15 +48,23 @@ export abstract class DateTime {
      */
     constructor(timestamp: number, opts?: CreateOptions) {
         this._ts = timestamp;
-        // this._date = {
-        //     year,
-        //     month: month ?? 1,
-        //     day: day ?? 1,
-        //     hour: hour ?? 0,
-        //     minute: minute ?? 0,
-        //     second: second ?? 0,
-        //     ms: ms ?? 0
-        // };
+        // const isInt = Number.isInteger;
+        // if (isInt(date)) {
+        //     this._cachedTs = date;
+        // } else if (isInt(date?.year)) {
+        //     this._units = {
+        //         year: date.year,
+        //         month: isInt(date.month) ? date.month : 1,
+        //         day: isInt(date.day) ? date.day : 1,
+        //         hour: isInt(date.hour) ? date.hour : 0,
+        //         minute: isInt(date.minute) ? date.minute : 0,
+        //         second: isInt(date.second) ? date.second : 0,
+        //         ms: isInt(date.ms) ? date.ms : 0,
+        //     };
+        // } else {
+        //     throw Error('Invalid DateTime parameters.');
+        // }
+
         // this._zone = opts.zone;
         // this._locale = locale ?? DateTime.getDefaultLocale();
     }
