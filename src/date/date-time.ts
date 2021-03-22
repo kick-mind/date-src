@@ -10,13 +10,13 @@ function padNumber(value: number, length: number) {
 
 /** DateTime units. */
 export interface DateTimeUnits {
-    year: number;
-    month: number;
-    day: number;
-    hour: number;
-    minute: number;
-    second: number;
-    ms: number;
+    year?: number;
+    month?: number;
+    day?: number;
+    hour?: number;
+    minute?: number;
+    second?: number;
+    ms?: number;
 }
 
 /** DateTime build options. */
@@ -230,7 +230,7 @@ export class DateTime {
     }
 
     /** Clones this DateTime with overwritten values. */
-    clone(newValues?: Partial<DateTimeUnits>): DateTime {
+    clone(newUnits?: DateTimeUnits): DateTime {
         throw new Error('Method not implemented.');
     }
     //#endregion
@@ -323,7 +323,7 @@ export class DateTime {
     }
 
     /** Formats this DateTime to ISO8601 standard. */
-    toISO(keepTimeZone = false): number[] {
+    toISO(keepTimeZone = false): string {
         throw new Error('Method not implemented.');
     }
 
