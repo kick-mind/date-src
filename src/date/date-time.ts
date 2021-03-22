@@ -49,21 +49,17 @@ export interface DateParseResult extends DateTimeUnits {
     offset: number;
 }
 
-/** An abstract base class for all JS-Sugar DateTime classes. */
+/** JS-Sugar DateTime. */
 export class DateTime {
-    private _ts: number;
-    private _cachedUnits: DateTimeUnits;
-    private _zone: Zone;
     private _cal: Calendar2;
+    private _zone: Zone;
     private _locale: Locale;
-    private _isValid: boolean;
     private _cache: DateTimeCachedValues;
 
     /**
      * Creates a new DateTime.
      * @constructor
      */
-
     constructor()
     constructor(opts: CreateOptions)
     constructor(timestamp: number, opts?: CreateOptions)
@@ -252,7 +248,7 @@ export class DateTime {
     //#region Query
     /** Returns whether this DateTime is same as another DateTime. */
     isSame(dateTime: DateTime): boolean {
-        return this._ts === dateTime.ts;
+        return this.ts === dateTime.ts;
     }
 
     /** Returns whether the type of this DateTime is same as the type of another DateTime. */
@@ -262,22 +258,22 @@ export class DateTime {
 
     /** Returns whether this DateTime is after another DateTime. */
     isAfter(dateTime: DateTime): boolean {
-        return this._ts > dateTime.ts;
+        return this.ts > dateTime.ts;
     }
 
     /** Returns whether this DateTime is same or after another DateTime. */
     isSameOrAfter(dateTime: DateTime): boolean {
-        return this._ts >= dateTime.ts;
+        return this.ts >= dateTime.ts;
     }
 
     /** Returns whether this DateTime is before another DateTime. */
     isBefore(dateTime: DateTime): boolean {
-        return this._ts < dateTime.ts;
+        return this.ts < dateTime.ts;
     }
 
     /** Returns whether this DateTime is same or before another DateTime. */
     isSameOrBefore(dateTime: DateTime): boolean {
-        return this._ts <= dateTime.ts;
+        return this.ts <= dateTime.ts;
     }
 
     /** Returns whether this DateTime is between the specified DateTimes. */

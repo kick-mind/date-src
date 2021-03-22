@@ -20,4 +20,8 @@ export class Locale {
     constructor(data: LocaleData) {
         this._data = data;
     }
+
+    get name() {
+        return this._data.name;
+    }
 }

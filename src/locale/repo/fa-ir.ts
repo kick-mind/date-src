@@ -1,7 +1,7 @@
 import { Locale } from '../locale';
-import { LocaleManager } from '../locale-manager';
+import { Locales } from '../locales';
 
-LocaleManager.addLocale(new Locale({
+Locales.addLocale(new Locale({
     name: 'fa-IR',
     weekStart: 6,
     weekdays: [
