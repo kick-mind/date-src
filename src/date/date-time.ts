@@ -1,3 +1,4 @@
+import { Calendar2 } from 'src/calendar';
 import { Locale } from '../locale';
 import { Zone } from '../zone';
 
@@ -22,12 +23,26 @@ export interface DateTimeDescriptor extends DateTimeUnits {
     zone: number;
 }
 
-
 /** DateTime build options. */
 export interface CreateOptions {
+    calandar: Calendar2 | string;
     zone?: Zone | string | number;
-    locale?: Locale | 'string';
+    locale?: Locale | string;
 }
+
+
+interface DateTimeCachedValues {
+    units: DateTimeUnits;
+    ts: number;
+    weekDay: number;
+    dayOfYear: number;
+    weekNumber: number;
+    daysInMonth: number;
+    daysInYear: number;
+    isLeapYear: boolean;
+    isValid: boolean;
+}
+
 
 /** DateTime parse result. */
 export interface DateParseResult extends DateTimeUnits {
@@ -35,19 +50,29 @@ export interface DateParseResult extends DateTimeUnits {
 }
 
 /** An abstract base class for all JS-Sugar DateTime classes. */
-export abstract class DateTime {
+export class DateTime {
     private _ts: number;
     private _cachedUnits: DateTimeUnits;
     private _zone: Zone;
+    private _cal: Calendar2;
     private _locale: Locale;
     private _isValid: boolean;
+    private _cache: DateTimeCachedValues;
 
     /**
-     * Create a new DateTime.
+     * Creates a new DateTime.
      * @constructor
      */
-    constructor(timestamp: number, opts?: CreateOptions) {
-        this._ts = timestamp;
+
+    constructor()
+    constructor(opts: CreateOptions)
+    constructor(timestamp: number, opts?: CreateOptions)
+    constructor(date: string, opts?: CreateOptions)
+    constructor(year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: CreateOptions)
+    constructor(opts: CreateOptions, year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number)
+    constructor(...args: any[]) {
+
+        // this._ts = timestamp;
         // const isInt = Number.isInteger;
         // if (isInt(date)) {
         //     this._cachedTs = date;
@@ -74,81 +99,69 @@ export abstract class DateTime {
     static parseDate(date: string, format: string): DateParseResult {
         throw new Error('Method not implemented.');
     }
+
     //#endregion
 
     //#region Get
-
-    /**
-     * @private
-     */
-    private get _units() {
-        if (this._cachedUnits == null) {
-            this._cachedUnits = this.compute();
-        }
-
-        return this._cachedUnits;
-    }
-
-    /**
-     * Computes DateTime units
-     * @protected
-     */
-    protected abstract compute(): DateTimeUnits;
-
     /**
      * Gets a unit value of this DateTime.
      * @public
      */
     get(unit: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'ms'): number {
-        return this._units[unit];
+        return this.toObject()[unit];
     }
 
     /** Get the year.
      * @public
      */
     get year(): number {
-        return this._units.year;
+        return this.toObject().year;
     }
 
     /** Get the month (1-12).
      * @public
      */
     get month(): number {
-        return this._units.month;
+        return this.toObject().month;
     }
 
     /** Get the day of the month (1 to 30). */
     get day(): number {
-        return this._units.day;
+        return this.toObject().day;
     }
 
     /** Get the hour of the day (0 to 23). */
     get hour(): number {
-        return this._units.hour;
+        return this.toObject().hour;
     }
 
     /** Get the minute of the hour (0 to 59). */
     get minute(): number {
-        return this._units.minute;
+        return this.toObject().minute;
     }
 
     /** Get the second of the minute (0 to 59). */
     get second(): number {
-        return this._units.second;
+        return this.toObject().second;
     }
 
     /** Get the millisecond of the second (0 to 999). */
     get ms(): number {
-        return this._units.year;
+        return this.toObject().ms;
     }
 
     /** Returns UTC timestamp of this object (milliseconds past from the minimum supported DateTime). */
     get ts(): number {
-        return this._ts;
+        return this._cache.ts;
     }
 
     /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
-    abstract get weekDay(): number;
+    get weekDay(): number {
+        if (this._cache.weekDay == null) {
+            this._cache.weekDay = this._cal.weekDay(this.ts);
+        }
+        return this._cache.weekDay;
+    }
 
     /** Get the day of the week with respect of this DateTime's locale (locale aware) */
     get weekDayLocale(): number {
@@ -161,41 +174,79 @@ export abstract class DateTime {
     }
 
     /** Gets the day of the year (1 to 366). */
-    abstract get dayOfYear(): number;
+    get dayOfYear(): number {
+        if (this._cache.dayOfYear == null) {
+            this._cache.dayOfYear = this._cal.dayOfYear(this.ts);
+        }
+        return this._cache.dayOfYear;
+    }
 
     /** Get the week number of the week year (1 to 52). */
-    abstract get weekNumber(): number;
+    get weekNumber(): number {
+        if (this._cache.weekNumber == null) {
+            this._cache.weekNumber = this._cal.weekNumber(this.ts);
+        }
+        return this._cache.weekNumber;
+    }
 
     /** Returns the number of days in this DateTime's month. */
-    abstract get daysInMonth(): number;
+    get daysInMonth(): number {
+        if (this._cache.daysInMonth == null) {
+            this._cache.daysInMonth = this._cal.daysInMonth(this.ts);
+        }
+        return this._cache.daysInMonth;
+    }
 
     /** Returns the number of days in this DateTime's year. */
-    abstract get daysInYear(): number;
+    get daysInYear(): number {
+        if (this._cache.daysInYear == null) {
+            this._cache.daysInYear = this._cal.daysInYear(this.ts);
+        }
+        return this._cache.daysInYear;
+    }
 
     /** Returns the number of weeks in this DateTime's year. */
-    abstract get weeksInYear(): number;
+    // get weeksInYear(): number {
+    //     if (this._cache.weeksInYear == null) {
+    //         this._cache.weeksInYear = this._cal.(this.ts);
+    //     }
+    //     return this._cache.weeksInYear;
+    // }
 
     /** Returns true if this DateTime is in a leap year, false otherwise. */
-    abstract get isInLeapYear(): boolean;
+    get isLeapYear(): boolean {
+        if (this._cache.daysInYear == null) {
+            this._cache.isLeapYear = this._cal.isLeapYear(this.ts);
+        }
+        return this._cache.isLeapYear;
+    }
 
     /** Get the quarter. */
     get quarter(): number {
-        return Math.floor(this._units.month / 4) + 1;
+        return Math.floor(this.month / 4) + 1;
     }
     //#endregion
 
     //#region Manipulate
     /** Adds a period of time to this DateTime and returns the resulting DateTime. */
-    abstract add(amounts: DateTimeUnits): DateTime;
+    add(units: DateTimeUnits): DateTime {
+        return new DateTime(this._cal.add(this.ts, units), { calandar: this._cal, zone: this._zone, locale: this._locale });
+    }
 
     /** Subtracts a period of time from this DateTime and returns the resulting DateTime. */
-    abstract subtract(amounts: DateTimeUnits): DateTime;
+    subtract(units: DateTimeUnits): DateTime {
+        return new DateTime(this._cal.subtract(this.ts, units), { calandar: this._cal, zone: this._zone, locale: this._locale });
+    }
 
     /** Clones this DateTime with time units (hour, minute, second, ms) set to zero. */
-    abstract withoutTime(): DateTime;
+    date(): DateTime {
+        throw new Error('Method not implemented.');
+    }
 
     /** Clones this DateTime with overwritten values. */
-    abstract clone(newValues?: Partial<DateTimeUnits>): DateTime;
+    clone(newValues?: Partial<DateTimeUnits>): DateTime {
+        throw new Error('Method not implemented.');
+    }
     //#endregion
 
     //#region Query
@@ -273,12 +324,15 @@ export abstract class DateTime {
 
     /** Returns an object with the values of this DateTime. */
     toObject(): DateTimeUnits {
-        return { ...this._units };
+        if (this._cache.units == null) {
+            this._cache.units = this._cal.getUnits(this._cache.ts);
+        }
+        return this._cache.units;
     }
 
     /** Returns an Array with the values of this DateTime. */
     toArray(): number[] {
-        const u = this._units;
+        const u = this.toObject();
         return [u.year, u.month, u.day, u.hour, u.minute, u.second, u.ms];
     }
 
@@ -314,16 +368,12 @@ export abstract class DateTime {
      * @public
      */
     get isValid(): boolean {
-        if (this._isValid == null) {
-            this._isValid = this.validate();
+        if (this._cache.isValid == null) {
+            const { year, month, day } = this.toObject();
+            this._cache.isValid = this._cal.isValid(year, month, day);
         }
-        return this._isValid;
+        return this._cache.isValid;
     }
-
-    /** Computes the validity of this DateTime
-     * @protected
-     */
-    protected abstract validate(): boolean;
 
     /** Returns whether a variable is a JS-Sugar DateTime or not. */
     static isJssDate(obj: any) {

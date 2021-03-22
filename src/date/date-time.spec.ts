@@ -10,4 +10,19 @@ describe('DateTime class', () => {
   //   const l = DateTime.findLocale('L1');
   //   expect(l).toBeDefined();
   // });
+
+  it('can be created via constructor', () => {
+  });
+
+  it('can parse a string', () => {
+  });
+
+  it('can format a string', () => {
+  });
+
+  it('can add dates', () => {
+  });
+
+  it('can subtract dates', () => {
+  });
 });

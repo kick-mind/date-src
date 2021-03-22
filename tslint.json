@@ -53,6 +53,7 @@
             true,
             "ignore-params"
         ],
+        "unified-signatures": false,
         "no-non-null-assertion": true,
         "no-redundant-jsdoc": false,
         "no-switch-case-fall-through": true,
