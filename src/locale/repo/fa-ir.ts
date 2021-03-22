@@ -1,8 +1,8 @@
 import { Locale } from '../locale';
 import { Locales } from '../locales';
 
-Locales.addLocale(new Locale({
-    name: 'fa-IR',
+Locales.add(new Locale({
+    id: 'fa-IR',
     weekStart: 6,
     weekdays: [
         'یک‌شنبه_دوشنبه_سه‌شنبه_چهارشنبه_پنج‌شنبه_جمعه_شنبه'.split('_'),

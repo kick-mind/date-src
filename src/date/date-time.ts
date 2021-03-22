@@ -19,10 +19,6 @@ export interface DateTimeUnits {
     ms: number;
 }
 
-export interface DateTimeDescriptor extends DateTimeUnits {
-    zone: number;
-}
-
 /** DateTime build options. */
 export interface CreateOptions {
     calandar: Calendar2 | string;
@@ -44,11 +40,6 @@ interface DateTimeCachedValues {
 }
 
 
-/** DateTime parse result. */
-export interface DateParseResult extends DateTimeUnits {
-    offset: number;
-}
-
 /** JS-Sugar DateTime. */
 export class DateTime {
     private _cal: Calendar2;
@@ -61,13 +52,12 @@ export class DateTime {
      * @constructor
      */
     constructor()
-    constructor(opts: CreateOptions)
     constructor(timestamp: number, opts?: CreateOptions)
     constructor(date: string, opts?: CreateOptions)
     constructor(year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: CreateOptions)
     constructor(opts: CreateOptions, year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number)
-    constructor(...args: any[]) {
-
+    constructor() {
+        const a = arguments;
         // this._ts = timestamp;
         // const isInt = Number.isInteger;
         // if (isInt(date)) {
@@ -92,7 +82,7 @@ export class DateTime {
 
     //#region Creations
     /** Parses a date */
-    static parseDate(date: string, format: string): DateParseResult {
+    static parse(date: string, format: string): DateTime {
         throw new Error('Method not implemented.');
     }
 
@@ -336,12 +326,21 @@ export class DateTime {
     toISO(keepTimeZone = false): number[] {
         throw new Error('Method not implemented.');
     }
+
+    // toJsDate(): Date {
+    //     throw new Error('Method not implemented.');
+    // }
     //#endregion
 
     //#region Locale
     /** Get the locale of a DateTime, such 'en-GB'. */
     get locale(): Locale {
         return this._locale;
+    }
+
+    /** Set the DateTime's locale (returns a new DateTime) */
+    changeLocale(l: Locale | string): DateTime {
+        throw new Error('Method not implemented.');
     }
     //#endregion
 
@@ -350,11 +349,18 @@ export class DateTime {
         return this._zone;
     }
 
+    /** Set the DateTime's zone to UTC (returns a new DateTime) */
     toUtc(): DateTime {
         throw new Error('Method not implemented.');
     }
 
-    toJsDate(): Date {
+    /** Set the DateTime's zone to the local zone of the system (returns a new DateTime) */
+    toLocal(): DateTime {
+        throw new Error('Method not implemented.');
+    }
+
+    /** Set the DateTime's zone (returns a new DateTime) */
+    changeZone(z: Zone | string): DateTime {
         throw new Error('Method not implemented.');
     }
     //#endregion
@@ -372,8 +378,8 @@ export class DateTime {
     }
 
     /** Returns whether a variable is a JS-Sugar DateTime or not. */
-    static isJssDate(obj: any) {
-        return obj instanceof DateTime;
+    static isJssDate(o: any) {
+        return o instanceof DateTime;
     }
     //#endregion
 }

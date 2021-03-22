@@ -2,9 +2,9 @@ import { DateTimeUnits } from '../date';
 
 // tslint:disable-next-line: class-name
 export abstract class Calendar2 {
-  /** Calendar name. */
-  abstract get name(): string;
-  
+  /** Calendar ID. */
+  abstract get id(): string;
+
   /** Get the year. */
   abstract getUnits(ts: number): DateTimeUnits;
 

@@ -4,7 +4,7 @@ const repository = new Array<Locale>();
 let defaultLocale: Locale;
 
 export abstract class Locales {
-    /** gets or Sets the default Locale. */
+    /** Gets or sets the default locale. */
     static set default(value: Locale) {
         defaultLocale = value;
     }
@@ -14,8 +14,8 @@ export abstract class Locales {
     }
 
     /** Adds a [Locale] to the locales repository. */
-    static addLocale(l: Locale): void {
-        if (!this.find(l.name)) {
+    static add(l: Locale) {
+        if (!this.get(l.id)) {
             repository.push(l);
             if (repository.length === 0) {
                 defaultLocale = l;
@@ -24,8 +24,8 @@ export abstract class Locales {
     }
 
     /** Finds a Locale by name in the locale repository. */
-    static find(name: string): Locale {
-        return repository.find(x => x.name === name);
+    static get(id: string): Locale {
+        return repository.find(x => x.id === id);
     }
 
     /** Gets the number of locales in the repository. */

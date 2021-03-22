@@ -15,7 +15,7 @@ export abstract class Calendars {
 
     /** Adds a [Calendar] to the calendars repository. */
     static add(c: Calendar2): void {
-        if (!this.find(c.name)) {
+        if (!this.get(c.id)) {
             repository.push(c);
             if (repository.length === 0) {
                 defaultCal = c;
@@ -24,8 +24,8 @@ export abstract class Calendars {
     }
 
     /** Finds a calendar by name in the calendar repository. */
-    static find(name: string): Calendar2 {
-        return repository.find(x => x.name === name);
+    static get(name: string): Calendar2 {
+        return repository.find(x => x.id === name);
     }
 
     /** Gets the number of calendars in the repository. */
