@@ -2,6 +2,9 @@ import { Calendar2 } from 'src/calendar';
 import { Locale } from '../locale';
 import { Zone } from '../zone';
 
+const II = Number.isInteger; // Is Integer?
+const IO = (x: any) => typeof x == 'object'; // Is Object ?
+const CO = (x: any) => ({ ...x }); // Clone Object
 const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
 
 function padNumber(value: number, length: number) {
@@ -20,7 +23,7 @@ export interface DateTimeUnits {
 }
 
 /** DateTime create options. */
-export interface CreateOptions {
+export interface DateTimeCreateOptions {
     calandar: Calendar2 | string;
     zone?: Zone | string | number;
     locale?: Locale | string;
@@ -29,6 +32,7 @@ export interface CreateOptions {
 
 interface DateTimeCachedValues {
     units: DateTimeUnits;
+    /** Timestamp (UTC) */
     ts: number;
     weekDay: number;
     dayOfYear: number;
@@ -53,38 +57,61 @@ export class DateTime {
      * @constructor
      */
     constructor()
-    constructor(timestamp: number, opts?: CreateOptions)
-    constructor(date: string, opts?: CreateOptions)
-    constructor(year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: CreateOptions)
-    constructor(opts: CreateOptions, year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number)
+    constructor(year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: DateTimeCreateOptions)
+    constructor(opts: DateTimeCreateOptions, year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number)
+    constructor(units: DateTimeUnits, opts?: DateTimeCreateOptions)
+    constructor(timestamp: number, opts?: DateTimeCreateOptions)
     constructor() {
         const a = arguments;
-        // this._ts = timestamp;
-        // const isInt = Number.isInteger;
-        // if (isInt(date)) {
-        //     this._cachedTs = date;
-        // } else if (isInt(date?.year)) {
-        //     this._units = {
-        //         year: date.year,
-        //         month: isInt(date.month) ? date.month : 1,
-        //         day: isInt(date.day) ? date.day : 1,
-        //         hour: isInt(date.hour) ? date.hour : 0,
-        //         minute: isInt(date.minute) ? date.minute : 0,
-        //         second: isInt(date.second) ? date.second : 0,
-        //         ms: isInt(date.ms) ? date.ms : 0,
-        //     };
-        // } else {
-        //     throw Error('Invalid DateTime parameters.');
-        // }
+        let ts: number;
+        let units: DateTimeUnits;
+        let opts: DateTimeCreateOptions;
+
+        if (a.length == 0) {
+            // first overload
+        } else if (II(a[0]) && II(a[1])) {
+            // 2'nd overload
+            units = { year: a[0], month: a[1], day: a[2], hour: a[3], minute: a[4], second: a[5], ms: a[6] };
+            opts = CO(a[7]);
+        } else if (IO(a[0]) && II(a[1])) {
+            // 3'rd overload
+            opts = a[0];
+            units = { year: a[1], month: a[2], day: a[3], hour: a[4], minute: a[5], second: a[6], ms: a[7] };
+        } else if (IO(a[0]) && (a[1] == null || IO(a[1]))) {
+            // 4'th overload
+            units = CO(a[0]);
+            opts = CO(a[1]);
+        } else if (II(a[0]) && (a[1] == null || IO(a[1]))) {
+            // 5'th overload (create by timestamp)
+            ts = a[0];
+            opts = CO(a[1]);
+        }
+
+        if (units != null) {
+            units = {
+                year: units.year,
+                month: II(units.month) ? units.month : 1,
+                day: II(units.day) ? units.day : 1,
+                hour: II(units.hour) ? units.hour : 0,
+                minute: II(units.minute) ? units.minute : 0,
+                second: II(units.second) ? units.second : 0,
+                ms: II(units.ms) ? units.ms : 0,
+            };
+            this._cache.units = units;
+        } else if (ts != null) {
+            this._cache.ts = ts;
+        } else {
+            throw new Error('Invalid DateTime parameters');
+        }
 
         // this._zone = opts.zone;
         // this._locale = locale ?? DateTime.getDefaultLocale();
     }
-    /** Parses a date */
-    static parse(date: string, format: string): DateTime {
+
+    /** Creates a DateTime from a string */
+    static parse(date: string, format: string, opts?: DateTimeCreateOptions): DateTime {
         throw new Error('Method not implemented.');
     }
-
     //#endregion
 
     //#region Get
@@ -135,8 +162,16 @@ export class DateTime {
         return this.toObject().ms;
     }
 
-    /** Returns UTC timestamp of this object (milliseconds past from the minimum supported DateTime). */
+    /** Returns UTC timestamp of this object.  
+     * This value can be positive or negetive (it depends on the implementation of the calendar). 
+     */
     get ts(): number {
+        if (this._cache.ts == null) {
+            const zoneTs = this._cal.getTimestamp(this._cache.units);
+            const utcTs = zoneTs - this._zone.getOffset(zoneTs);
+            this._cache.ts = utcTs;
+        }
+
         return this._cache.ts;
     }
 
@@ -225,7 +260,7 @@ export class DateTime {
 
     /** Clones this DateTime with time units (hour, minute, second, ms) set to zero. */
     date(): DateTime {
-        throw new Error('Method not implemented.');
+        return new DateTime({ ...this.toObject(), hour: 0, minute: 0, second: 0, ms: 0 }, { calandar: this._cal, zone: this._zone, locale: this._locale });
     }
     //#endregion
 
@@ -305,15 +340,16 @@ export class DateTime {
     /** Returns an object with the values of this DateTime. */
     toObject(): DateTimeUnits {
         if (this._cache.units == null) {
-            this._cache.units = this._cal.getUnits(this._cache.ts);
+            const ts = this._cache.ts;
+            this._cache.units = this._cal.getUnits(ts + this._zone.getOffset(ts));
         }
         return this._cache.units;
     }
 
     /** Returns an Array with the values of this DateTime. */
     toArray(): number[] {
-        const u = this.toObject();
-        return [u.year, u.month, u.day, u.hour, u.minute, u.second, u.ms];
+        const d = this.toObject();
+        return [d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms];
     }
 
     /** Formats this DateTime to ISO8601 standard. */
@@ -355,7 +391,7 @@ export class DateTime {
 
     /** Set the DateTime's zone (returns a new DateTime) */
     changeZone(zone: Zone | string): DateTime {
-        throw new Error('Method not implemented.');
+        return new DateTime(this.ts, { calandar: this._cal, zone, locale: this._locale });
     }
     //#endregion
 
@@ -376,9 +412,19 @@ export class DateTime {
         return o instanceof DateTime;
     }
 
-    /** Clones this DateTime with overwritten values. */
-    clone(newUnits?: DateTimeUnits): DateTime {
-        throw new Error('Method not implemented.');
+    /** Clones this DateTime with overrided unit values. */
+    set(newUnits?: DateTimeUnits): DateTime {
+        const opts = this._createOptions();
+
+        if (newUnits) {
+            return new DateTime({ ...this.toObject(), ...newUnits }, opts);
+        } else {
+            return this._cache.ts ? new DateTime(this._cache.ts, opts) : new DateTime(this._cache.units, opts);
+        }
     }
     //#endregion
+
+    _createOptions(): DateTimeCreateOptions {
+        return { calandar: this._cal, locale: this._locale, zone: this._zone };
+    }
 }
