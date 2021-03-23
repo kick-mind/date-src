@@ -7,138 +7,121 @@ export enum DayOfWeek {
   Friday = 5,
   Saturday = 6,
 }
-
-export enum WeekRule {
-  FirstDay = 0,
-  FirstFullWeek = 1,
-  FirstFourDayWeek = 2,
+export interface DateTimeUnits {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  second: number;
+  ms: number;
 }
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 // tslint:disable: triple-equals
+const _ticksPerSecond = 1000;
+const _ticksPerMinute = _ticksPerSecond * 60;
+const _ticksPerHour = _ticksPerMinute * 60;
+const _ticksPerDay = _ticksPerHour * 24;
+const _maxMillis = 315537897600000;
+const _minDate = new Date('100/1/1');
+const _maxDate = new Date('9999/12/31');
+const _daysInYear = 365;
+
+function add(time: number, value: number, scale: number): number {
+  const millis: number = value * scale;
+  if (!(millis > -Number(_maxMillis) && millis < Number(_maxMillis))) {
+    throw new Error();
+  }
+  const ticks: number = time + millis;
+  checkAddResult(ticks, _minDate, _maxDate);
+  return ticks;
+}
+
+function addMs(time: number, milliseconds: number): number {
+  return add(time, milliseconds, 1);
+}
+function addSeconds(time: number, seconds: number): number {
+  return add(time, seconds, _ticksPerSecond);
+}
+function addMinutes(time: number, minutes: number): number {
+  return add(time, minutes, _ticksPerMinute);
+}
+function addHours(time: number, hours: number): number {
+  return add(time, hours, _ticksPerHour);
+}
+function addDays(time: number, days: number): number {
+  return add(time, days, _ticksPerDay);
+}
+
+function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
+  if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
+    throw new Error();
+  }
+}
 export abstract class Calendar {
-  protected static readonly _ticksPerSecond = 1000;
-  protected static readonly _ticksPerMinute = Calendar._ticksPerSecond * 60;
-  protected static readonly _ticksPerHour = Calendar._ticksPerMinute * 60;
-  protected static readonly _ticksPerDay = Calendar._ticksPerHour * 24;
-  private static readonly _maxMillis = 315537897600000;
-  private static readonly _minDate = new Date('100/1/1');
-  private static readonly _maxDate = new Date('9999/12/31');
-  protected readonly daysInYear = 365;
-
-  protected static checkAddResult(
-    ticks: number,
-    minValue: Date,
-    maxValue: Date
-  ) {
-    if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
-      throw new Error();
-    }
-  }
-
-  add(time: number, value: number, scale: number): number {
-    const millis: number = value * scale;
-    if (
-      !(
-        millis > -Number(Calendar._maxMillis) &&
-        millis < Number(Calendar._maxMillis)
-      )
-    ) {
-      throw new Error();
-    }
-    const ticks: number = time + millis;
-    Calendar.checkAddResult(ticks, Calendar._minDate, Calendar._maxDate);
-    return ticks;
-  }
-
-  addMilliseconds(time: number, milliseconds: number): number {
-    return this.add(time, milliseconds, 1);
-  }
-  addSeconds(time: number, seconds: number): number {
-    return this.add(time, seconds, Calendar._ticksPerSecond);
-  }
-  addMinutes(time: number, minutes: number): number {
-    return this.add(time, minutes, Calendar._ticksPerMinute);
-  }
-  addHours(time: number, hours: number): number {
-    return this.add(time, hours, Calendar._ticksPerHour);
-  }
-  addDays(time: number, days: number): number {
-    return this.add(time, days, Calendar._ticksPerDay);
-  }
-  addWeeks(time: number, weeks: number): number {
-    return this.addDays(time, weeks * 7);
-  }
-
-  getMilliseconds(time: number): number {
+  ms(time: number): number {
     return time % 1000;
   }
-  getSecond(time: number): number {
-    return Math.trunc((time / Calendar._ticksPerSecond) % 60);
+  second(time: number): number {
+    return Math.trunc((time / _ticksPerSecond) % 60);
   }
-  getMinute(time: number): number {
-    return Math.trunc((time / Calendar._ticksPerMinute) % 60);
+  minute(time: number): number {
+    return Math.trunc((time / _ticksPerMinute) % 60);
   }
-  getHour(time: number): number {
-    return Math.trunc((time / Calendar._ticksPerHour) % 24);
+  hour(time: number): number {
+    return Math.trunc((time / _ticksPerHour) % 24);
   }
 
-  private getFirstDayWeekOfYear(
-    time: number,
-    firstDayOfWeek: number,
-    year: number
-  ): number {
-    const dayOfYear = this.getDayOfYear(time, year) - 1;
-    const dayForJan1 = this.getDayOfWeek(time) - (dayOfYear % 7);
+  private getFirstDayWeekOfYear(time: number, firstDayOfWeek: number): number {
+    const dayOfYear = this.dayOfYear(time) - 1;
+    const dayForJan1 = this.weekDay(time) - (dayOfYear % 7);
     const offset = (dayForJan1 - firstDayOfWeek + 14) % 7;
-    return (dayOfYear + offset) / 7 + 1;
+    return Math.trunc((dayOfYear + offset) / 7) + 1;
   }
 
   private getWeekOfYearFullDays(
     time: number,
     firstDayOfWeek: number,
-    fullDays: number,
-    year: number
+    fullDays: number
   ): number {
     let dayForJan1: number;
     let offset: number;
     let day: number;
-    const dayOfYear = this.getDayOfYear(time, year) - 1;
-    dayForJan1 = this.getDayOfWeek(time) - (dayOfYear % 7);
+    const dayOfYear = this.dayOfYear(time) - 1;
+    dayForJan1 = this.weekDay(time) - (dayOfYear % 7);
     offset = (firstDayOfWeek - dayForJan1 + 14) % 7;
     if (offset != 0 && offset >= fullDays) {
       offset -= 7;
     }
     day = dayOfYear - offset;
     if (day >= 0) {
-      return day / 7 + 1;
+      return Math.trunc(day / 7) + 1;
     }
-    if (time <= this.addDays(Calendar._minDate.getTime(), dayOfYear)) {
-      return this.getWeekOfYearOfMinDate(firstDayOfWeek, fullDays, year);
+    if (time <= addDays(_minDate.getTime(), dayOfYear)) {
+      return this.getWeekOfYearOfMinDate(firstDayOfWeek, fullDays);
     }
     return this.getWeekOfYearFullDays(
-      this.addDays(time, -(dayOfYear + 1)),
+      addDays(time, -(dayOfYear + 1)),
       firstDayOfWeek,
-      fullDays,
-      year
+      fullDays
     );
   }
 
   private getWeekOfYearOfMinDate(
     firstDayOfWeek: number,
-    minimumDaysInFirstWeek: number,
-    year: number
+    minimumDaysInFirstWeek: number
   ): number {
-    const dayOfYear = this.getDayOfYear(Calendar._minDate.getTime(), year) - 1;
+    const dayOfYear = this.dayOfYear(_minDate.getTime()) - 1;
     const dayOfWeekOfFirstOfYear =
-      this.getDayOfWeek(Calendar._minDate.getTime()) - (dayOfYear % 7);
+      this.weekDay(_minDate.getTime()) - (dayOfYear % 7);
 
     const offset = (firstDayOfWeek + 7 - dayOfWeekOfFirstOfYear) % 7;
     if (offset == 0 || offset >= minimumDaysInFirstWeek) {
       return 1;
     }
 
-    const daysInYear = this.daysInYear - 1;
+    const daysInYear = _daysInYear - 1;
     const dayOfWeekOfFirstOfPreviousYear =
       dayOfWeekOfFirstOfYear - 1 - (daysInYear % 7);
 
@@ -148,72 +131,74 @@ export abstract class Calendar {
     if (daysInInitialPartialWeek >= minimumDaysInFirstWeek) {
       day += 7;
     }
-    return day / 7 + 1;
+    return Math.trunc(day / 7) + 1;
   }
 
-  getWeekOfYear(
-    time: number,
-    year: number,
-    rule: WeekRule,
-    firstDayOfWeek: DayOfWeek
-  ): number {
+  weekNumber(time: number, firstDayOfWeek: DayOfWeek, offset: number): number {
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
       throw new Error();
     }
-
-    switch (rule) {
-      case WeekRule.FirstDay:
-        return this.getFirstDayWeekOfYear(time, firstDayOfWeek, year);
-      case WeekRule.FirstFullWeek:
-        return this.getWeekOfYearFullDays(time, firstDayOfWeek, 7, year);
-      case WeekRule.FirstFourDayWeek:
-        return this.getWeekOfYearFullDays(time, firstDayOfWeek, 4, year);
-    }
+    offset = offset % 8;
+    if (offset == 1) { return this.getFirstDayWeekOfYear(time, firstDayOfWeek); }
+    else { return this.getWeekOfYearFullDays(time, firstDayOfWeek, offset); }
   }
 
-  protected timeToTicks(
-    hour: number,
-    minute: number,
-    second: number,
-    ms: number
-  ): number {
-    if (
-      hour >= 0 &&
-      hour < 24 &&
-      minute >= 0 &&
-      minute < 60 &&
-      second >= 0 &&
-      second < 60 &&
-      ms >= 0 &&
-      ms < Calendar._ticksPerSecond
-    ) {
-      return (
-        hour * Calendar._ticksPerHour +
-        minute * Calendar._ticksPerMinute +
-        second * Calendar._ticksPerSecond +
-        ms
-      );
+  /** Adds a period of time to this DateTime and returns the resulting DateTime. */
+  add(ts: number, units: Partial<DateTimeUnits>): number {
+    const isInt = Number.isInteger;
+    let t: number = ts;
+    if (isInt(units.ms)) {
+      t = addMs(t, units.ms);
     }
-    throw new Error();
+
+    if (isInt(units.second)) {
+      t = addSeconds(t, units.second);
+    }
+
+    if (isInt(units.minute)) {
+      t = addMinutes(t, units.minute);
+    }
+
+    if (isInt(units.hour)) {
+      t = addHours(t, units.hour);
+    }
+
+    if (isInt(units.day)) {
+      t = addDays(t, units.day);
+    }
+
+    if (isInt(units.month)) {
+      t = this.addMonths(t, units.month);
+    }
+
+    if (isInt(units.year)) {
+      t = this.addYears(t, units.year);
+    }
+
+    return t;
+  }
+
+  /** Subtracts a period of time from this DateTime and returns the resulting DateTime. */
+  subtract(ts: number, units: Partial<DateTimeUnits>): number {
+    return this.add(ts, {
+      year: -units.year,
+      month: -units.month,
+      day: -units.day,
+      hour: -units.hour,
+      minute: -units.minute,
+      second: -units.second,
+      ms: -units.ms,
+    });
   }
 
   abstract addMonths(time: number, months: number): number;
   abstract addYears(time: number, years: number): number;
-  abstract getDayOfMonth(time: number, year: number, month: number): number;
-  abstract getDayOfWeek(time: number): DayOfWeek;
-  abstract getDayOfYear(time: number, year: number): number;
-  abstract getDaysInMonth(year: number, month: number): number;
-  abstract getDaysInYear(year: number): number;
-  abstract getMonth(time: number, year: number): number;
-  abstract getYear(time: number): number;
-  abstract isLeapYear(year: number): boolean;
-  abstract toDateTime(
-    year: number,
-    month: number,
-    day: number,
-    hour: number,
-    minute: number,
-    second: number,
-    ms: number
-  ): number;
+  abstract weekDay(time: number): DayOfWeek;
+  abstract dayOfYear(time: number): number;
+  abstract daysInMonth(year: number, month: number): number;
+  abstract daysInYear(year: number): number;
+  abstract isInLeapYear(year: number): boolean;
+  abstract isValid(year: number, month: number, day: number): boolean;
+  abstract getTimestamp(units: DateTimeUnits): number;
+  abstract getUnits(ts: number): DateTimeUnits;
 }
