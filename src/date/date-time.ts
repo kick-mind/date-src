@@ -19,7 +19,7 @@ export interface DateTimeUnits {
     ms?: number;
 }
 
-/** DateTime build options. */
+/** DateTime create options. */
 export interface CreateOptions {
     calandar: Calendar2 | string;
     zone?: Zone | string | number;
@@ -169,7 +169,7 @@ export class DateTime {
     /** Get the week number of the week year (1 to 52). */
     get weekNumber(): number {
         if (this._cache.weekNumber == null) {
-            this._cache.weekNumber = this._cal.weekNumber(this.ts);
+            this._cache.weekNumber = this._cal.weekNumber(this.ts, 1, 1);
         }
         return this._cache.weekNumber;
     }
