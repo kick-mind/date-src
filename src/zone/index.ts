@@ -1,3 +1,3 @@
-export * from './FixedZone';
-export * from './IANAZone';
+export * from './fixed-zone';
+export * from './iana-zone';
 export * from './zone';
