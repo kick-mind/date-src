@@ -452,35 +452,14 @@ export class Helper {
         this._secondsPerDay *
         this._millisecondsPerSecond
     );
-    return (
-      daysTotalTicks +
-      this.getZoneOffsetFromPersiaTicks(daysTotalTicks) -
-      this._jsEpoch
-    );
+    return this.getJsTicks(daysTotalTicks);
   }
 
-  static getPersiaTicks(date: number): number {
-    return date - this.getZoneOffsetFromJsTicks(date) + this._jsEpoch;
+  static getPersiaTicks(ticks: number): number {
+    return ticks + this._jsEpoch;
   }
 
   static getJsTicks(ticks: number): number {
-    return ticks + Helper.getZoneOffsetFromPersiaTicks(ticks) - Helper._jsEpoch;
-  }
-
-  static getZoneOffsetFromPersiaTicks(ticks: number): number {
-    const date = new Date(ticks - this._jsEpoch);
-    return (
-      date.getTimezoneOffset() *
-      this._secondsPerMinute *
-      this._millisecondsPerSecond
-    );
-  }
-
-  static getZoneOffsetFromJsTicks(date: number): number {
-    return (
-      new Date(date).getTimezoneOffset() *
-      this._secondsPerMinute *
-      this._millisecondsPerSecond
-    );
+    return ticks - Helper._jsEpoch;
   }
 }

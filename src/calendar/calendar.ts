@@ -59,6 +59,18 @@ function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
     throw new Error();
   }
 }
+
+function getFirstDayWeekOfYear(
+  time: number,
+  firstDayOfWeek: number,
+  dayOfYear: number,
+  weekDay: number
+): number {
+  dayOfYear = dayOfYear - 1;
+  const dayForJan1 = weekDay - (dayOfYear % 7);
+  const offset = (dayForJan1 - firstDayOfWeek + 14) % 7;
+  return Math.trunc((dayOfYear + offset) / 7) + 1;
+}
 export abstract class Calendar {
   ms(time: number): number {
     return time % 1000;
@@ -71,13 +83,6 @@ export abstract class Calendar {
   }
   hour(time: number): number {
     return Math.trunc((time / _ticksPerHour) % 24);
-  }
-
-  private getFirstDayWeekOfYear(time: number, firstDayOfWeek: number): number {
-    const dayOfYear = this.dayOfYear(time) - 1;
-    const dayForJan1 = this.weekDay(time) - (dayOfYear % 7);
-    const offset = (dayForJan1 - firstDayOfWeek + 14) % 7;
-    return Math.trunc((dayOfYear + offset) / 7) + 1;
   }
 
   private getWeekOfYearFullDays(
@@ -98,9 +103,6 @@ export abstract class Calendar {
     if (day >= 0) {
       return Math.trunc(day / 7) + 1;
     }
-    if (time <= addDays(_minDate.getTime(), dayOfYear)) {
-      return this.getWeekOfYearOfMinDate(firstDayOfWeek, fullDays);
-    }
     return this.getWeekOfYearFullDays(
       addDays(time, -(dayOfYear + 1)),
       firstDayOfWeek,
@@ -108,39 +110,21 @@ export abstract class Calendar {
     );
   }
 
-  private getWeekOfYearOfMinDate(
-    firstDayOfWeek: number,
-    minimumDaysInFirstWeek: number
-  ): number {
-    const dayOfYear = this.dayOfYear(_minDate.getTime()) - 1;
-    const dayOfWeekOfFirstOfYear =
-      this.weekDay(_minDate.getTime()) - (dayOfYear % 7);
-
-    const offset = (firstDayOfWeek + 7 - dayOfWeekOfFirstOfYear) % 7;
-    if (offset == 0 || offset >= minimumDaysInFirstWeek) {
-      return 1;
-    }
-
-    const daysInYear = _daysInYear - 1;
-    const dayOfWeekOfFirstOfPreviousYear =
-      dayOfWeekOfFirstOfYear - 1 - (daysInYear % 7);
-
-    const daysInInitialPartialWeek =
-      (firstDayOfWeek - dayOfWeekOfFirstOfPreviousYear + 14) % 7;
-    let day = daysInYear - daysInInitialPartialWeek;
-    if (daysInInitialPartialWeek >= minimumDaysInFirstWeek) {
-      day += 7;
-    }
-    return Math.trunc(day / 7) + 1;
-  }
-
   weekNumber(time: number, firstDayOfWeek: DayOfWeek, offset: number): number {
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
       throw new Error();
     }
     offset = offset % 8;
-    if (offset == 1) { return this.getFirstDayWeekOfYear(time, firstDayOfWeek); }
-    else { return this.getWeekOfYearFullDays(time, firstDayOfWeek, offset); }
+    if (offset == 1) {
+      return getFirstDayWeekOfYear(
+        time,
+        firstDayOfWeek,
+        this.dayOfYear(time),
+        this.weekDay(time)
+      );
+    } else {
+      return this.getWeekOfYearFullDays(time, firstDayOfWeek, offset);
+    }
   }
 
   /** Adds a period of time to this DateTime and returns the resulting DateTime. */
