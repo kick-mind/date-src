@@ -24,8 +24,8 @@ export abstract class Calendars {
     }
 
     /** Finds a calendar by name in the calendar repository. */
-    static get(name: string): Calendar2 {
-        return repository.find(x => x.id === name);
+    static get(id: string): Calendar2 {
+        return repository.find(x => x.id === id);
     }
 
     /** Gets the number of calendars in the repository. */
