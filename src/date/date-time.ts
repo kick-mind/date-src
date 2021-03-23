@@ -19,7 +19,7 @@ export interface DateTimeUnits {
     ms?: number;
 }
 
-/** DateTime build options. */
+/** DateTime create options. */
 export interface CreateOptions {
     calandar: Calendar2 | string;
     zone?: Zone | string | number;
@@ -47,6 +47,7 @@ export class DateTime {
     private _locale: Locale;
     private _cache: DateTimeCachedValues;
 
+    //#region Creations
     /**
      * Creates a new DateTime.
      * @constructor
@@ -79,8 +80,6 @@ export class DateTime {
         // this._zone = opts.zone;
         // this._locale = locale ?? DateTime.getDefaultLocale();
     }
-
-    //#region Creations
     /** Parses a date */
     static parse(date: string, format: string): DateTime {
         throw new Error('Method not implemented.');
@@ -170,7 +169,7 @@ export class DateTime {
     /** Get the week number of the week year (1 to 52). */
     get weekNumber(): number {
         if (this._cache.weekNumber == null) {
-            this._cache.weekNumber = this._cal.weekNumber(this.ts);
+            this._cache.weekNumber = this._cal.weekNumber(this.ts, 1, 1);
         }
         return this._cache.weekNumber;
     }
@@ -213,7 +212,7 @@ export class DateTime {
     }
     //#endregion
 
-    //#region Manipulate
+    //#region Calculation
     /** Adds a period of time to this DateTime and returns the resulting DateTime. */
     add(units: DateTimeUnits): DateTime {
         return new DateTime(this._cal.add(this.ts, units), { calandar: this._cal, zone: this._zone, locale: this._locale });
@@ -226,11 +225,6 @@ export class DateTime {
 
     /** Clones this DateTime with time units (hour, minute, second, ms) set to zero. */
     date(): DateTime {
-        throw new Error('Method not implemented.');
-    }
-
-    /** Clones this DateTime with overwritten values. */
-    clone(newUnits?: DateTimeUnits): DateTime {
         throw new Error('Method not implemented.');
     }
     //#endregion
@@ -339,7 +333,7 @@ export class DateTime {
     }
 
     /** Set the DateTime's locale (returns a new DateTime) */
-    changeLocale(l: Locale | string): DateTime {
+    changeLocale(locale: Locale | string): DateTime {
         throw new Error('Method not implemented.');
     }
     //#endregion
@@ -360,7 +354,7 @@ export class DateTime {
     }
 
     /** Set the DateTime's zone (returns a new DateTime) */
-    changeZone(z: Zone | string): DateTime {
+    changeZone(zone: Zone | string): DateTime {
         throw new Error('Method not implemented.');
     }
     //#endregion
@@ -380,6 +374,11 @@ export class DateTime {
     /** Returns whether a variable is a JS-Sugar DateTime or not. */
     static isJssDate(o: any) {
         return o instanceof DateTime;
+    }
+
+    /** Clones this DateTime with overwritten values. */
+    clone(newUnits?: DateTimeUnits): DateTime {
+        throw new Error('Method not implemented.');
     }
     //#endregion
 }

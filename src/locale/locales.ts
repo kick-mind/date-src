@@ -1,8 +1,15 @@
 import { Locale } from './locale';
+import { PackageLocale } from './package-locale';
+import { SystemLocale } from './system-locale';
 
-const repository = new Array<Locale>();
+const repository = {
+    package: {} as any,
+    system: {} as any,
+};
+
 let defaultLocale: Locale;
 
+/** A class with some static methods for managing locales. */
 export abstract class Locales {
     /** Gets or sets the default locale. */
     static set default(value: Locale) {
@@ -15,21 +22,33 @@ export abstract class Locales {
 
     /** Adds a [Locale] to the locales repository. */
     static add(l: Locale) {
-        if (!this.get(l.id)) {
-            repository.push(l);
-            if (repository.length === 0) {
-                defaultLocale = l;
-            }
+        if (l instanceof PackageLocale) {
+            repository.package[l.id] = l;
+        }
+        if (l instanceof SystemLocale) {
+            repository.system[l.id] = l;
         }
     }
 
-    /** Finds a Locale by name in the locale repository. */
-    static get(id: string): Locale {
-        return repository.find(x => x.id === id);
+    /**
+     * Tries to find a PackageLocale or a SystemLocale.  
+     * This method first tries to find a Package or System Locale. if it cannot find a neither of them, tries to create a SystemLocale and returns it.
+     * If system locale creation fails, it returns null.
+     * @public
+     */
+    static resolve(id: string): Locale {
+        let l = repository.package[id] || repository.system[id];
+        if (l) { return l; }
+
+        l = SystemLocale.tryCreate(id);
+        if (l) {
+            repository.system[id] = l;
+        }
+        return l;
     }
 
-    /** Gets the number of locales in the repository. */
-    static count(): number {
-        return repository.length;
+    /** Gets all locales in the repository (returns a copy of the repository). */
+    static all(): Locale[] {
+        return [...Object.values<Locale>(repository.package), ...Object.values<Locale>(repository.system)];
     }
 }
