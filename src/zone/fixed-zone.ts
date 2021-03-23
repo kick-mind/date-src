@@ -9,10 +9,6 @@ export class FixedZone extends Zone {
     }
 
     getOffset(timestamp: number): number {
-        return this.offset;
-    }
-
-    get offset() {
         return this._offset;
     }
 }

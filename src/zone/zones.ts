@@ -1,12 +1,13 @@
+import { LocalZone } from './local-zone';
 import { Zone } from './zone';
 
 const cache = new Array<Zone>();
 
-/** An abstract base class for all zones (FixedZone, IANAZone). */
+/** A class with some static methods for managing zones. */
 export abstract class Zones {
     /** Gets the zone of this computer. */
     static get local(): Zone {
-        throw new Error('Method not implemented.');
+        return LocalZone.instance;
     }
 
     /** Gets the zone of this computer. */

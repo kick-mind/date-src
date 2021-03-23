@@ -36,7 +36,7 @@ export abstract class Locales {
      * If system locale creation fails, it returns null.
      * @public
      */
-    static resolve(id: string): Locale {
+    static find(id: string): Locale {
         let l = repository.package[id] || repository.system[id];
         if (l) { return l; }
 
