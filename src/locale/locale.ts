@@ -1,6 +1,6 @@
 export interface LocaleData {
-    /** Locale ID */
-    id: string;
+    /** Locale name */
+    name: string;
 
     /** The first day of the week */
     weekStart: number;
@@ -20,8 +20,5 @@ export class Locale {
     constructor(data: LocaleData) {
         this._data = data;
     }
-
-    get id() {
-        return this._data.id;
-    }
+    
 }
