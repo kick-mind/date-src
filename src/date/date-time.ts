@@ -26,8 +26,8 @@ export interface DateTimeUnits {
 
 /** DateTime create options. */
 export interface DateTimeCreateOptions {
-    calandar: Calendar2 | string;
-    zone?: Zone | string | number;
+    calendar: Calendar2 | string;
+    zone?: Zone | string; // | number :: zone offset (for next versions)
     locale?: Locale | string;
 }
 
@@ -51,6 +51,20 @@ export class DateTime {
     private _zone: Zone;
     private _locale: Locale;
     private _cache: DateTimeCachedValues;
+    private _: {
+        /** resolved create options */
+        opts: DateTimeCreateOptions,
+        units: DateTimeCachedValues,
+        /** Timestamp (UTC) */
+        ts: number;
+        weekDay: number;
+        dayOfYear: number;
+        weekNumber: number;
+        daysInMonth: number;
+        daysInYear: number;
+        isLeapYear: boolean;
+        isValid: boolean;
+    };
     // #_: { c: Calendar2, z: Zone, l: Locale };
 
     //#region Creations
@@ -112,9 +126,9 @@ export class DateTime {
         this._zone = z instanceof Zone ? z : (typeof z == 'string' ? Zones.find(z, o) : Zones.local);
 
         const l = opts?.locale;
-        this._locale = l instanceof Locale ? l : (typeof l == 'string' ? Locales.find(l, o) : Locales.default);
+        this._.opts.locale = l instanceof Locale ? l : (typeof l == 'string' ? Locales.find(l, o) : Locales.default);
 
-        const c = opts?.calandar;
+        const c = opts?.calendar;
         this._cal = c instanceof Calendar2 ? c : (typeof c == 'string' ? Calendars.find(c, o) : Calendars.default);
     }
 
@@ -130,8 +144,8 @@ export class DateTime {
      */
     static fromObject(units: DateTimeUnits, opts?: DateTimeCreateOptions): DateTime {
         const u = units;
-        if (!u || !II(u.year)) {
-            throw new Error('"year" is required.');
+        if (!u || !II(u.year) || !II(u.month) ) {
+            throw new Error('year and month are required.');
         }
 
         return new DateTime(u.year, u.month, u.day, u.hour, u.minute, u.second, u.ms, opts);
@@ -269,22 +283,28 @@ export class DateTime {
     get quarter(): number {
         return Math.floor(this.month / 4) + 1;
     }
+
+    /** Returns the configurations of this object (calandar, zone and locale). */
+    get config(): { calendar: Calendar2, zone?: Zone, locale?: Locale } {
+        return { calendar: this._cal, zone: this._zone, locale: this._locale };
+    }
     //#endregion
 
     //#region Calculation
     /** Adds a period of time to this DateTime and returns the resulting DateTime. */
     add(units: DateTimeUnits): DateTime {
-        return new DateTime(this._cal.add(this.ts, units), { calandar: this._cal, zone: this._zone, locale: this._locale });
+        return new DateTime(this._cal.add(this.ts, units), this.config);
     }
 
     /** Subtracts a period of time from this DateTime and returns the resulting DateTime. */
     subtract(units: DateTimeUnits): DateTime {
-        return new DateTime(this._cal.subtract(this.ts, units), { calandar: this._cal, zone: this._zone, locale: this._locale });
+        return new DateTime(this._cal.subtract(this.ts, units), this.config);
     }
 
     /** Clones this DateTime with time units (hour, minute, second, ms) set to zero. */
-    date(): DateTime {
-        return DateTime.fromObject({ ...this.toObject(), hour: 0, minute: 0, second: 0, ms: 0 }, { calandar: this._cal, zone: this._zone, locale: this._locale });
+    getDate(): DateTime {
+        const o = this.toObject();
+        return new DateTime(this.config, o.year, o.month, o.day);
     }
     //#endregion
 
@@ -393,7 +413,7 @@ export class DateTime {
     }
 
     /** Set the DateTime's locale (returns a new DateTime) */
-    changeLocale(locale: Locale | string): DateTime {
+    toLocale(locale: Locale | string): DateTime {
         throw new Error('Method not implemented.');
     }
     //#endregion
@@ -405,17 +425,27 @@ export class DateTime {
 
     /** Set the DateTime's zone to UTC (returns a new DateTime) */
     toUtc(): DateTime {
-        throw new Error('Method not implemented.');
+        return this.toZone(Zones.utc);
     }
 
     /** Set the DateTime's zone to the local zone of the system (returns a new DateTime) */
     toLocal(): DateTime {
-        throw new Error('Method not implemented.');
+        return this.toZone(Zones.local);
     }
 
     /** Set the DateTime's zone (returns a new DateTime) */
-    changeZone(zone: Zone | string): DateTime {
-        return new DateTime(this.ts, { calandar: this._cal, zone, locale: this._locale });
+    toZone(zone: Zone | string): DateTime {
+        return new DateTime(this.ts, { calendar: this._cal, zone, locale: this._locale });
+    }
+    //#endregion
+
+    //#region Calendar
+
+    /**
+     * Returns a new date time with the given calendar.
+     */
+    to(calendar: Calendar2 | string): DateTime {
+        return new DateTime(this.ts, { ...this.config, calendar });
     }
     //#endregion
 
@@ -437,8 +467,8 @@ export class DateTime {
     }
 
     /** Clones this DateTime with overrided unit values. */
-    set(newUnits?: DateTimeUnits): DateTime {
-        const opts = this._createOptions();
+    clone(newUnits?: DateTimeUnits): DateTime {
+        const opts = this.config;
 
         if (newUnits) {
             return DateTime.fromObject({ ...this.toObject(), ...newUnits }, opts);
@@ -447,8 +477,4 @@ export class DateTime {
         }
     }
     //#endregion
-
-    _createOptions(): DateTimeCreateOptions {
-        return { calandar: this._cal, locale: this._locale, zone: this._zone };
-    }
 }
