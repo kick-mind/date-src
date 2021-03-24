@@ -1,15 +1,17 @@
-import { Calendar, DateTimeUnits } from '../calendar';
+import {
+  Calendar,
+  DateTimeUnits,
+  throwErr,
+  _ticksPerDay,
+  _ticksPerHour,
+  _ticksPerMinute,
+  _ticksPerSecond,
+} from '../calendar';
 import { Helper } from './helper';
 // tslint:disable: member-ordering
 // tslint:disable: variable-name
 // tslint:disable: triple-equals
 // tslint:disable: prefer-const
-
-const _ticksPerSecond = 1000;
-const _ticksPerMinute = _ticksPerSecond * 60;
-const _ticksPerHour = _ticksPerMinute * 60;
-const _ticksPerDay = _ticksPerHour * 24;
-
 const _persianEpoch: number = 19603728000000 / _ticksPerDay;
 const _approximateHalfYear = 180;
 const _monthsPerYear = 12;
@@ -32,7 +34,7 @@ const _DaysToMonth = [
 
 function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
   if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
-    throw new Error();
+    throwErr();
   }
 }
 
@@ -68,7 +70,7 @@ function getAbsoluteDatePersian(
     yearStart += ordinalDay;
     return yearStart;
   }
-  throw new Error();
+  throwErr();
 }
 
 function timeToTicks(
@@ -94,7 +96,7 @@ function timeToTicks(
       ms
     );
   }
-  throw new Error();
+  throwErr();
 }
 export class Persia extends Calendar {
   static MinDate: Date = new Date('622/3/22');
@@ -102,7 +104,7 @@ export class Persia extends Calendar {
 
   addMonths(time: number, months: number): number {
     if (months < -120000 || months > 120000) {
-      throw new Error();
+      throwErr();
     }
     let ut = this.getUnits(time);
     let y = ut.year;
@@ -121,8 +123,7 @@ export class Persia extends Calendar {
       d = days;
     }
     const ticks =
-      getAbsoluteDatePersian(y, m, d) * _ticksPerDay +
-      (time % _ticksPerDay);
+      getAbsoluteDatePersian(y, m, d) * _ticksPerDay + (time % _ticksPerDay);
     checkAddResult(ticks, Persia.MinDate, Persia.MaxDate);
     return Helper.getJsTicks(ticks);
   }
@@ -198,14 +199,10 @@ export class Persia extends Calendar {
   getTimestamp(units: DateTimeUnits): number {
     const daysInMonth = this.daysInMonth(units.year, units.month);
     if (units.day < 1 || units.day > daysInMonth) {
-      throw new Error();
+      throwErr();
     }
 
-    const lDate = getAbsoluteDatePersian(
-      units.year,
-      units.month,
-      units.day
-    );
+    const lDate = getAbsoluteDatePersian(units.year, units.month, units.day);
 
     if (lDate >= 0) {
       let ticks =
@@ -213,7 +210,7 @@ export class Persia extends Calendar {
         timeToTicks(units.hour, units.minute, units.second, units.ms);
       return Helper.getJsTicks(ticks);
     } else {
-      throw new Error();
+      throwErr();
     }
   }
 

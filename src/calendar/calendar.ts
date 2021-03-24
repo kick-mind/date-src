@@ -10,19 +10,21 @@ export interface DateTimeUnits {
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 // tslint:disable: triple-equals
-const _ticksPerSecond = 1000;
-const _ticksPerMinute = _ticksPerSecond * 60;
-const _ticksPerHour = _ticksPerMinute * 60;
-const _ticksPerDay = _ticksPerHour * 24;
+export const _ticksPerSecond = 1000;
+export const _ticksPerMinute = _ticksPerSecond * 60;
+export const _ticksPerHour = _ticksPerMinute * 60;
+export const _ticksPerDay = _ticksPerHour * 24;
 const _maxMillis = 315537897600000;
 const _minDate = new Date('100/1/1');
 const _maxDate = new Date('9999/12/31');
-const _daysInYear = 365;
 
+export function throwErr(){
+  throw new Error('Invalid Time!');
+}
 function add(time: number, value: number, scale: number): number {
   const millis: number = value * scale;
   if (!(millis > -Number(_maxMillis) && millis < Number(_maxMillis))) {
-    throw new Error();
+    throwErr();
   }
   const ticks: number = time + millis;
   checkAddResult(ticks, _minDate, _maxDate);
@@ -47,7 +49,7 @@ function addDays(time: number, days: number): number {
 
 function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
   if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
-    throw new Error();
+    throwErr();
   }
 }
 
@@ -103,7 +105,7 @@ export abstract class Calendar {
 
   weekNumber(time: number, firstDayOfWeek: number, offset: number): number {
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
-      throw new Error();
+      throwErr();
     }
     offset = offset % 8;
     if (offset == 1) {
