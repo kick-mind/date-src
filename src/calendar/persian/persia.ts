@@ -13,9 +13,7 @@ const _ticksPerDay = _ticksPerHour * 24;
 const _persianEpoch: number = 19603728000000 / _ticksPerDay;
 const _approximateHalfYear = 180;
 const _monthsPerYear = 12;
-const _maxCalendarYear = 9378;
-const _maxCalendarMonth = 10;
-const _maxCalendarDay = 13;
+const _maxCalendarYear = 9000;
 const _DaysToMonth = [
   0,
   31,
@@ -168,10 +166,6 @@ export class Persia extends Calendar {
   }
 
   daysInMonth(year: number, month: number): number {
-    if (month == _maxCalendarMonth && year == _maxCalendarYear) {
-      return _maxCalendarDay;
-    }
-
     let daysInMonth = _DaysToMonth[month] - _DaysToMonth[month - 1];
     if (month == _monthsPerYear && !this.isInLeapYear(year)) {
       --daysInMonth;
@@ -180,17 +174,10 @@ export class Persia extends Calendar {
   }
 
   daysInYear(year: number): number {
-    if (year == _maxCalendarYear) {
-      return _DaysToMonth[_maxCalendarMonth - 1] + _maxCalendarDay;
-    }
     return this.isInLeapYear(year) ? 366 : 365;
   }
 
   isInLeapYear(year: number): boolean {
-    if (year == _maxCalendarYear) {
-      return false;
-    }
-
     return (
       getAbsoluteDatePersian(year + 1, 1, 1) -
         getAbsoluteDatePersian(year, 1, 1) ==
@@ -201,7 +188,7 @@ export class Persia extends Calendar {
   isValid(year: number, month: number, day: number): boolean {
     return (
       year >= 1 &&
-      year <= 9999 &&
+      year <= _maxCalendarYear &&
       month >= 1 &&
       month <= 12 &&
       day >= 1 &&
