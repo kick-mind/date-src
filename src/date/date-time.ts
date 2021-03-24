@@ -1,8 +1,6 @@
 import { Calendar2, Calendars } from '../calendar';
-import { Locales } from '../locale/locales';
-import { Zones } from '../zone/zones';
-import { Locale } from '../locale';
-import { Zone } from '../zone';
+import { Zone, Zones } from '../zone';
+import { Locale, Locales } from '../locale';
 
 const II = Number.isInteger; // Is Integer?
 const IO = (x: any) => typeof x == 'object'; // Is Object ?

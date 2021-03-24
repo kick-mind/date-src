@@ -1,6 +1,7 @@
 {
     "extends": "tslint:recommended",
     "rules": {
+        "prefer-const": false,
         "one-variable-per-declaration": false,
         "triple-equals": false,
         "no-trailing-whitespace": false,

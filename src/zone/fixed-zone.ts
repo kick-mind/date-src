@@ -1,15 +1,22 @@
 import { Zone } from './zone';
 
 export class FixedZone extends Zone {
-    private _offset: number;
+    #offset: number;
+    #ln: string;
+    #sn: string;
 
-    constructor(id: string, offset: number) {
-        super(id);
-        this._offset = offset;
+    constructor(longName: string, shortName: string, offset: number) {
+        super();
+        this.#offset = offset;
+        this.#ln = longName;
+        this.#sn = shortName;
     }
 
     getOffset(timestamp: number): number {
-        return this._offset;
+        return this.#offset;
+    }
+
+    getName(format: 'long' | 'short' = 'long'): string {
+        return format === 'short' ? this.#sn : this.#ln;
     }
 }
-

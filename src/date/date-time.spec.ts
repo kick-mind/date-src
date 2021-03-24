@@ -1,6 +1,6 @@
 import { DateTime } from './date-time';
 
-describe('DateTime creation', () => {
+describe('DateTime', () => {
   it('can be created from timestamp', () => {
     const d1 = new DateTime(12345);
     expect(d1.year).toBe(1000);
