@@ -1,4 +1,4 @@
-import { verifyParamType } from 'src/common/utils';
+import { verifyParamType } from '../common/utils';
 import { Calendar2 } from './calendar__';
 
 const calendars = new Array<Calendar2>();

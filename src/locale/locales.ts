@@ -1,4 +1,4 @@
-import { verifyParamType } from 'src/common/utils';
+import { verifyParamType } from '../common/utils';
 import { Locale } from './locale';
 import { PackageLocale } from './package-locale';
 import { SystemLocale } from './system-locale';

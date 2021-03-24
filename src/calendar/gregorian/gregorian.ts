@@ -1,4 +1,4 @@
-import { DateTimeUnits } from 'src/date';
+import { DateTimeUnits } from '../../date';
 import { Calendar2 } from '..';
 
 export class Gregorian extends Calendar2 {

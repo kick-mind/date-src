@@ -1,7 +1,7 @@
-import { PersianDate } from './src/date';
+// import { PersianDate } from './src/date';
 
-const pd = new PersianDate(1400);
-const f = pd.format('Y4:M:D');
+// const pd = new PersianDate(1400);
+// const f = pd.format('Y4:M:D');
 
-console.log(f);
+console.log(23);
 

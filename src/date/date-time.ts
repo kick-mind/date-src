@@ -1,6 +1,6 @@
-import { Calendar2, Calendars } from 'src/calendar';
-import { Locales } from 'src/locale/locales';
-import { Zones } from 'src/zone/zones';
+import { Calendar2, Calendars } from '../calendar';
+import { Locales } from '../locale/locales';
+import { Zones } from '../zone/zones';
 import { Locale } from '../locale';
 import { Zone } from '../zone';
 
