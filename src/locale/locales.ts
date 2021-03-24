@@ -1,3 +1,4 @@
+import { verifyParamType } from 'src/common/utils';
 import { Locale } from './locale';
 import { PackageLocale } from './package-locale';
 import { SystemLocale } from './system-locale';
@@ -22,10 +23,10 @@ export abstract class Locales {
 
     /** Adds a [Locale] to the locales repository. */
     static add(l: Locale) {
+        verifyParamType(l, Locale);
         if (l instanceof PackageLocale) {
             repository.package[l.id] = l;
-        }
-        if (l instanceof SystemLocale) {
+        } else {
             repository.system[l.id] = l;
         }
     }
@@ -50,7 +51,7 @@ export abstract class Locales {
         return l;
     }
 
-    /** Gets all locales in the repository (returns a copy of the repository). */
+    /** Gets all locales in the repository. */
     static all(): Locale[] {
         return [...Object.values<Locale>(repository.package), ...Object.values<Locale>(repository.system)];
     }
