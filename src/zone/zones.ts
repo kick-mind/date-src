@@ -2,7 +2,6 @@ import { FixedZone } from './fixed-zone';
 import { IANAZone } from './iana-zone';
 import { LocalZone } from './local-zone';
 import { SystemIANAZone } from './system-iana-zone';
-import { Zone } from './zone';
 
 const cache: { [key: string]: IANAZone } = {};
 const utc = new FixedZone('Coordinated Universal Time', 'UTC', 0);
@@ -10,12 +9,12 @@ const utc = new FixedZone('Coordinated Universal Time', 'UTC', 0);
 /** A class with some static methods for managing zones. */
 export abstract class Zones {
     /** Gets the zone of this computer. */
-    static get local(): Zone {
+    static get local(): LocalZone {
         return LocalZone.instance;
     }
 
-    /** Gets the zone of this computer. */
-    static get utc(): Zone {
+    /** Returns UTC zone. */
+    static get utc(): FixedZone {
         return utc;
     }
 

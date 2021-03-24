@@ -3,3 +3,7 @@ export function verifyParamType(parameter: any, type: any) {
         throw new Error('invalid parameter.');
     }
 }
+
+export function hasIntl(): boolean {
+    return Intl != null && typeof Intl.DateTimeFormat === 'function';
+}

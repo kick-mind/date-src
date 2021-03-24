@@ -1,21 +1,20 @@
+import { hasIntl } from '../common';
 import { Zone } from './zone';
 
 /** The local zone of this computer (singleton object) */
 export class LocalZone extends Zone {
-
     /**
      * Do not call this constructor. Use LocalZone.instance instead.
      * @private 
      */
     private constructor() {
-        const id = Intl?.DateTimeFormat()?.resolvedOptions().timeZone ?? '';
         super();
         if (instance) {
             throw new Error('Invalid Operation');
         }
     }
 
-    /** Gets the local zone */
+    /** Returns the local zone */
     static get instance() {
         if (!instance) {
             instance = new LocalZone();
@@ -28,7 +27,12 @@ export class LocalZone extends Zone {
     }
 
     getName(format: 'long' | 'short' = 'long'): string {
-        return format === 'short' ? 'Local' : 'Local Time Zone'; // TODO: return user real local timezone name
+        if (hasIntl()) {
+            let f = new Intl.DateTimeFormat([], { timeZoneName: format });
+            return f.resolvedOptions().timeZone;
+        } else {
+            return format === 'short' ? 'Local' : 'Local Time Zone';
+        }
     }
 }
 

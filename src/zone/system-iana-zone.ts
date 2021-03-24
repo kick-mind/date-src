@@ -8,7 +8,7 @@ export class SystemIANAZone extends IANAZone {
         super(id);
 
         try {
-            this.#long = new Intl.DateTimeFormat('en-US', {
+            this.#long = new Intl.DateTimeFormat([], {
                 timeZone: id,
                 hour12: false,
                 year: 'numeric',
@@ -44,7 +44,7 @@ export class SystemIANAZone extends IANAZone {
         let f;
         if (format == 'short') {
             if (!this.#short) {
-                this.#short = new Intl.DateTimeFormat('en-US', { timeZone: this.id, timeZoneName: 'short' });
+                this.#short = new Intl.DateTimeFormat([], { timeZone: this.id, timeZoneName: 'short' });
             }
             f = this.#short;
         } else {

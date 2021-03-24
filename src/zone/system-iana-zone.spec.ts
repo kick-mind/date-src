@@ -4,8 +4,8 @@
  */
 import { SystemIANAZone } from './system-iana-zone';
 
-describe('Zone', () => {
-    it('Should create a SystemIANAZone for zone "Asia/Tehran"', () => {
+describe('System IANA Zone', () => {
+    it('Should create a zone for "Asia/Tehran"', () => {
         const z = new SystemIANAZone('Asia/tehran');
         
         const offset = z.getOffset(Date.UTC(2021, 3, 24));
