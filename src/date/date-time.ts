@@ -85,6 +85,7 @@ export class DateTime {
 
         if (a.length == 0) {
             // first overload
+            // this._cache.units = this._cal.getUnits(new Date().getTime());
         } else if (IO(a[0])) {
             // 2'nd overload
             opts = C(a[0]);
@@ -144,7 +145,7 @@ export class DateTime {
      */
     static fromObject(units: DateTimeUnits, opts?: DateTimeCreateOptions): DateTime {
         const u = units;
-        if (!u || !II(u.year) || !II(u.month) ) {
+        if (!u || !II(u.year) || !II(u.month)) {
             throw new Error('year and month are required.');
         }
 
@@ -314,11 +315,6 @@ export class DateTime {
         return this.ts === dateTime.ts;
     }
 
-    /** Returns whether the type of this DateTime is same as the type of another DateTime. */
-    isSameType(dateTime: DateTime): boolean {
-        throw new Error('Method not implemented.');
-    }
-
     /** Returns whether this DateTime is after another DateTime. */
     isAfter(dateTime: DateTime): boolean {
         return this.ts > dateTime.ts;
@@ -419,6 +415,7 @@ export class DateTime {
     //#endregion
 
     //#region TimeZone
+    /** Returns the zone of this DateTime object */
     get zone(): Zone {
         return this._zone;
     }
@@ -447,6 +444,13 @@ export class DateTime {
     to(calendar: Calendar2 | string): DateTime {
         return new DateTime(this.ts, { ...this.config, calendar });
     }
+
+    /** 
+     * Returns the calendar of this DateTime object
+     */
+    get calendar() {
+        return this._cal;
+    }
     //#endregion
 
     //#region Misc
@@ -466,7 +470,7 @@ export class DateTime {
         return o instanceof DateTime;
     }
 
-    /** Clones this DateTime with overrided unit values. */
+    /** Clones this DateTime with overrided new unit values. */
     clone(newUnits?: DateTimeUnits): DateTime {
         const opts = this.config;
 
