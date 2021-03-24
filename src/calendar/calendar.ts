@@ -1,12 +1,3 @@
-export enum DayOfWeek {
-  Sunday = 0,
-  Monday = 1,
-  Tuesday = 2,
-  Wednesday = 3,
-  Thursday = 4,
-  Friday = 5,
-  Saturday = 6,
-}
 export interface DateTimeUnits {
   year: number;
   month: number;
@@ -110,7 +101,7 @@ export abstract class Calendar {
     );
   }
 
-  weekNumber(time: number, firstDayOfWeek: DayOfWeek, offset: number): number {
+  weekNumber(time: number, firstDayOfWeek: number, offset: number): number {
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
       throw new Error();
     }
@@ -177,7 +168,7 @@ export abstract class Calendar {
 
   abstract addMonths(time: number, months: number): number;
   abstract addYears(time: number, years: number): number;
-  abstract weekDay(time: number): DayOfWeek;
+  abstract weekDay(time: number): number;
   abstract dayOfYear(time: number): number;
   abstract daysInMonth(year: number, month: number): number;
   abstract daysInYear(year: number): number;

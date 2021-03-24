@@ -1,4 +1,4 @@
-import { Calendar, DateTimeUnits, DayOfWeek } from '../calendar';
+import { Calendar, DateTimeUnits } from '../calendar';
 import { Helper } from './helper';
 // tslint:disable: member-ordering
 // tslint:disable: variable-name
@@ -131,9 +131,8 @@ export class Persia extends Calendar {
     return this.addMonths(time, years * 12);
   }
 
-  weekDay(time: number): DayOfWeek {
-    const day = Math.trunc(Helper.getPersiaTicks(time) / _ticksPerDay + 1) % 7;
-    return day as DayOfWeek;
+  weekDay(time: number): number {
+    return Math.trunc(Helper.getPersiaTicks(time) / _ticksPerDay + 1) % 7;
   }
 
   dayOfYear(time: number): number {
