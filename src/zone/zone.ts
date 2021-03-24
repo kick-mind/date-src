@@ -1,3 +1,4 @@
+/** An abstract base class for all zones */
 export abstract class Zone {
     private _id: string;
 

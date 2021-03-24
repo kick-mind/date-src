@@ -12,3 +12,4 @@ export class FixedZone extends Zone {
         return this._offset;
     }
 }
+

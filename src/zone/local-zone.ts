@@ -1,23 +1,24 @@
 import { Zone } from './zone';
 
-let instance: LocalZone;
-let allowCreate = false;
-
+/** The local zone of this computer (singleton object) */
 export class LocalZone extends Zone {
-    constructor() {
-        super('local');
-        if (!allowCreate) {
-            throw new Error('Invalid operation');
+    /**
+     * Do not call this constructor. Use LocalZone.instance instead.
+     * @private 
+     */
+    private constructor() {
+        const id = Intl?.DateTimeFormat()?.resolvedOptions().timeZone ?? '';
+        super('sdf');
+        if (instance) {
+            throw new Error('Invalid Operation');
         }
-        allowCreate = false;
     }
 
+    /** Gets the local zone */
     static get instance() {
         if (!instance) {
-            allowCreate = true;
             instance = new LocalZone();
         }
-
         return instance;
     }
 
@@ -25,3 +26,5 @@ export class LocalZone extends Zone {
         return -new Date(timestamp).getTimezoneOffset();
     }
 }
+
+let instance: LocalZone;

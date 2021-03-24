@@ -36,14 +36,17 @@ export abstract class Locales {
      * If system locale creation fails, it returns null.
      * @public
      */
-    static find(id: string): Locale {
+    static find(id: string, opts?: { throwError: boolean }): Locale {
         let l = repository.package[id] || repository.system[id];
         if (l) { return l; }
 
-        l = SystemLocale.tryCreate(id);
-        if (l) {
-            repository.system[id] = l;
+        try {
+            l = new SystemLocale(id);
+            if (l) { repository.system[id] = l; }
+        } catch (e) {
+            if (opts && opts.throwError) { throw e; }
         }
+
         return l;
     }
 
