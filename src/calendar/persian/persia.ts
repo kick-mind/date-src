@@ -106,8 +106,7 @@ export class Persia extends Calendar {
     if (months < -120000 || months > 120000) {
       throw new Error();
     }
-    let totalTicks = Helper.getPersiaTicks(time);
-    let ut = this.getUnits(totalTicks);
+    let ut = this.getUnits(time);
     let y = ut.year;
     let m = ut.month;
     let d = ut.day;
@@ -125,7 +124,7 @@ export class Persia extends Calendar {
     }
     const ticks =
       getAbsoluteDatePersian(y, m, d) * _ticksPerDay +
-      (totalTicks % _ticksPerDay);
+      (time % _ticksPerDay);
     checkAddResult(ticks, Persia.MinDate, Persia.MaxDate);
     return Helper.getJsTicks(ticks);
   }
@@ -233,6 +232,7 @@ export class Persia extends Calendar {
   }
 
   getUnits(ts: number): DateTimeUnits {
+    ts = Helper.getPersiaTicks(ts);
     let tu = this.getDateUnits(ts);
     tu.hour = this.hour(ts);
     tu.minute = this.minute(ts);
