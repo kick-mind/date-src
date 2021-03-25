@@ -7,7 +7,7 @@ import {
   _ticksPerMinute,
   _ticksPerSecond,
 } from '../calendar';
-import { Helper } from './helper';
+import { Helper, _meanTropicalYearInDays } from './helper';
 // tslint:disable: member-ordering
 // tslint:disable: variable-name
 // tslint:disable: triple-equals
@@ -60,7 +60,7 @@ function getAbsoluteDatePersian(
   if (year >= 1 && year <= _maxYear && month >= 1 && month <= 12) {
     const ordinalDay = daysInPreviousMonths(month) + day - 1;
     const approximateDaysFromEpochForYearStart = Math.trunc(
-      Helper._meanTropicalYearInDays * (year - 1)
+      _meanTropicalYearInDays * (year - 1)
     );
     let yearStart = Helper.PersianNewYearOnOrBefore(
       _persianEpoch +
@@ -151,7 +151,7 @@ export class Persia extends Calendar {
     const y =
       Math.trunc(
         Math.floor(
-          (yearStart - _persianEpoch) / Helper._meanTropicalYearInDays + 0.5
+          (yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5
         )
       ) + 1;
 
@@ -249,7 +249,7 @@ export class Persia extends Calendar {
     const y =
       Math.trunc(
         Math.floor(
-          (yearStart - _persianEpoch) / Helper._meanTropicalYearInDays + 0.5
+          (yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5
         )
       ) + 1;
 
