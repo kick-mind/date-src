@@ -1,6 +1,7 @@
 import { IANAZone } from './iana-zone';
 
-export class SystemIANAZone extends IANAZone {
+/** An IANA zone created by using Javascript Intl API */
+export class JsIANAZone extends IANAZone {
     #long: Intl.DateTimeFormat; // A formatter with long time zone name
     #short: Intl.DateTimeFormat; // A formatter with short time zone name
 
@@ -35,7 +36,7 @@ export class SystemIANAZone extends IANAZone {
         const fixedHour = units[3] === 24 ? 0 : units[3];
         const utcTimestamp = Date.UTC(units[0], units[1] - 1, units[2], fixedHour, units[4], units[5], 0);
         const timestampMilliseconds = timestamp % 1000;
-        timestamp -= timestampMilliseconds; // we should ignore timestamp milliseconds beacuse [utcTimestamp] is created without milliseconds.
+        timestamp -= timestampMilliseconds; // We should ignore timestamp's milliseconds beacuse [utcTimestamp] is created without milliseconds.
         const diff = utcTimestamp - timestamp;
         return diff / (60 * 1000);
     }
