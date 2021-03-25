@@ -1,9 +1,9 @@
 import { verifyParamType } from '../common/utils';
 import { Locale } from './locale';
-import { PackageLocale } from './package-locale';
-import { SystemLocale } from './system-locale';
+import { FileLocale } from './file-locale';
+import { JsLocale } from './js-locale';
 
-const repository = {
+const cache = {
     package: {} as any,
     system: {} as any,
 };
@@ -24,26 +24,24 @@ export abstract class Locales {
     /** Adds a [Locale] to the locales repository. */
     static add(l: Locale) {
         verifyParamType(l, Locale);
-        if (l instanceof PackageLocale) {
-            repository.package[l.id] = l;
+        if (l instanceof FileLocale) {
+            cache.package[l.id] = l;
         } else {
-            repository.system[l.id] = l;
+            cache.system[l.id] = l;
         }
     }
 
     /**
-     * Tries to find a PackageLocale or a SystemLocale.  
-     * This method first tries to find a Package or System Locale. if it cannot find a neither of them, tries to create a SystemLocale and returns it.
-     * If system locale creation fails, it returns null.
+     * This method tries to find a file based or a Javascript based (Intl API) Locale.
      * @public
      */
     static find(id: string, opts?: { throwError: boolean }): Locale {
-        let l = repository.package[id] || repository.system[id];
+        let l = cache.package[id] || cache.system[id];
         if (l) { return l; }
 
         try {
-            l = new SystemLocale(id);
-            if (l) { repository.system[id] = l; }
+            l = new JsLocale(id);
+            if (l) { cache.system[id] = l; }
         } catch (e) {
             if (opts && opts.throwError) { throw e; }
         }
@@ -53,6 +51,6 @@ export abstract class Locales {
 
     /** Gets all locales in the repository. */
     static all(): Locale[] {
-        return [...Object.values<Locale>(repository.package), ...Object.values<Locale>(repository.system)];
+        return [...Object.values<Locale>(cache.package), ...Object.values<Locale>(cache.system)];
     }
 }

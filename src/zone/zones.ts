@@ -1,10 +1,10 @@
 import { FixedZone } from './fixed-zone';
 import { IANAZone } from './iana-zone';
 import { LocalZone } from './local-zone';
-import { SystemIANAZone } from './system-iana-zone';
+import { JsIANAZone } from './js-iana-zone';
 
 const cache: { [key: string]: IANAZone } = {};
-const utc = new FixedZone('Coordinated Universal Time', 'UTC', 0);
+const utc = new FixedZone('UTC', 'Coordinated Universal Time', 'UTC', 0);
 
 /** A class with some static methods for managing zones. */
 export abstract class Zones {
@@ -25,7 +25,7 @@ export abstract class Zones {
         if (z) { return z; }
 
         try {
-            z = new SystemIANAZone(id);
+            z = new JsIANAZone(id);
             cache[key] = z;
         } catch {
             if (opts && opts.throwError) { throw new Error('IANA timezone not found.'); }
