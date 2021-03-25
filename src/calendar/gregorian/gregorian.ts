@@ -1,8 +1,27 @@
-import { DateTimeUnits } from '../../date';
-import { Calendar2 } from '..';
+// tslint:disable: variable-name
+// tslint:disable: member-ordering
+// tslint:disable: triple-equals
 
-export class Gregorian extends Calendar2 {
+import { Calendar, DateTimeUnits, _ticksPerDay } from '../calendar';
+const _monthsPerYear = 12;
+const _maxYear = 9000;
+const _DaysToMonth = [
+  0,
+  31,
+  60,
+  91,
+  121,
+  152,
+  182,
+  213,
+  244,
+  274,
+  305,
+  335,
+  366,
+];
 
+export class Gregorian extends Calendar {
   get id(): string {
     return 'gregorian';
   }
@@ -10,7 +29,50 @@ export class Gregorian extends Calendar2 {
   get name(): string {
     return 'gregorian';
   }
-
+  addMonths(time: number, months: number): number {
+    const d = new Date(time);
+    d.setMonth(d.getMonth() + months);
+    return d.getTime();
+  }
+  addYears(time: number, years: number): number {
+    return this.addMonths(time, years * 12);
+  }
+  weekDay(time: number): number {
+    return Math.trunc(time / _ticksPerDay + 1) % 7;
+  }
+  dayOfYear(time: number): number {
+    const now = new Date(time);
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now.getTime() - start.getTime();
+    return Math.floor(diff / _ticksPerDay);
+  }
+  daysInMonth(year: number, month: number): number {
+    let daysInMonth = _DaysToMonth[month] - _DaysToMonth[month - 1];
+    if (month == _monthsPerYear && !this.isLeapYear(year)) {
+      --daysInMonth;
+    }
+    return daysInMonth;
+  }
+  daysInYear(year: number): number {
+    return this.isLeapYear(year) ? 366 : 365;
+  }
+  isLeapYear(year: number): boolean {
+    return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  }
+  isValid(year: number, month: number, day: number): boolean {
+    return (
+      year >= 1 &&
+      year <= _maxYear &&
+      month >= 1 &&
+      month <= 12 &&
+      day >= 1 &&
+      day <= this.daysInMonth(year, month)
+    );
+  }
+  getTimestamp(units: DateTimeUnits): number {
+    const u = units;
+    return Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms);
+  }
   getUnits(ts: number): DateTimeUnits {
     const d = new Date(ts);
     return {
@@ -20,48 +82,7 @@ export class Gregorian extends Calendar2 {
       hour: d.getUTCHours(),
       minute: d.getUTCMinutes(),
       second: d.getUTCSeconds(),
-      ms: d.getUTCMilliseconds()
+      ms: d.getUTCMilliseconds(),
     };
-  }
-
-  getTimestamp(units: DateTimeUnits): number {
-    const u = units;
-    return Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms);
-  }
-
-  weekDay(ts: number): number {
-    return new Date(ts).getUTCDay() + 1;
-  }
-
-  dayOfYear(ts: number): number {
-    throw new Error('Method not implemented.');
-  }
-
-  weekNumber(ts: number, weekStart: number, offset: number): number {
-    throw new Error('Method not implemented.');
-  }
-
-  daysInMonth(ts: number): number {
-    throw new Error('Method not implemented.');
-  }
-
-  daysInYear(ts: number): number {
-    throw new Error('Method not implemented.');
-  }
-
-  isLeapYear(ts: number): boolean {
-    throw new Error('Method not implemented.');
-  }
-
-  isValid(year: number, month: number, day: number): boolean {
-    throw new Error('Method not implemented.');
-  }
-
-  add(ts: number, units: Partial<DateTimeUnits>): number {
-    throw new Error('Method not implemented.');
-  }
-
-  subtract(ts: number, units: Partial<DateTimeUnits>): number {
-    throw new Error('Method not implemented.');
   }
 }

@@ -15,7 +15,7 @@ import { Helper } from './helper';
 const _persianEpoch: number = 19603728000000 / _ticksPerDay;
 const _approximateHalfYear = 180;
 const _monthsPerYear = 12;
-const _maxCalendarYear = 9000;
+const _maxYear = 9000;
 const _DaysToMonth = [
   0,
   31,
@@ -57,7 +57,7 @@ function getAbsoluteDatePersian(
   month: number,
   day: number
 ): number {
-  if (year >= 1 && year <= _maxCalendarYear && month >= 1 && month <= 12) {
+  if (year >= 1 && year <= _maxYear && month >= 1 && month <= 12) {
     const ordinalDay = daysInPreviousMonths(month) + day - 1;
     const approximateDaysFromEpochForYearStart = Math.trunc(
       Helper._meanTropicalYearInDays * (year - 1)
@@ -99,6 +99,14 @@ function timeToTicks(
   throwErr();
 }
 export class Persia extends Calendar {
+
+  get id(): string {
+    return 'persia';
+  }
+
+  get name(): string {
+    return 'persia';
+  }
   static MinDate: Date = new Date('622/3/22');
   static MaxDate: Date = new Date('9999/12/31');
 
@@ -167,17 +175,17 @@ export class Persia extends Calendar {
 
   daysInMonth(year: number, month: number): number {
     let daysInMonth = _DaysToMonth[month] - _DaysToMonth[month - 1];
-    if (month == _monthsPerYear && !this.isInLeapYear(year)) {
+    if (month == _monthsPerYear && !this.isLeapYear(year)) {
       --daysInMonth;
     }
     return daysInMonth;
   }
 
   daysInYear(year: number): number {
-    return this.isInLeapYear(year) ? 366 : 365;
+    return this.isLeapYear(year) ? 366 : 365;
   }
 
-  isInLeapYear(year: number): boolean {
+  isLeapYear(year: number): boolean {
     return (
       getAbsoluteDatePersian(year + 1, 1, 1) -
         getAbsoluteDatePersian(year, 1, 1) ==
@@ -188,7 +196,7 @@ export class Persia extends Calendar {
   isValid(year: number, month: number, day: number): boolean {
     return (
       year >= 1 &&
-      year <= _maxCalendarYear &&
+      year <= _maxYear &&
       month >= 1 &&
       month <= 12 &&
       day >= 1 &&

@@ -5,8 +5,8 @@ export class FixedZone extends Zone {
     #ln: string;
     #sn: string;
 
-    constructor(longName: string, shortName: string, offset: number) {
-        super();
+    constructor(id: string, longName: string, shortName: string, offset: number) {
+        super(id);
         this.#offset = offset;
         this.#ln = longName;
         this.#sn = shortName;

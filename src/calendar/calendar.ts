@@ -168,13 +168,21 @@ export abstract class Calendar {
     });
   }
 
+  /** Calendar's unique identifier. */
+  abstract get id(): string;
+
+  /**
+   * Calendar's name (Gregorian, Chiness, Persian, Islamic, ...).
+   *It is possible that you have multiple calendars with the same "name" and different ID's.
+   */ 
+  abstract get name(): string;
   abstract addMonths(time: number, months: number): number;
   abstract addYears(time: number, years: number): number;
   abstract weekDay(time: number): number;
   abstract dayOfYear(time: number): number;
   abstract daysInMonth(year: number, month: number): number;
   abstract daysInYear(year: number): number;
-  abstract isInLeapYear(year: number): boolean;
+  abstract isLeapYear(year: number): boolean;
   abstract isValid(year: number, month: number, day: number): boolean;
   abstract getTimestamp(units: DateTimeUnits): number;
   abstract getUnits(ts: number): DateTimeUnits;

@@ -2,6 +2,8 @@
 
 
 // import { IANAZone } from './iana-zone';
+
+/** An IANA zone created from a database. */
 // export class DbIANAZone extends IANAZone {
 //     constructor(id: string) {
 //         super(id);

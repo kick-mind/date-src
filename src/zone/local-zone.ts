@@ -8,7 +8,7 @@ export class LocalZone extends Zone {
      * @private 
      */
     private constructor() {
-        super();
+        super('Local');
         if (instance) {
             throw new Error('Invalid Operation');
         }

@@ -1,14 +1,5 @@
 import { Zone } from './zone';
 
+/** An abstract base class for all IANA zones */
 export abstract class IANAZone extends Zone {
-    #id: string;
-
-    constructor(id: string) {
-        super();
-        this.#id = id;
-    }
-
-    get id() {
-        return this.#id;
-    }
 }
