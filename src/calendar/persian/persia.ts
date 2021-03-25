@@ -1,114 +1,115 @@
-import { Calendar, DayOfWeek } from '../calendars';
+import {
+  Calendar,
+  DateTimeUnits,
+  throwErr,
+  _ticksPerDay,
+  _ticksPerHour,
+  _ticksPerMinute,
+  _ticksPerSecond,
+} from '../calendar';
 import { Helper } from './helper';
 // tslint:disable: member-ordering
 // tslint:disable: variable-name
 // tslint:disable: triple-equals
 // tslint:disable: prefer-const
+const _persianEpoch: number = 19603728000000 / _ticksPerDay;
+const _approximateHalfYear = 180;
+const _monthsPerYear = 12;
+const _maxCalendarYear = 9000;
+const _DaysToMonth = [
+  0,
+  31,
+  62,
+  93,
+  124,
+  155,
+  186,
+  216,
+  246,
+  276,
+  306,
+  336,
+  366,
+];
+
+function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
+  if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
+    throwErr();
+  }
+}
+
+function monthFromOrdinalDay(ordinalDay: number): number {
+  let index = 0;
+  while (ordinalDay > _DaysToMonth[index]) {
+    index++;
+  }
+
+  return index;
+}
+
+function daysInPreviousMonths(month: number): number {
+  --month;
+  return _DaysToMonth[month];
+}
+
+function getAbsoluteDatePersian(
+  year: number,
+  month: number,
+  day: number
+): number {
+  if (year >= 1 && year <= _maxCalendarYear && month >= 1 && month <= 12) {
+    const ordinalDay = daysInPreviousMonths(month) + day - 1;
+    const approximateDaysFromEpochForYearStart = Math.trunc(
+      Helper._meanTropicalYearInDays * (year - 1)
+    );
+    let yearStart = Helper.PersianNewYearOnOrBefore(
+      _persianEpoch +
+        approximateDaysFromEpochForYearStart +
+        _approximateHalfYear
+    );
+    yearStart += ordinalDay;
+    return yearStart;
+  }
+  throwErr();
+}
+
+function timeToTicks(
+  hour: number,
+  minute: number,
+  second: number,
+  ms: number
+): number {
+  if (
+    hour >= 0 &&
+    hour < 24 &&
+    minute >= 0 &&
+    minute < 60 &&
+    second >= 0 &&
+    second < 60 &&
+    ms >= 0 &&
+    ms < _ticksPerSecond
+  ) {
+    return (
+      hour * _ticksPerHour +
+      minute * _ticksPerMinute +
+      second * _ticksPerSecond +
+      ms
+    );
+  }
+  throwErr();
+}
 export class Persia extends Calendar {
-  private static _persianEpoch: number = 19603728000000 / Persia._ticksPerDay;
-  private static readonly _approximateHalfYear: number = 180;
-  private static readonly _monthsPerYear = 12;
-  private static readonly _maxCalendarYear = 9378;
-  private static readonly _maxCalendarMonth = 10;
-  private static readonly _maxCalendarDay = 13;
   static MinDate: Date = new Date('622/3/22');
   static MaxDate: Date = new Date('9999/12/31');
-  private static DaysToMonth = [
-    0,
-    31,
-    62,
-    93,
-    124,
-    155,
-    186,
-    216,
-    246,
-    276,
-    306,
-    336,
-    366,
-  ];
-
-  private getAbsoluteDatePersian(
-    year: number,
-    month: number,
-    day: number
-  ): number {
-    if (
-      year >= 1 &&
-      year <= Persia._maxCalendarYear &&
-      month >= 1 &&
-      month <= 12
-    ) {
-      const ordinalDay = Persia.daysInPreviousMonths(month) + day - 1;
-      const approximateDaysFromEpochForYearStart = Math.trunc(
-        Helper._meanTropicalYearInDays * (year - 1)
-      );
-      let yearStart = Helper.PersianNewYearOnOrBefore(
-        Persia._persianEpoch +
-          approximateDaysFromEpochForYearStart +
-          Persia._approximateHalfYear
-      );
-      yearStart += ordinalDay;
-      return yearStart;
-    }
-    throw new Error();
-  }
-
-  private static monthFromOrdinalDay(ordinalDay: number): number {
-    let index = 0;
-    while (ordinalDay > this.DaysToMonth[index]) {
-      index++;
-    }
-
-    return index;
-  }
-
-  private static daysInPreviousMonths(month: number): number {
-    --month;
-    return this.DaysToMonth[month];
-  }
-
-  private getDatePartYear(ticks: number): number {
-    let NumDays = Math.trunc(ticks / Persia._ticksPerDay) + 1;
-    const yearStart = Helper.PersianNewYearOnOrBefore(NumDays);
-    return (
-      Math.floor(
-        (yearStart - Persia._persianEpoch) / Helper._meanTropicalYearInDays +
-          0.5
-      ) + 1
-    );
-  }
-
-  private getDatePartDayOfYear(ticks: number, year: number): number {
-    let NumDays = Math.trunc(ticks / Persia._ticksPerDay) + 1;
-
-    const ordinalDay = Math.trunc(
-      NumDays - Helper.getNumberOfDays(this.toDateTime(year, 1, 1, 0, 0, 0, 0))
-    );
-
-    return ordinalDay;
-  }
-
-  private getDatePartMonth(ticks: number, year: number): number {
-    return Persia.monthFromOrdinalDay(this.getDatePartDayOfYear(ticks, year));
-  }
-
-  private getDatePartDay(ticks: number, year: number, month: number): number {
-    return (
-      this.getDatePartDayOfYear(ticks, year) -
-      Persia.daysInPreviousMonths(month)
-    );
-  }
 
   addMonths(time: number, months: number): number {
     if (months < -120000 || months > 120000) {
-      throw new Error();
+      throwErr();
     }
-    let totalTicks = Helper.getPersiaTicks(time);
-    let y = this.getDatePartYear(totalTicks);
-    let m = this.getDatePartMonth(totalTicks, y);
-    let d = this.getDatePartDay(totalTicks, y, m);
+    let ut = this.getUnits(time);
+    let y = ut.year;
+    let m = ut.month;
+    let d = ut.day;
     const i = m - 1 + months;
     if (i >= 0) {
       m = (i % 12) + 1;
@@ -117,14 +118,13 @@ export class Persia extends Calendar {
       m = 12 + ((i + 1) % 12);
       y = Math.trunc(y + (i - 11) / 12);
     }
-    const days = this.getDaysInMonth(y, m);
+    const days = this.daysInMonth(y, m);
     if (d > days) {
       d = days;
     }
     const ticks =
-      this.getAbsoluteDatePersian(y, m, d) * Persia._ticksPerDay +
-      (totalTicks % Persia._ticksPerDay);
-    Persia.checkAddResult(ticks, Persia.MinDate, Persia.MaxDate);
+      getAbsoluteDatePersian(y, m, d) * _ticksPerDay + (time % _ticksPerDay);
+    checkAddResult(ticks, Persia.MinDate, Persia.MaxDate);
     return Helper.getJsTicks(ticks);
   }
 
@@ -132,96 +132,138 @@ export class Persia extends Calendar {
     return this.addMonths(time, years * 12);
   }
 
-  getDayOfMonth(time: number, year: number, month: number): number {
-    return this.getDatePartDay(Helper.getPersiaTicks(time), year, month);
+  weekDay(time: number): number {
+    return Math.trunc(Helper.getPersiaTicks(time) / _ticksPerDay + 1) % 7;
   }
 
-  getDayOfWeek(time: number): DayOfWeek {
-    const day =
-      Math.trunc(Helper.getPersiaTicks(time) / Persia._ticksPerDay + 1) % 7;
-    return day as DayOfWeek;
+  dayOfYear(time: number): number {
+    let NumDays = Math.trunc(Helper.getPersiaTicks(time) / _ticksPerDay) + 1;
+
+    const yearStart = Helper.PersianNewYearOnOrBefore(NumDays);
+    const y =
+      Math.trunc(
+        Math.floor(
+          (yearStart - _persianEpoch) / Helper._meanTropicalYearInDays + 0.5
+        )
+      ) + 1;
+
+    const ordinalDay = Math.trunc(
+      NumDays -
+        Helper.getNumberOfDays(
+          this.getTimestamp({
+            year: y,
+            month: 1,
+            day: 1,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            ms: 0,
+          })
+        )
+    );
+
+    return ordinalDay;
   }
 
-  getDayOfYear(time: number, year: number): number {
-    return this.getDatePartDayOfYear(Helper.getPersiaTicks(time), year);
-  }
-
-  getDaysInMonth(year: number, month: number): number {
-    if (month == Persia._maxCalendarMonth && year == Persia._maxCalendarYear) {
-      return Persia._maxCalendarDay;
-    }
-
-    let daysInMonth = Persia.DaysToMonth[month] - Persia.DaysToMonth[month - 1];
-    if (month == Persia._monthsPerYear && !this.isLeapYear(year)) {
+  daysInMonth(year: number, month: number): number {
+    let daysInMonth = _DaysToMonth[month] - _DaysToMonth[month - 1];
+    if (month == _monthsPerYear && !this.isInLeapYear(year)) {
       --daysInMonth;
     }
     return daysInMonth;
   }
 
-  getDaysInYear(year: number): number {
-    if (year == Persia._maxCalendarYear) {
-      return (
-        Persia.DaysToMonth[Persia._maxCalendarMonth - 1] +
-        Persia._maxCalendarDay
-      );
-    }
-    return this.isLeapYear(year) ? 366 : 365;
+  daysInYear(year: number): number {
+    return this.isInLeapYear(year) ? 366 : 365;
   }
 
-  getMonth(time: number, year: number): number {
-    return this.getDatePartMonth(Helper.getPersiaTicks(time), year);
-  }
-
-  getYear(time: number): number {
-    return this.getDatePartYear(Helper.getPersiaTicks(time));
-  }
-
-  isLeapYear(year: number): boolean {
-    if (year == Persia._maxCalendarYear) {
-      return false;
-    }
-
+  isInLeapYear(year: number): boolean {
     return (
-      this.getAbsoluteDatePersian(year + 1, 1, 1) -
-        this.getAbsoluteDatePersian(year, 1, 1) ==
+      getAbsoluteDatePersian(year + 1, 1, 1) -
+        getAbsoluteDatePersian(year, 1, 1) ==
       366
     );
   }
 
   isValid(year: number, month: number, day: number): boolean {
     return (
-      year >= this.getYear(Persia.MinDate.getTime()) &&
-      year <= this.getYear(Persia.MaxDate.getTime()) &&
+      year >= 1 &&
+      year <= _maxCalendarYear &&
       month >= 1 &&
       month <= 12 &&
       day >= 1 &&
-      day <= this.getDaysInMonth(year, month)
+      day <= this.daysInMonth(year, month)
     );
   }
 
-  toDateTime(
-    year: number,
-    month: number,
-    day: number,
-    hour: number,
-    minute: number,
-    second: number,
-    ms: number
-  ): number {
-    const daysInMonth = this.getDaysInMonth(year, month);
-    if (day < 1 || day > daysInMonth) {
-      throw new Error();
+  getTimestamp(units: DateTimeUnits): number {
+    const daysInMonth = this.daysInMonth(units.year, units.month);
+    if (units.day < 1 || units.day > daysInMonth) {
+      throwErr();
     }
 
-    const lDate = this.getAbsoluteDatePersian(year, month, day);
+    const lDate = getAbsoluteDatePersian(units.year, units.month, units.day);
 
     if (lDate >= 0) {
       let ticks =
-        lDate * Persia._ticksPerDay +
-        this.timeToTicks(hour, minute, second, ms);
+        lDate * _ticksPerDay +
+        timeToTicks(units.hour, units.minute, units.second, units.ms);
       return Helper.getJsTicks(ticks);
     } else {
-      throw new Error();
+      throwErr();
     }
+  }
+
+  getUnits(ts: number): DateTimeUnits {
+    ts = Helper.getPersiaTicks(ts);
+    let tu = this.getDateUnits(ts);
+    tu.hour = this.hour(ts);
+    tu.minute = this.minute(ts);
+    tu.second = this.second(ts);
+    tu.ms = this.ms(ts);
+    return tu;
+  }
+
+  private getDateUnits(ticks: number): DateTimeUnits {
+    let du: DateTimeUnits = {
+      year: 0,
+      month: 0,
+      day: 0,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      ms: 0,
+    };
+
+    let NumDays;
+    NumDays = Math.trunc(ticks / _ticksPerDay) + 1;
+    const yearStart = Helper.PersianNewYearOnOrBefore(NumDays);
+    const y =
+      Math.trunc(
+        Math.floor(
+          (yearStart - _persianEpoch) / Helper._meanTropicalYearInDays + 0.5
+        )
+      ) + 1;
+
+    const ordinalDay = Math.trunc(
+      NumDays -
+        Helper.getNumberOfDays(
+          this.getTimestamp({
+            ['year']: y,
+            month: 1,
+            day: 1,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            ms: 0,
+          })
+        )
+    );
+
+    du.year = y;
+    du.month = monthFromOrdinalDay(ordinalDay);
+    du.day = ordinalDay - daysInPreviousMonths(du.month);
+
+    return du;
   }
 }

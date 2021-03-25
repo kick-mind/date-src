@@ -2,22 +2,14 @@
 // tslint:disable: variable-name
 // tslint:disable: triple-equals
 // tslint:disable: prefer-cons
-enum Algo {
-  Default,
-  Y1988to2019,
-  Y1900to1987,
-  Y1800to1899,
-  Y1700to1799,
-  Y1620to1699,
-}
 
 class AlgoMap {
-  constructor(year: number, algorithm: Algo) {
+  constructor(year: number, algorithm: number) {
     this._lowestYear = year;
     this._algorithm = algorithm;
   }
   _lowestYear: number;
-  _algorithm: Algo;
+  _algorithm: number;
 }
 export class Helper {
   private static _jsEpoch = 62135596800000;
@@ -99,13 +91,13 @@ export class Helper {
   private static _coeffB: number[] = [201.11, 72001.5377, 0.00057];
 
   private static _corrTable: AlgoMap[] = [
-    new AlgoMap(2020, Algo.Default),
-    new AlgoMap(1988, Algo.Y1988to2019),
-    new AlgoMap(1900, Algo.Y1900to1987),
-    new AlgoMap(1800, Algo.Y1800to1899),
-    new AlgoMap(1700, Algo.Y1700to1799),
-    new AlgoMap(1620, Algo.Y1620to1699),
-    new AlgoMap(Number.MIN_VALUE, Algo.Default),
+    new AlgoMap(2020, 0),
+    new AlgoMap(1988, 1),
+    new AlgoMap(1900, 2),
+    new AlgoMap(1800, 3),
+    new AlgoMap(1700, 4),
+    new AlgoMap(1620, 5),
+    new AlgoMap(Number.MIN_VALUE, 0),
   ];
 
   private static radiansFromDegrees(degree: number): number {
@@ -237,17 +229,17 @@ export class Helper {
     this._corrTable.forEach((map) => {
       if (map._lowestYear <= year) {
         switch (map._algorithm) {
-          case Algo.Default:
+          case 0:
             return this.defaultCorr(year);
-          case Algo.Y1988to2019:
+          case 1:
             return this.corr1988to2019(year);
-          case Algo.Y1900to1987:
+          case 2:
             return this.corr1900to1987(year);
-          case Algo.Y1800to1899:
+          case 3:
             return this.corr1800to1899(year);
-          case Algo.Y1700to1799:
+          case 4:
             return this.corr1700to1799(year);
-          case Algo.Y1620to1699:
+          case 5:
             return this.corr1620to1699(year);
         }
       }
@@ -452,35 +444,14 @@ export class Helper {
         this._secondsPerDay *
         this._millisecondsPerSecond
     );
-    return (
-      daysTotalTicks +
-      this.getZoneOffsetFromPersiaTicks(daysTotalTicks) -
-      this._jsEpoch
-    );
+    return this.getJsTicks(daysTotalTicks);
   }
 
-  static getPersiaTicks(date: number): number {
-    return date - this.getZoneOffsetFromJsTicks(date) + this._jsEpoch;
+  static getPersiaTicks(ticks: number): number {
+    return ticks + this._jsEpoch;
   }
 
   static getJsTicks(ticks: number): number {
-    return ticks + Helper.getZoneOffsetFromPersiaTicks(ticks) - Helper._jsEpoch;
-  }
-
-  static getZoneOffsetFromPersiaTicks(ticks: number): number {
-    const date = new Date(ticks - this._jsEpoch);
-    return (
-      date.getTimezoneOffset() *
-      this._secondsPerMinute *
-      this._millisecondsPerSecond
-    );
-  }
-
-  static getZoneOffsetFromJsTicks(date: number): number {
-    return (
-      new Date(date).getTimezoneOffset() *
-      this._secondsPerMinute *
-      this._millisecondsPerSecond
-    );
+    return ticks - Helper._jsEpoch;
   }
 }

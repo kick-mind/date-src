@@ -1,6 +1,6 @@
 import { DateTime } from './date-time';
 
-describe('DateTime creation', () => {
+describe('DateTime', () => {
   it('can be created from timestamp', () => {
     const d1 = new DateTime(12345);
     expect(d1.year).toBe(1000);
@@ -9,7 +9,7 @@ describe('DateTime creation', () => {
     // Do more validation on d1 here...
 
 
-    const d2 = new DateTime(12345, { calandar: 'persian' });
+    const d2 = new DateTime(12345, { calendar: 'persian' });
     expect(d2.year).toBe(1000);
     expect(d2.month).toBe(1);
     expect(d2.day).toBe(1);

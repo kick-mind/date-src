@@ -1,11 +1,11 @@
 import { Locale, LocaleData } from './locale';
 
+/** A locale created by using javascript Intl API. */
 export class SystemLocale extends Locale {
-    private constructor(data: LocaleData) {
-        super(data);
-    }
+    constructor(id: string) {
+        const data: LocaleData = null;
 
-    static get(id: string): SystemLocale {
-        throw new Error('Method not implemented.');
+
+        super(data);
     }
 }
