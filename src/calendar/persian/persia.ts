@@ -43,7 +43,6 @@ function monthFromOrdinalDay(ordinalDay: number): number {
   while (ordinalDay > _DaysToMonth[index]) {
     index++;
   }
-
   return index;
 }
 
@@ -99,6 +98,8 @@ function timeToTicks(
   throwErr();
 }
 export class Persia extends Calendar {
+  static MinDate: Date = new Date('622/3/22');
+  static MaxDate: Date = new Date('9999/12/31');
 
   get id(): string {
     return 'persia';
@@ -107,8 +108,6 @@ export class Persia extends Calendar {
   get name(): string {
     return 'persia';
   }
-  static MinDate: Date = new Date('622/3/22');
-  static MaxDate: Date = new Date('9999/12/31');
 
   addMonths(time: number, months: number): number {
     if (months < -120000 || months > 120000) {
@@ -169,7 +168,6 @@ export class Persia extends Calendar {
           })
         )
     );
-
     return ordinalDay;
   }
 
@@ -271,7 +269,6 @@ export class Persia extends Calendar {
     du.year = y;
     du.month = monthFromOrdinalDay(ordinalDay);
     du.day = ordinalDay - daysInPreviousMonths(du.month);
-
     return du;
   }
 }

@@ -2,6 +2,15 @@
 // tslint:disable: variable-name
 // tslint:disable: triple-equals
 // tslint:disable: prefer-cons
+class AlgoMap {
+  constructor(year: number, algorithm: number) {
+    this._lowestYear = year;
+    this._algorithm = algorithm;
+  }
+  _lowestYear: number;
+  _algorithm: number;
+}
+
 const _jsEpoch = 62135596800000;
 const _fullCircleOfArc = 360.0; // 360.0;
 const _halfCircleOfArc = 180;
@@ -16,7 +25,6 @@ const _secondsPerMinute = 60;
 const _minutesPerDegree = 60;
 const _startOf1810 = 660723;
 const _startOf1900Century = 693595;
-
 const _coeff1900to1987: number[] = [
   -0.00002,
   0.000297,
@@ -59,19 +67,8 @@ const _eccentricityCoefficients: number[] = [
   -0.000042037,
   -0.0000001236,
 ];
-
 const _coeffA: number[] = [124.9, -1934.134, 0.002063];
 const _coeffB: number[] = [201.11, 72001.5377, 0.00057];
-
-class AlgoMap {
-  constructor(year: number, algorithm: number) {
-    this._lowestYear = year;
-    this._algorithm = algorithm;
-  }
-  _lowestYear: number;
-  _algorithm: number;
-}
-
 export const _meanTropicalYearInDays = 365.242189;
 const _meanSpeedOfSun: number = _meanTropicalYearInDays / _fullCircleOfArc;
 
@@ -143,7 +140,6 @@ function polynomialSum(coeff: number[], indeterminate: number): number {
     indeterminateRaised *= indeterminate;
     sum += coeff[i] * indeterminateRaised;
   }
-
   return sum;
 }
 
@@ -207,7 +203,6 @@ function corr(time: number): number {
       }
     }
   });
-
   return defaultCorr(year);
 }
 
@@ -229,11 +224,9 @@ function equationOfTime(time: number): number {
   const lambda = polynomialSum(_lambdaCoefficients, j);
   const anomaly = polynomialSum(_anomalyCoefficients, j);
   const eccentricity = polynomialSum(_eccentricityCoefficients, j);
-
   const epsilon = obliquity(j);
   const tanHalfEpsilon = tanOfDegree(epsilon / 2);
   const y = tanHalfEpsilon * tanHalfEpsilon;
-
   const dividend =
     y * sinOfDegree(2 * lambda) -
     2 * eccentricity * sinOfDegree(anomaly) +
@@ -242,7 +235,6 @@ function equationOfTime(time: number): number {
     1.25 * Math.pow(eccentricity, 2) * sinOfDegree(2 * anomaly);
   const divisor = 2 * Math.PI;
   const equation = dividend / divisor;
-
   return copySign(Math.min(Math.abs(equation), _twelveHours), equation);
 }
 
