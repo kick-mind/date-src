@@ -25,9 +25,9 @@ export abstract class Calendars {
         }
     }
 
-    /** Finds a calendar by name in the calendars repository. */
-    static find(name: string, opts?: { throwError: boolean }): Calendar2 {
-        const c = calendars.find(x => x.name === name);
+    /** Finds a calendar by id in the calendars repository. */
+    static find(id: string, opts?: { throwError: boolean }): Calendar2 {
+        const c = calendars.find(x => x.id === id);
         if (!c && opts?.throwError) {
             throw new Error('Calendar not found.');
         }

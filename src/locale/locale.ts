@@ -1,48 +1,27 @@
-/** Locale data */
-export interface LocaleData {
-    /** Locale identifier */
-    id: string;
+import { MonthNameFormat, WeekdayNameFormat } from 'src/common';
+import { Calendar2 } from '../calendar';
 
-    /** The first day of the week */
-    weekStart: number;
-
-    /** weekday names */
-    weekdays: Array<Array<string>>;
-
-    /** month names */
-    months: {
-        [calendarName: string]: Array<Array<string>>;
-    };
-}
 
 /** An abstract base class for all locales (PackageLocale, SystemLocale) */
 export abstract class Locale {
-    private _data: LocaleData;
+    private _id: string;
 
-    constructor(data: LocaleData) {
-        this._data = data;
-        Object.freeze(data); // TODO: Do a deep data freezing!
+    constructor(id: string) {
+        this._id = id;
     }
 
     /** Gets the locale ID */
     get id() {
-        return this._data.id;
+        return this._id;
     }
 
     /** Gets the week strat day */
-    get weekStart() {
-        return this._data.weekStart;
-    }
+    abstract get weekStart(): number;
 
-    /** Returns the month name */
-    monthName(month: number, calendarName: string, abbr = false) {
-        return this._data.months[calendarName][abbr ? 1 : 0][month - 1];
-    }
+    /** Returns the month names of the given calendar */
+    abstract monthNames(calendar: Calendar2, format?: MonthNameFormat): string[];
 
-    /** Returns the weekday name */
-    weekdayName(weekday: number, abbr: 'none' | 'short' | 'min' = 'none') {
-        const idx = abbr == 'min' ? 2 : (abbr == 'short' ? 1 : 0);
-        return this._data.months[idx][weekday - 1];
-    }
+    /** Returns the weekday names */
+    abstract weekdayNames(format?: WeekdayNameFormat): string[];
 }
 

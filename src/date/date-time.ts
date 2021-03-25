@@ -24,7 +24,7 @@ export interface DateTimeUnits {
 
 /** DateTime create options. */
 export interface DateTimeCreateOptions {
-    calendar: Calendar2 | string;
+    calendar: Calendar2 | string; // A Calendar object or Calendar ID
     zone?: Zone | string; // | number :: zone offset (for next versions)
     locale?: Locale | string;
 }

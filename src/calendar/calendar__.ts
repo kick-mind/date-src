@@ -6,10 +6,10 @@ export abstract class Calendar2 {
   abstract get id(): string;
 
   /**
-   * Calendar's name (Gregorian, Chiness, Persian, Islamic, ...).
-   * It is possible that you have multiple calendars with the same "name" and different ID's.
+   * Calendar's type (Gregorian, Chiness, Persian, Islamic, ...).
+   * It is possible that you have multiple calendars with the same type and different ID's.
    */
-  abstract get name(): string;
+  abstract get type(): string;
 
   /** Get the year. */
   abstract getUnits(ts: number): DateTimeUnits;
