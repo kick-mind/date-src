@@ -1,7 +1,9 @@
 import {
   Calendar,
+  checkAddResult,
   DateTimeUnits,
   throwErr,
+  _maxYear,
   _ticksPerDay,
   _ticksPerHour,
   _ticksPerMinute,
@@ -15,7 +17,6 @@ import { Helper, _meanTropicalYearInDays } from './helper';
 const _persianEpoch: number = 19603728000000 / _ticksPerDay;
 const _approximateHalfYear = 180;
 const _monthsPerYear = 12;
-const _maxYear = 9000;
 const _DaysToMonth = [
   0,
   31,
@@ -31,12 +32,6 @@ const _DaysToMonth = [
   336,
   366,
 ];
-
-function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
-  if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
-    throwErr();
-  }
-}
 
 function monthFromOrdinalDay(ordinalDay: number): number {
   let index = 0;
@@ -99,7 +94,7 @@ function timeToTicks(
 }
 export class Persia extends Calendar {
   static MinDate: Date = new Date('622/3/22');
-  static MaxDate: Date = new Date('9999/12/31');
+  static MaxDate: Date = new Date('9000/12/31');
 
   get id(): string {
     return 'persia';
@@ -137,10 +132,6 @@ export class Persia extends Calendar {
 
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
-  }
-
-  weekDay(time: number): number {
-    return Math.trunc(Helper.getPersiaTicks(time) / _ticksPerDay + 1) % 7;
   }
 
   dayOfYear(time: number): number {
@@ -188,17 +179,6 @@ export class Persia extends Calendar {
       getAbsoluteDatePersian(year + 1, 1, 1) -
         getAbsoluteDatePersian(year, 1, 1) ==
       366
-    );
-  }
-
-  isValid(year: number, month: number, day: number): boolean {
-    return (
-      year >= 1 &&
-      year <= _maxYear &&
-      month >= 1 &&
-      month <= 12 &&
-      day >= 1 &&
-      day <= this.daysInMonth(year, month)
     );
   }
 

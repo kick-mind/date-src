@@ -10,10 +10,12 @@ export interface DateTimeUnits {
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 // tslint:disable: triple-equals
+const _jsEpoch = 62135596800000;
 export const _ticksPerSecond = 1000;
 export const _ticksPerMinute = _ticksPerSecond * 60;
 export const _ticksPerHour = _ticksPerMinute * 60;
 export const _ticksPerDay = _ticksPerHour * 24;
+export const _maxYear = 9000;
 const _maxMillis = 315537897600000;
 const _minDate = new Date('100/1/1');
 const _maxDate = new Date('9999/12/31');
@@ -47,7 +49,7 @@ function addDays(time: number, days: number): number {
   return add(time, days, _ticksPerDay);
 }
 
-function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
+export function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
   if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
     throwErr();
   }
@@ -64,6 +66,16 @@ function getFirstDayWeekOfYear(
   const offset = (dayForJan1 - firstDayOfWeek + 14) % 7;
   return Math.trunc((dayOfYear + offset) / 7) + 1;
 }
+
+
+export function getCalendarTicks(ticks: number): number {
+  return ticks + _jsEpoch;
+}
+
+export function getJsTicks(ticks: number): number {
+  return ticks - _jsEpoch;
+}
+
 export abstract class Calendar {
   ms(time: number): number {
     return time % 1000;
@@ -168,7 +180,21 @@ export abstract class Calendar {
     });
   }
 
+  isValid(year: number, month: number, day: number): boolean {
+    return (
+      year >= 1 &&
+      year <= _maxYear &&
+      month >= 1 &&
+      month <= 12 &&
+      day >= 1 &&
+      day <= this.daysInMonth(year, month)
+    );
+  }
   /** Calendar's unique identifier. */
+
+  weekDay(time: number): number {
+    return Math.trunc(getCalendarTicks(time) / _ticksPerDay + 1) % 7;
+  }
   abstract get id(): string;
 
   /**
@@ -178,12 +204,10 @@ export abstract class Calendar {
   abstract get name(): string;
   abstract addMonths(time: number, months: number): number;
   abstract addYears(time: number, years: number): number;
-  abstract weekDay(time: number): number;
   abstract dayOfYear(time: number): number;
   abstract daysInMonth(year: number, month: number): number;
   abstract daysInYear(year: number): number;
   abstract isLeapYear(year: number): boolean;
-  abstract isValid(year: number, month: number, day: number): boolean;
   abstract getTimestamp(units: DateTimeUnits): number;
   abstract getUnits(ts: number): DateTimeUnits;
 }
