@@ -99,6 +99,14 @@ function timeToTicks(
   throwErr();
 }
 export class Persia extends Calendar {
+
+  get id(): string {
+    return 'persia';
+  }
+
+  get name(): string {
+    return 'persia';
+  }
   static MinDate: Date = new Date('622/3/22');
   static MaxDate: Date = new Date('9999/12/31');
 
