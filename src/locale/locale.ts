@@ -1,7 +1,7 @@
 /** Locale data */
 export interface LocaleData {
-    /** Locale identifier */
-    id: string;
+    /** Locale name */
+    name: string;
 
     /** The first day of the week */
     weekStart: number;
@@ -23,6 +23,9 @@ export abstract class Locale {
         this._data = data;
         Object.freeze(data); // TODO: Do a deep data freezing!
     }
+<<<<<<< HEAD
+    
+=======
 
     /** Gets the locale ID */
     get id() {
@@ -44,5 +47,6 @@ export abstract class Locale {
         const idx = abbr == 'min' ? 2 : (abbr == 'short' ? 1 : 0);
         return this._data.months[idx][weekday - 1];
     }
+>>>>>>> 544fa44de2e3f555a19f758763a514b8d5efc87c
 }
 
