@@ -182,7 +182,7 @@ export abstract class Calendar {
   abstract dayOfYear(time: number): number;
   abstract daysInMonth(year: number, month: number): number;
   abstract daysInYear(year: number): number;
-  abstract isInLeapYear(year: number): boolean;
+  abstract isLeapYear(year: number): boolean;
   abstract isValid(year: number, month: number, day: number): boolean;
   abstract getTimestamp(units: DateTimeUnits): number;
   abstract getUnits(ts: number): DateTimeUnits;
