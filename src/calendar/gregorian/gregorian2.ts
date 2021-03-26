@@ -52,7 +52,7 @@ const _daysToMonth366 = [
   366,
 ];
 
-export class GC extends Calendar {
+export class Gregorian2 extends Calendar {
   static MinDate: Date = new Date('1/1/1');
   static MaxDate: Date = new Date('9000/12/31');
 
@@ -128,7 +128,7 @@ export class GC extends Calendar {
       d = days;
     }
     const ticks = this.dateToTicks(y, m, d) + (time % _ticksPerDay);
-    checkAddResult(ticks, GC.MinDate, GC.MaxDate);
+    checkAddResult(ticks, Gregorian2.MinDate, Gregorian2.MaxDate);
 
     return getJsTicks(ticks);
   }
