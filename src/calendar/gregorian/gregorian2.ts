@@ -11,6 +11,7 @@ import {
   _maxYear,
   _ticksPerDay,
 } from '../calendar';
+import { Calendars } from '../calendars';
 
 // Number of days in a non-leap year
 const _daysPerYear = 365;
@@ -52,7 +53,8 @@ const _daysToMonth366 = [
   366,
 ];
 
-export class Gregorian2 extends Calendar {
+/** Gregorian2 calendar */
+export class GregorianCalendar2 extends Calendar {
   static MinDate: Date = new Date('1/1/1');
   static MaxDate: Date = new Date('9000/12/31');
 
@@ -128,7 +130,7 @@ export class Gregorian2 extends Calendar {
       d = days;
     }
     const ticks = this.dateToTicks(y, m, d) + (time % _ticksPerDay);
-    checkAddResult(ticks, Gregorian2.MinDate, Gregorian2.MaxDate);
+    checkAddResult(ticks, GregorianCalendar2.MinDate, GregorianCalendar2.MaxDate);
 
     return getJsTicks(ticks);
   }
@@ -189,3 +191,5 @@ export class Gregorian2 extends Calendar {
     return this.getAbsoluteDate(year, month, day) * _ticksPerDay;
   }
 }
+
+Calendars.add(new GregorianCalendar2());

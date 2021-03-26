@@ -4,6 +4,7 @@
 
 import { DateTimeUnits } from '../../common';
 import { Calendar, _ticksPerDay } from '../calendar';
+import { Calendars } from '../calendars';
 const _monthsPerYear = 12;
 const _maxYear = 9000;
 const _DaysToMonth = [
@@ -22,7 +23,8 @@ const _DaysToMonth = [
   366,
 ];
 
-export class Gregorian extends Calendar {
+/** Gregorian calendar */
+export class GregorianCalendar extends Calendar {
   constructor() {
     super('gregorian', 'gregorian');
   }
@@ -73,3 +75,5 @@ export class Gregorian extends Calendar {
     };
   }
 }
+
+Calendars.add(new GregorianCalendar());
