@@ -109,7 +109,7 @@ export class DateTime {
         } else if (IsStr(z)) {
             z = Zones.find(z, o);
         } else {
-            verifyObject(z, Zone, 'Invalid zone');
+            verifyObject(z, Zone, true, 'Invalid zone');
         }
         this._z = z;
 
@@ -120,7 +120,7 @@ export class DateTime {
         } else if (IsStr(l)) {
             l = Locales.find(l, o);
         } else {
-            verifyObject(l, Locale, 'Invalid locale');
+            verifyObject(l, Locale, true, 'Invalid locale');
         }
         this._l = l;
 
@@ -131,7 +131,7 @@ export class DateTime {
         } else if (IsStr(c)) {
             c = Calendars.findById(c, o);
         } else {
-            verifyObject(c, Calendar, 'Invalid calendar');
+            verifyObject(c, Calendar, true, 'Invalid calendar');
         }
         this._c = c;
     }

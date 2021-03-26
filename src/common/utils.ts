@@ -21,15 +21,15 @@ export function padNumber(value: number, length: number) {
 }
 
 /** Verifies an object's to ensure that it has a specific type */
-export function verifyObject(x: any, type: any, err = 'invalid parameter.') {
-    if (!(x instanceof type)) {
+export function verifyObject(x: any, type: any, required = true, err = 'invalid parameter.') {
+    if ((x == null && required) || !(x instanceof type)) {
         throw new Error(err);
     }
 }
 
 /** Verifies an object's type */
-export function verifyType(x: any, type: 'object' | 'string' | 'number' | 'boolean' | 'function', err = 'invalid parameter.') {
-    if (!(typeof x == type)) {
+export function verifyType(x: any, type: 'object' | 'string' | 'number' | 'boolean' | 'function', required = true, err = 'invalid parameter.') {
+    if ((x == null && required) || (typeof x != type)) {
         throw new Error(err);
     }
 }
@@ -38,5 +38,21 @@ export function verifyType(x: any, type: 'object' | 'string' | 'number' | 'boole
 export function verifyClassCall(inst: any, cls: any) {
     if (!(inst instanceof cls)) {
         throw new TypeError('Cannot call a class as a function');
+    }
+}
+
+/** Determines if a locale is supported by the Javascript environment or not. */
+export function isSupportedLocale(name: string) {
+    try {
+        return Intl.DateTimeFormat.supportedLocalesOf([name], { localeMatcher: 'lookup' }).length == 1;
+    } catch {
+        return false;
+    }
+}
+
+/** If the given locale is not supported, throws an error */
+export function verifyLocale(name: string, err = 'Unsupported locale') {
+    if (!isSupportedLocale(name)) {
+        throw new Error(err);
     }
 }

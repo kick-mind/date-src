@@ -21,24 +21,14 @@ export interface LocaleData {
     };
 }
 
-/** A locale provided in the package (file-based locale). */
-export class FileLocale extends Locale {
+/** A locale provided in the package (package-based locale). */
+export class PackageLocale extends Locale {
     private _data: LocaleData;
 
     constructor(data: LocaleData) {
-        super(data.id);
+        super(data.id, { weekStart: data.weekStart });
         this._data = data;
         Object.freeze(data); // TODO: Do a deep data freezing!
-    }
-
-    /** Gets the locale ID */
-    get id() {
-        return this._data.id;
-    }
-
-    /** Gets the week strat day */
-    get weekStart() {
-        return this._data.weekStart;
     }
 
     monthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {

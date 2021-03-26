@@ -1,7 +1,8 @@
-import { MonthNameFormat, WeekdayNameFormat } from 'src/common';
+import { IsInt, MonthNameFormat, verifyClassCall, verifyLocale, verifyType, WeekdayNameFormat } from 'src/common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
 
+// Weekday names cache
 let weekDays: {
     [localeId: string]: {
         long?: string[],
@@ -10,6 +11,7 @@ let weekDays: {
     },
 } = {};
 
+// Month names cache
 let monthNames: {
     [localeId: string]: {
         [calendarType: string]: {
@@ -20,9 +22,10 @@ let monthNames: {
     }
 } = {};
 
+// Date formatters cache
 let formatters: {
     [localeId: string]: {
-        day?: {
+        weekday?: {
             long?: Intl.DateTimeFormat,
             short?: Intl.DateTimeFormat,
             narrow?: Intl.DateTimeFormat,
@@ -37,14 +40,10 @@ let formatters: {
 
 /** A locale created by using javascript Intl API. */
 export class JsLocale extends Locale {
-    private _f: Intl.DateTimeFormat;
-
-    constructor(id: string) {
-        super(id);
-    }
-
-    get weekStart(): number {
-        return 0;
+    constructor(id: string, data: { weekStart: number }) {
+        super(id, data);
+        verifyClassCall(this, JsLocale);
+        verifyLocale(id);
     }
 
     weekdayNames(format?: WeekdayNameFormat): string[] {
@@ -62,7 +61,7 @@ export class JsLocale extends Locale {
             formatters[id].month[format] = f;
         }
 
-        // Find/create months names
+        // Find or create/cache months names
         let localeMonths = monthNames[id] || {},
             calMonths = localeMonths[calendar.type] || {},
             months = calMonths[format];
