@@ -1,5 +1,5 @@
 import { MonthNameFormat, WeekdayNameFormat } from 'src/common';
-import { Calendar2 } from '../calendar';
+import { Calendar } from '../calendar';
 import { Locale } from './locale';
 
 let weekDays: {
@@ -51,7 +51,7 @@ export class JsLocale extends Locale {
         throw new Error('Method not implemented.');
     }
 
-    monthNames(calendar: Calendar2, format: MonthNameFormat = 'long'): string[] {
+    monthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
         let id = this.id;
         // Find or create/cache a month formatter 
         let lf = formatters[id] || {},

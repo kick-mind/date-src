@@ -2,7 +2,8 @@
 // tslint:disable: member-ordering
 // tslint:disable: triple-equals
 
-import { Calendar, DateTimeUnits, _ticksPerDay } from '../calendar';
+import { DateTimeUnits } from '../../common';
+import { Calendar, _ticksPerDay } from '../calendar';
 const _monthsPerYear = 12;
 const _maxYear = 9000;
 const _DaysToMonth = [
@@ -22,18 +23,16 @@ const _DaysToMonth = [
 ];
 
 export class Gregorian extends Calendar {
-  get id(): string {
-    return 'gregorian';
+  constructor() {
+    super('gregorian', 'gregorian');
   }
 
-  get name(): string {
-    return 'gregorian';
-  }
   addMonths(time: number, months: number): number {
     const d = new Date(time);
     d.setMonth(d.getMonth() + months);
     return d.getTime();
   }
+  
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
   }
@@ -44,6 +43,7 @@ export class Gregorian extends Calendar {
     const diff = now.getTime() - start.getTime();
     return Math.floor(diff / _ticksPerDay);
   }
+
   daysInMonth(year: number, month: number): number {
     let daysInMonth = _DaysToMonth[month] - _DaysToMonth[month - 1];
     if (month == _monthsPerYear && !this.isLeapYear(year)) {
@@ -51,9 +51,11 @@ export class Gregorian extends Calendar {
     }
     return daysInMonth;
   }
+
   daysInYear(year: number): number {
     return this.isLeapYear(year) ? 366 : 365;
   }
+
   isLeapYear(year: number): boolean {
     return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
   }
@@ -62,6 +64,7 @@ export class Gregorian extends Calendar {
     const u = units;
     return Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms);
   }
+
   getUnits(ts: number): DateTimeUnits {
     const d = new Date(ts);
     return {

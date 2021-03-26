@@ -1,10 +1,10 @@
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 // tslint:disable: triple-equals
+import { DateTimeUnits } from '../../common';
 import {
   Calendar,
   checkAddResult,
-  DateTimeUnits,
   getCalendarTicks,
   getJsTicks,
   throwErr,
@@ -55,11 +55,9 @@ const _daysToMonth366 = [
 export class GC extends Calendar {
   static MinDate: Date = new Date('1/1/1');
   static MaxDate: Date = new Date('9000/12/31');
-  get id(): string {
-    return 'gc';
-  }
-  get name(): string {
-    return 'gc';
+
+  constructor() {
+    super('gregorian2', 'gregorian');
   }
 
   private getDateUnits(ticks: number): DateTimeUnits {
@@ -91,6 +89,7 @@ export class GC extends Calendar {
     n -= y1 * _daysPerYear;
     const leapYear: boolean = y1 == 3 && (y4 != 24 || y100 == 3);
     const days = leapYear ? _daysToMonth366 : _daysToMonth365;
+    // tslint:disable-next-line: no-bitwise
     let m = (n >> 5) + 1;
     // m = 1-based month number
     while (n >= days[m]) {
@@ -133,6 +132,7 @@ export class GC extends Calendar {
 
     return getJsTicks(ticks);
   }
+
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
   }
@@ -144,21 +144,26 @@ export class GC extends Calendar {
     const diff = now.getTime() - start.getTime();
     return Math.floor(diff / _ticksPerDay);
   }
+
   daysInMonth(year: number, month: number): number {
     const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
     return days[month] - days[month - 1];
   }
+
   daysInYear(year: number): number {
     return this.isLeapYear(year) ? 366 : 365;
   }
+
   isLeapYear(year: number): boolean {
     if (year >= 1 && year <= _maxYear) {
       return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
     }
   }
+
   getTimestamp(units: DateTimeUnits): number {
     throw new Error('Method not implemented.');
   }
+
   getUnits(ts: number): DateTimeUnits {
     ts = getCalendarTicks(ts);
     const tu = this.getDateUnits(ts);

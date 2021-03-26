@@ -1,7 +1,7 @@
-import { Calendar2, Calendars } from '../calendar';
+import { Calendar, Calendars } from '../calendar';
 import { Zone, Zones } from '../zone';
 import { Locale, Locales } from '../locale';
-import { IsInt, IsObj, IsStr, padNumber } from '../common';
+import { DateTimeUnits, IsInt, IsObj, IsStr, padNumber } from '../common';
 
 const II = IsInt;
 const IO = IsObj;
@@ -9,21 +9,9 @@ const IIN = (x: any) => x == null || IsInt(x); /** Is integer or null or undefin
 const C = (x: any) => ({ ...x }); // Clone object (shallow)
 const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
 
-
-/** DateTime units. */
-export interface DateTimeUnits {
-    year?: number;
-    month?: number;
-    day?: number;
-    hour?: number;
-    minute?: number;
-    second?: number;
-    ms?: number;
-}
-
 /** DateTime create options. */
 export interface DateTimeCreateOptions {
-    calendar: Calendar2 | string; // A Calendar object or Calendar ID
+    calendar: Calendar | string; // A Calendar object or Calendar ID
     zone?: Zone | string; // | number :: zone offset (for next versions)
     locale?: Locale | string;
 }
@@ -44,7 +32,7 @@ interface DateTimeCachedValues {
 
 /** JS-Sugar DateTime. */
 export class DateTime {
-    private _cal: Calendar2;
+    private _cal: Calendar;
     private _zone: Zone;
     private _locale: Locale;
     private _cache: DateTimeCachedValues;
@@ -62,7 +50,7 @@ export class DateTime {
         isLeapYear: boolean;
         isValid: boolean;
     };
-    // #_: { c: Calendar2, z: Zone, l: Locale };
+    // #_: { c: Calendar, z: Zone, l: Locale };
 
     //#region Creations
     /**
@@ -127,7 +115,7 @@ export class DateTime {
         this._.opts.locale = l instanceof Locale ? l : (IsStr(l) ? Locales.find(l, o) : Locales.default);
 
         const c = opts?.calendar;
-        this._cal = c instanceof Calendar2 ? c : (IsStr(c) ? Calendars.findById(c, o) : Calendars.default);
+        this._cal = c instanceof Calendar ? c : (IsStr(c) ? Calendars.findById(c, o) : Calendars.default);
     }
 
     /** 
@@ -244,7 +232,8 @@ export class DateTime {
     /** Returns the number of days in this DateTime's month. */
     get daysInMonth(): number {
         if (this._cache.daysInMonth == null) {
-            this._cache.daysInMonth = this._cal.daysInMonth(this.ts);
+            let u = this.toObject();
+            this._cache.daysInMonth = this._cal.daysInMonth(u.year, u.month);
         }
         return this._cache.daysInMonth;
     }
@@ -252,7 +241,7 @@ export class DateTime {
     /** Returns the number of days in this DateTime's year. */
     get daysInYear(): number {
         if (this._cache.daysInYear == null) {
-            this._cache.daysInYear = this._cal.daysInYear(this.ts);
+            this._cache.daysInYear = this._cal.daysInYear(this.year);
         }
         return this._cache.daysInYear;
     }
@@ -279,7 +268,7 @@ export class DateTime {
     }
 
     /** Returns the configurations of this object (calandar, zone and locale). */
-    get config(): { calendar: Calendar2, zone?: Zone, locale?: Locale } {
+    get config(): { calendar: Calendar, zone?: Zone, locale?: Locale } {
         return { calendar: this._cal, zone: this._zone, locale: this._locale };
     }
     //#endregion
@@ -434,7 +423,7 @@ export class DateTime {
     /**
      * Returns a new date time with the given calendar.
      */
-    to(calendar: Calendar2 | string): DateTime {
+    to(calendar: Calendar | string): DateTime {
         return new DateTime(this.ts, { ...this.config, calendar });
     }
 

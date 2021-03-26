@@ -1,22 +1,22 @@
 import { verifyParamType } from '../common/utils';
-import { Calendar2 } from './calendar__';
+import { Calendar } from './calendar';
 
-const calendars = new Array<Calendar2>();
-let defaultCalendar: Calendar2;
+const calendars = new Array<Calendar>();
+let defaultCalendar: Calendar;
 
 export abstract class Calendars {
     /** Fets or sets the default calendar. */
-    static set default(value: Calendar2) {
+    static set default(value: Calendar) {
         defaultCalendar = value;
     }
 
-    static get default(): Calendar2 {
+    static get default(): Calendar {
         return defaultCalendar;
     }
 
     /** Adds a [Calendar] to the calendars repository. */
-    static add(c: Calendar2): void {
-        verifyParamType(c, Calendar2);
+    static add(c: Calendar): void {
+        verifyParamType(c, Calendar);
         if (!this.findById(c.id)) {
             calendars.push(c);
             if (calendars.length === 0) {
@@ -26,7 +26,7 @@ export abstract class Calendars {
     }
 
     /** Finds a calendar by id in the calendars repository. */
-    static findById(id: string, opts?: { throwError: boolean }): Calendar2 {
+    static findById(id: string, opts?: { throwError: boolean }): Calendar {
         const c = calendars.find(x => x.id === id);
         if (!c && opts?.throwError) {
             throw new Error('Calendar not found.');
@@ -35,7 +35,7 @@ export abstract class Calendars {
     }
 
     /** Finds a calendar by type. */
-    static findByType(type: string, opts?: { throwError: boolean }): Calendar2 {
+    static findByType(type: string, opts?: { throwError: boolean }): Calendar {
         const c = calendars.find(x => x.type === type);
         if (!c && opts?.throwError) {
             throw new Error('Calendar not found.');
@@ -44,7 +44,7 @@ export abstract class Calendars {
     }    
 
     /** Gets the number of calendars in the repository. */
-    static all(): Calendar2[] {
+    static all(): Calendar[] {
         return [...calendars];
     }
 }

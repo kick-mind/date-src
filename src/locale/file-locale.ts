@@ -1,5 +1,5 @@
 import { MonthNameFormat, WeekdayNameFormat } from '../common';
-import { Calendar2 } from '../calendar';
+import { Calendar } from '../calendar';
 import { Locale } from './locale';
 
 let computeFormatIndex = (f: MonthNameFormat) => f == 'narrow' ? 2 : (f == 'short' ? 1 : 0);
@@ -41,7 +41,7 @@ export class FileLocale extends Locale {
         return this._data.weekStart;
     }
 
-    monthNames(calendar: Calendar2, format: MonthNameFormat = 'long'): string[] {
+    monthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
         const idx = computeFormatIndex(format);
         return [...this._data.months[calendar.type][idx]];
     }

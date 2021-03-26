@@ -1,7 +1,7 @@
+import { DateTimeUnits } from '../../common';
 import {
   Calendar,
   checkAddResult,
-  DateTimeUnits,
   throwErr,
   _maxYear,
   _ticksPerDay,
@@ -58,8 +58,8 @@ function getAbsoluteDatePersian(
     );
     let yearStart = Helper.PersianNewYearOnOrBefore(
       _persianEpoch +
-        approximateDaysFromEpochForYearStart +
-        _approximateHalfYear
+      approximateDaysFromEpochForYearStart +
+      _approximateHalfYear
     );
     yearStart += ordinalDay;
     return yearStart;
@@ -96,12 +96,8 @@ export class Persia extends Calendar {
   static MinDate: Date = new Date('622/3/22');
   static MaxDate: Date = new Date('9000/12/31');
 
-  get id(): string {
-    return 'persia';
-  }
-
-  get name(): string {
-    return 'persia';
+  constructor() {
+    super('persian', 'persian');
   }
 
   addMonths(time: number, months: number): number {
@@ -147,17 +143,17 @@ export class Persia extends Calendar {
 
     const ordinalDay = Math.trunc(
       NumDays -
-        Helper.getNumberOfDays(
-          this.getTimestamp({
-            year: y,
-            month: 1,
-            day: 1,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            ms: 0,
-          })
-        )
+      Helper.getNumberOfDays(
+        this.getTimestamp({
+          year: y,
+          month: 1,
+          day: 1,
+          hour: 0,
+          minute: 0,
+          second: 0,
+          ms: 0,
+        })
+      )
     );
     return ordinalDay;
   }
@@ -177,7 +173,7 @@ export class Persia extends Calendar {
   isLeapYear(year: number): boolean {
     return (
       getAbsoluteDatePersian(year + 1, 1, 1) -
-        getAbsoluteDatePersian(year, 1, 1) ==
+      getAbsoluteDatePersian(year, 1, 1) ==
       366
     );
   }
@@ -233,17 +229,17 @@ export class Persia extends Calendar {
 
     const ordinalDay = Math.trunc(
       NumDays -
-        Helper.getNumberOfDays(
-          this.getTimestamp({
-            ['year']: y,
-            month: 1,
-            day: 1,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            ms: 0,
-          })
-        )
+      Helper.getNumberOfDays(
+        this.getTimestamp({
+          ['year']: y,
+          month: 1,
+          day: 1,
+          hour: 0,
+          minute: 0,
+          second: 0,
+          ms: 0,
+        })
+      )
     );
 
     du.year = y;

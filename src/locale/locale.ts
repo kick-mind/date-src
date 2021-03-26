@@ -1,5 +1,5 @@
 import { MonthNameFormat, WeekdayNameFormat } from 'src/common';
-import { Calendar2 } from '../calendar';
+import { Calendar } from '../calendar';
 
 
 /** An abstract base class for all locales (PackageLocale, SystemLocale) */
@@ -19,7 +19,7 @@ export abstract class Locale {
     abstract get weekStart(): number;
 
     /** Returns the month names of the given calendar */
-    abstract monthNames(calendar: Calendar2, format?: MonthNameFormat): string[];
+    abstract monthNames(calendar: Calendar, format?: MonthNameFormat): string[];
 
     /** Returns the weekday names */
     abstract weekdayNames(format?: WeekdayNameFormat): string[];
