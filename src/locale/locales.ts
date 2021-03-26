@@ -1,4 +1,4 @@
-import { verifyParamType } from '../common/utils';
+import { verifyObject } from '../common/utils';
 import { Locale } from './locale';
 import { FileLocale } from './file-locale';
 import { JsLocale } from './js-locale';
@@ -23,7 +23,7 @@ export abstract class Locales {
 
     /** Adds a [Locale] to the locales repository. */
     static add(l: Locale) {
-        verifyParamType(l, Locale);
+        verifyObject(l, Locale);
         if (l instanceof FileLocale) {
             cache.package[l.id] = l;
         } else {

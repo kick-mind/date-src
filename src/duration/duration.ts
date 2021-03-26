@@ -1,39 +1,63 @@
+import { verifyObject, verifyType } from '../common';
+
+let F = Math.floor;
+
+/** Represents a time interval. */
 export class Duration {
     private _ms: number;
 
     constructor(ms: number) {
+        verifyType(ms, 'number');
         this._ms = ms;
     }
 
+    /** Gets the days component of the time interval. */
     get days() {
-        throw new Error('Method not implemented.');
+        return F(this._ms / 1000 * 60 * 60 * 24);
     }
 
+    /** Gets the hours component of the time interval. */
     get hours() {
-        throw new Error('Method not implemented.');
+        return F(this._ms / 1000 * 60 * 60) % 24;
     }
 
+    /** Gets the days minutes of the time interval. */
+    get minutes() {
+        return F(this._ms / 1000 * 60) % 60;
+    }
+
+    /** Gets the seconds component of the time interval. */
     get seconds() {
-        throw new Error('Method not implemented.');
+        return F(this._ms / 1000) % 60;
     }
 
+    /** Gets the milliseconds component of the time interval. */
     get ms() {
-        throw new Error('Method not implemented.');
+        return this._ms % 1000;
     }
 
+    /** Gets the value of the current Duration object expressed in whole and fractional days. */
     get totalDays() {
-        throw new Error('Method not implemented.');
+        return (this._ms / 1000 * 60 * 60 * 24);
     }
 
+    /** Gets the value of the current Duration object expressed in whole and fractional hours. */
     get totalHours() {
-        throw new Error('Method not implemented.');
+        return (this._ms / 1000 * 60 * 60);
     }
 
+    /** Gets the value of the current Duration object expressed in whole and fractional minutes. */
+    get totalMinutes() {
+        return (this._ms / 1000 * 60);
+    }
+
+    /** Gets the value of the current Duration object expressed in whole and fractional seconds. */
     get totalSeconds() {
-        throw new Error('Method not implemented.');
+        return this._ms / 1000;
     }
 
+    /** Gets the value of the current Duration object expressed in milliseconds. */
     get totalMs() {
-        throw new Error('Method not implemented.');
+        return this.ms;
     }
 }

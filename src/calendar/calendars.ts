@@ -1,4 +1,4 @@
-import { verifyParamType } from '../common/utils';
+import { verifyObject } from '../common/utils';
 import { Calendar } from './calendar';
 
 const calendars = new Array<Calendar>();
@@ -16,7 +16,7 @@ export abstract class Calendars {
 
     /** Adds a [Calendar] to the calendars repository. */
     static add(c: Calendar): void {
-        verifyParamType(c, Calendar);
+        verifyObject(c, Calendar);
         if (!this.findById(c.id)) {
             calendars.push(c);
             if (calendars.length === 0) {
