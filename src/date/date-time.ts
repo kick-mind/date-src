@@ -1,7 +1,7 @@
 import { Calendar, Calendars } from '../calendar';
 import { Zone, Zones } from '../zone';
 import { Locale, Locales } from '../locale';
-import { DateTimeUnits, IsInt, IsObj, IsStr, padNumber } from '../common';
+import { DateTimeUnits, IsInt, IsObj, IsStr, padNumber, verifyClassCall, verifyObject } from '../common';
 
 const II = IsInt;
 const IO = IsObj;
@@ -11,7 +11,7 @@ const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|
 
 /** DateTime create options. */
 export interface DateTimeCreateOptions {
-    calendar: Calendar | string; // A Calendar object or Calendar ID
+    calendar?: Calendar | string; // A Calendar object or Calendar ID
     zone?: Zone | string; // | number :: zone offset (for next versions)
     locale?: Locale | string;
 }
@@ -32,16 +32,12 @@ interface DateTimeCachedValues {
 
 /** JS-Sugar DateTime. */
 export class DateTime {
-    private _cal: Calendar;
-    private _zone: Zone;
-    private _locale: Locale;
-    private _cache: DateTimeCachedValues;
-    private _: {
-        /** resolved create options */
-        opts: DateTimeCreateOptions,
-        units: DateTimeCachedValues,
-        /** Timestamp (UTC) */
-        ts: number;
+    private _c: Calendar;
+    private _z: Zone;
+    private _l: Locale;
+    private _: { // Cache
+        units: DateTimeUnits;
+        ts: number; /** Timestamp (UTC) */
         weekDay: number;
         dayOfYear: number;
         weekNumber: number;
@@ -50,7 +46,6 @@ export class DateTime {
         isLeapYear: boolean;
         isValid: boolean;
     };
-    // #_: { c: Calendar, z: Zone, l: Locale };
 
     //#region Creations
     /**
@@ -63,39 +58,38 @@ export class DateTime {
     constructor(opts: DateTimeCreateOptions, year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number)
     constructor(timestamp: number, opts?: DateTimeCreateOptions)
     constructor() {
+        verifyClassCall(this, DateTime);
         let ts: number;
         let year: number, month: number, day: number, hour: number, minute: number, second: number, ms: number;
         let opts: DateTimeCreateOptions;
+
+
+        // Resolve constructor parameters
         const a = arguments, a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
         let now = () => new Date().valueOf();
-
-        if (a.length == 0) {
-            // 1'st overload
+        if (a.length == 0) { // 1'st overload
             ts = now();
-        } else if (IO(a0)) {
-            // 2'nd overload
+        } else if (IO(a0)) {  // 2'nd overload
             ts = now();
             opts = C(a1);
-        } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) {
-            // 3'nd overload
+        } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) { // 3'nd overload
             year = a0; month = a1; day = a2; hour = a3; minute = a4; second = a5; ms = a6;
             opts = C(a7);
-        } else if (IO(a0) && II(a1), II(a2), IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) {
-            // 4'rd overload
+        } else if (IO(a0) && II(a1), II(a2), IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) { // 4'rd overload
             opts = a0;
             year = a1; month = a2; day = a3; hour = a4; minute = a5; second = a6; ms = a7;
-        } else if (II(a0) && (a1 == null || IO(a1))) {
-            // 5'th overload (create by timestamp)
+        } else if (II(a0) && (a1 == null || IO(a1))) { // 5'th overload (create by timestamp)
             ts = a0;
             opts = C(a1);
         } else {
             throw new Error('Invalid parameters.');
         }
 
+        // Set DateTime value
         if (ts) {
-            this._cache.ts = ts;
+            this._.ts = ts;
         } else {
-            this._cache.units = {
+            this._.units = {
                 year,
                 month,
                 day: day ? day : 1,
@@ -108,14 +102,38 @@ export class DateTime {
 
         const o = { throwError: true };
 
-        const z = opts?.zone;
-        this._zone = z instanceof Zone ? z : (IsStr(z) ? Zones.find(z, o) : Zones.local);
+        // Resolve zone
+        let z: any = opts?.zone;
+        if (z == null) {
+            z = Zones.local;
+        } else if (IsStr(z)) {
+            z = Zones.find(z, o);
+        } else {
+            verifyObject(z, Zone, 'Invalid zone');
+        }
+        this._z = z;
 
-        const l = opts?.locale;
-        this._.opts.locale = l instanceof Locale ? l : (IsStr(l) ? Locales.find(l, o) : Locales.default);
+        // Resolve locale
+        let l: any = opts?.locale;
+        if (l == null) {
+            l = Locales.default;
+        } else if (IsStr(l)) {
+            l = Locales.find(l, o);
+        } else {
+            verifyObject(l, Locale, 'Invalid locale');
+        }
+        this._l = l;
 
-        const c = opts?.calendar;
-        this._cal = c instanceof Calendar ? c : (IsStr(c) ? Calendars.findById(c, o) : Calendars.default);
+        // Resolve calendar
+        let c: any = opts?.calendar;
+        if (c == null) {
+            c = Calendars.default;
+        } else if (IsStr(c)) {
+            c = Calendars.findById(c, o);
+        } else {
+            verifyObject(c, Calendar, 'Invalid calendar');
+        }
+        this._c = c;
     }
 
     /** 
@@ -186,21 +204,21 @@ export class DateTime {
      * This value can be positive or negetive (it depends on the implementation of the calendar). 
      */
     get ts(): number {
-        if (this._cache.ts == null) {
-            const zoneTs = this._cal.getTimestamp(this._cache.units);
-            const utcTs = zoneTs - this._zone.getOffset(zoneTs);
-            this._cache.ts = utcTs;
+        if (this._.ts == null) {
+            const zoneTs = this._c.getTimestamp(this._.units);
+            const utcTs = zoneTs - this._z.getOffset(zoneTs);
+            this._.ts = utcTs;
         }
 
-        return this._cache.ts;
+        return this._.ts;
     }
 
     /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
     get weekDay(): number {
-        if (this._cache.weekDay == null) {
-            this._cache.weekDay = this._cal.weekDay(this.ts);
+        if (this._.weekDay == null) {
+            this._.weekDay = this._c.weekDay(this.ts);
         }
-        return this._cache.weekDay;
+        return this._.weekDay;
     }
 
     /** Get the day of the week with respect of this DateTime's locale (locale aware) */
@@ -215,35 +233,35 @@ export class DateTime {
 
     /** Gets the day of the year (1 to 366). */
     get dayOfYear(): number {
-        if (this._cache.dayOfYear == null) {
-            this._cache.dayOfYear = this._cal.dayOfYear(this.ts);
+        if (this._.dayOfYear == null) {
+            this._.dayOfYear = this._c.dayOfYear(this.ts);
         }
-        return this._cache.dayOfYear;
+        return this._.dayOfYear;
     }
 
     /** Get the week number of the week year (1 to 52). */
     get weekNumber(): number {
-        if (this._cache.weekNumber == null) {
-            this._cache.weekNumber = this._cal.weekNumber(this.ts, 1, 1);
+        if (this._.weekNumber == null) {
+            this._.weekNumber = this._c.weekNumber(this.ts, 1, 1);
         }
-        return this._cache.weekNumber;
+        return this._.weekNumber;
     }
 
     /** Returns the number of days in this DateTime's month. */
     get daysInMonth(): number {
-        if (this._cache.daysInMonth == null) {
+        if (this._.daysInMonth == null) {
             let u = this.toObject();
-            this._cache.daysInMonth = this._cal.daysInMonth(u.year, u.month);
+            this._.daysInMonth = this._c.daysInMonth(u.year, u.month);
         }
-        return this._cache.daysInMonth;
+        return this._.daysInMonth;
     }
 
     /** Returns the number of days in this DateTime's year. */
     get daysInYear(): number {
-        if (this._cache.daysInYear == null) {
-            this._cache.daysInYear = this._cal.daysInYear(this.year);
+        if (this._.daysInYear == null) {
+            this._.daysInYear = this._c.daysInYear(this.year);
         }
-        return this._cache.daysInYear;
+        return this._.daysInYear;
     }
 
     /** Returns the number of weeks in this DateTime's year. */
@@ -256,10 +274,10 @@ export class DateTime {
 
     /** Returns true if this DateTime is in a leap year, false otherwise. */
     get isLeapYear(): boolean {
-        if (this._cache.daysInYear == null) {
-            this._cache.isLeapYear = this._cal.isLeapYear(this.ts);
+        if (this._.daysInYear == null) {
+            this._.isLeapYear = this._c.isLeapYear(this.ts);
         }
-        return this._cache.isLeapYear;
+        return this._.isLeapYear;
     }
 
     /** Get the quarter. */
@@ -269,19 +287,19 @@ export class DateTime {
 
     /** Returns the configurations of this object (calandar, zone and locale). */
     get config(): { calendar: Calendar, zone?: Zone, locale?: Locale } {
-        return { calendar: this._cal, zone: this._zone, locale: this._locale };
+        return { calendar: this._c, zone: this._z, locale: this._l };
     }
     //#endregion
 
     //#region Calculation
     /** Adds a period of time to this DateTime and returns the resulting DateTime. */
     add(units: DateTimeUnits): DateTime {
-        return new DateTime(this._cal.add(this.ts, units), this.config);
+        return new DateTime(this._c.add(this.ts, units), this.config);
     }
 
     /** Subtracts a period of time from this DateTime and returns the resulting DateTime. */
     subtract(units: DateTimeUnits): DateTime {
-        return new DateTime(this._cal.subtract(this.ts, units), this.config);
+        return new DateTime(this._c.subtract(this.ts, units), this.config);
     }
 
     /** Clones this DateTime with time units (hour, minute, second, ms) set to zero. */
@@ -361,11 +379,11 @@ export class DateTime {
 
     /** Returns an object with the values of this DateTime. */
     toObject(): DateTimeUnits {
-        if (this._cache.units == null) {
-            const ts = this._cache.ts;
-            this._cache.units = this._cal.getUnits(ts + this._zone.getOffset(ts));
+        if (this._.units == null) {
+            const ts = this._.ts;
+            this._.units = this._c.getUnits(ts + this._z.getOffset(ts));
         }
-        return this._cache.units;
+        return this._.units;
     }
 
     /** Returns an Array with the values of this DateTime. */
@@ -387,11 +405,11 @@ export class DateTime {
     //#region Locale
     /** Get the locale of a DateTime, such 'en-GB'. */
     get locale(): Locale {
-        return this._locale;
+        return this._l;
     }
 
     /** Set the DateTime's locale (returns a new DateTime) */
-    toLocale(locale: Locale | string): DateTime {
+    setLocale(locale: Locale | string): DateTime {
         throw new Error('Method not implemented.');
     }
     //#endregion
@@ -399,22 +417,22 @@ export class DateTime {
     //#region TimeZone
     /** Returns the zone of this DateTime object */
     get zone(): Zone {
-        return this._zone;
+        return this._z;
     }
 
     /** Set the DateTime's zone to UTC (returns a new DateTime) */
     toUtc(): DateTime {
-        return this.toZone(Zones.utc);
+        return this.setZone(Zones.utc);
     }
 
     /** Set the DateTime's zone to the local zone of the system (returns a new DateTime) */
     toLocal(): DateTime {
-        return this.toZone(Zones.local);
+        return this.setZone(Zones.local);
     }
 
     /** Set the DateTime's zone (returns a new DateTime) */
-    toZone(zone: Zone | string): DateTime {
-        return new DateTime(this.ts, { calendar: this._cal, zone, locale: this._locale });
+    setZone(zone: Zone | string): DateTime {
+        return new DateTime(this.ts, { calendar: this._c, zone, locale: this._l });
     }
     //#endregion
 
@@ -423,7 +441,7 @@ export class DateTime {
     /**
      * Returns a new date time with the given calendar.
      */
-    to(calendar: Calendar | string): DateTime {
+    setCalendar(calendar: Calendar | string): DateTime {
         return new DateTime(this.ts, { ...this.config, calendar });
     }
 
@@ -431,7 +449,7 @@ export class DateTime {
      * Returns the calendar of this DateTime object
      */
     get calendar() {
-        return this._cal;
+        return this._c;
     }
     //#endregion
 
@@ -440,11 +458,11 @@ export class DateTime {
      * @public
      */
     get isValid(): boolean {
-        if (this._cache.isValid == null) {
+        if (this._.isValid == null) {
             const { year, month, day } = this.toObject();
-            this._cache.isValid = this._cal.isValid(year, month, day);
+            this._.isValid = this._c.isValid(year, month, day);
         }
-        return this._cache.isValid;
+        return this._.isValid;
     }
 
     /** Returns whether a variable is a JS-Sugar DateTime or not. */
@@ -453,13 +471,13 @@ export class DateTime {
     }
 
     /** Clones this DateTime with overrided new unit values. */
-    clone(newUnits?: DateTimeUnits): DateTime {
+    set(newUnits?: DateTimeUnits): DateTime {
         const opts = this.config;
 
         if (newUnits) {
             return DateTime.fromObject({ ...this.toObject(), ...newUnits }, opts);
         } else {
-            return this._cache.ts ? new DateTime(this._cache.ts, opts) : DateTime.fromObject(this._cache.units, opts);
+            return this._.ts ? new DateTime(this._.ts, opts) : DateTime.fromObject(this._.units, opts);
         }
     }
     //#endregion

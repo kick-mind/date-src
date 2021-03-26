@@ -33,3 +33,10 @@ export function verifyType(x: any, type: 'object' | 'string' | 'number' | 'boole
         throw new Error(err);
     }
 }
+
+/** Verifies class call and ensures that a class is called by new operator */
+export function verifyClassCall(inst: any, cls: any) {
+    if (!(inst instanceof cls)) {
+        throw new TypeError('Cannot call a class as a function');
+    }
+}

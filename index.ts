@@ -1,8 +1,8 @@
-// import { PersianDate } from './src/date';
+export * from './src/calendar';
+export * from './src/date';
+export * from './src/duration';
+export * from './src/locale';
+export * from './src/zone';
 
-// const pd = new PersianDate(1400);
-// const f = pd.format('Y4:M:D');
-
-console.log(23);
-console.log(23);
-
+// include gregorian calendar by default
+export * from './src/calendar/gregorian/gregorian';
