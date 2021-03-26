@@ -1,15 +1,14 @@
 import { Calendar2, Calendars } from '../calendar';
 import { Zone, Zones } from '../zone';
 import { Locale, Locales } from '../locale';
+import { IsInt, IsObj, IsStr, padNumber } from '../common';
 
-const II = Number.isInteger; // Is Integer?
-const IO = (x: any) => typeof x == 'object'; // Is Object ?
-const C = (x: any) => ({ ...x }); // Clone Object
+const II = IsInt;
+const IO = IsObj;
+const IIN = (x: any) => x == null || IsInt(x); /** Is integer or null or undefined */
+const C = (x: any) => ({ ...x }); // Clone object (shallow)
 const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
 
-function padNumber(value: number, length: number) {
-    value.toString().slice(-length).padStart(length, '0');
-}
 
 /** DateTime units. */
 export interface DateTimeUnits {
@@ -73,62 +72,62 @@ export class DateTime {
     constructor()
     constructor(opts: DateTimeCreateOptions)
     constructor(year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: DateTimeCreateOptions)
-    constructor(opts: DateTimeCreateOptions, year: number, month?: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number)
+    constructor(opts: DateTimeCreateOptions, year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number)
     constructor(timestamp: number, opts?: DateTimeCreateOptions)
     constructor() {
-        const a = arguments;
         let ts: number;
         let year: number, month: number, day: number, hour: number, minute: number, second: number, ms: number;
         let opts: DateTimeCreateOptions;
+        const a = arguments, a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
+        let now = () => new Date().valueOf();
 
         if (a.length == 0) {
-            // first overload
-            // this._cache.units = this._cal.getUnits(new Date().getTime());
-        } else if (IO(a[0])) {
+            // 1'st overload
+            ts = now();
+        } else if (IO(a0)) {
             // 2'nd overload
-            opts = C(a[0]);
-        } else if (II(a[0]) && II(a[1])) {
-            // 2'nd overload
-            year = a[0]; month = a[1]; day = a[2]; hour = a[3]; minute = a[4]; second = a[5]; ms = a[6];
-            opts = C(a[7]);
-        } else if (IO(a[0]) && II(a[1])) {
-            // 3'rd overload
-            opts = a[0];
-            year = a[1]; month = a[2]; day = a[3]; hour = a[4]; minute = a[5]; second = a[6]; ms = a[7];
-        } else if (II(a[0]) && (a[1] == null || IO(a[1]))) {
+            ts = now();
+            opts = C(a1);
+        } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) {
+            // 3'nd overload
+            year = a0; month = a1; day = a2; hour = a3; minute = a4; second = a5; ms = a6;
+            opts = C(a7);
+        } else if (IO(a0) && II(a1), II(a2), IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) {
+            // 4'rd overload
+            opts = a0;
+            year = a1; month = a2; day = a3; hour = a4; minute = a5; second = a6; ms = a7;
+        } else if (II(a0) && (a1 == null || IO(a1))) {
             // 5'th overload (create by timestamp)
-            ts = a[0];
-            opts = C(a[1]);
+            ts = a0;
+            opts = C(a1);
         } else {
             throw new Error('Invalid parameters.');
         }
 
         if (ts) {
             this._cache.ts = ts;
-        } else if (year && month) {
+        } else {
             this._cache.units = {
                 year,
                 month,
-                day: II(day) ? day : 1,
-                hour: II(hour) ? hour : 0,
-                minute: II(minute) ? minute : 0,
-                second: II(second) ? second : 0,
-                ms: II(ms) ? ms : 0,
+                day: day ? day : 1,
+                hour: hour ? hour : 0,
+                minute: minute ? minute : 0,
+                second: second ? second : 0,
+                ms: ms ? ms : 0,
             };
-        } else {
-            this._cache.units = this._cal.getUnits(new Date().getTime());
         }
 
         const o = { throwError: true };
 
         const z = opts?.zone;
-        this._zone = z instanceof Zone ? z : (typeof z == 'string' ? Zones.find(z, o) : Zones.local);
+        this._zone = z instanceof Zone ? z : (IsStr(z) ? Zones.find(z, o) : Zones.local);
 
         const l = opts?.locale;
-        this._.opts.locale = l instanceof Locale ? l : (typeof l == 'string' ? Locales.find(l, o) : Locales.default);
+        this._.opts.locale = l instanceof Locale ? l : (IsStr(l) ? Locales.find(l, o) : Locales.default);
 
         const c = opts?.calendar;
-        this._cal = c instanceof Calendar2 ? c : (typeof c == 'string' ? Calendars.find(c, o) : Calendars.default);
+        this._cal = c instanceof Calendar2 ? c : (IsStr(c) ? Calendars.findById(c, o) : Calendars.default);
     }
 
     /** 
@@ -143,10 +142,6 @@ export class DateTime {
      */
     static fromObject(units: DateTimeUnits, opts?: DateTimeCreateOptions): DateTime {
         const u = units;
-        if (!u || !II(u.year) || !II(u.month)) {
-            throw new Error('year and month are required.');
-        }
-
         return new DateTime(u.year, u.month, u.day, u.hour, u.minute, u.second, u.ms, opts);
     }
     //#endregion
