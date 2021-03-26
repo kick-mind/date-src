@@ -32,7 +32,6 @@ export class Gregorian extends Calendar {
     d.setMonth(d.getMonth() + months);
     return d.getTime();
   }
-  
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
   }
@@ -43,7 +42,6 @@ export class Gregorian extends Calendar {
     const diff = now.getTime() - start.getTime();
     return Math.floor(diff / _ticksPerDay);
   }
-
   daysInMonth(year: number, month: number): number {
     let daysInMonth = _DaysToMonth[month] - _DaysToMonth[month - 1];
     if (month == _monthsPerYear && !this.isLeapYear(year)) {
@@ -51,11 +49,9 @@ export class Gregorian extends Calendar {
     }
     return daysInMonth;
   }
-
   daysInYear(year: number): number {
     return this.isLeapYear(year) ? 366 : 365;
   }
-
   isLeapYear(year: number): boolean {
     return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
   }
@@ -64,7 +60,6 @@ export class Gregorian extends Calendar {
     const u = units;
     return Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms);
   }
-
   getUnits(ts: number): DateTimeUnits {
     const d = new Date(ts);
     return {

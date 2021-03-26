@@ -132,7 +132,6 @@ export class Gregorian2 extends Calendar {
 
     return getJsTicks(ticks);
   }
-
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
   }
@@ -144,26 +143,21 @@ export class Gregorian2 extends Calendar {
     const diff = now.getTime() - start.getTime();
     return Math.floor(diff / _ticksPerDay);
   }
-
   daysInMonth(year: number, month: number): number {
     const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
     return days[month] - days[month - 1];
   }
-
   daysInYear(year: number): number {
     return this.isLeapYear(year) ? 366 : 365;
   }
-
   isLeapYear(year: number): boolean {
     if (year >= 1 && year <= _maxYear) {
       return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
     }
   }
-
   getTimestamp(units: DateTimeUnits): number {
     throw new Error('Method not implemented.');
   }
-
   getUnits(ts: number): DateTimeUnits {
     ts = getCalendarTicks(ts);
     const tu = this.getDateUnits(ts);

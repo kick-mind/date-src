@@ -1,9 +1,7 @@
 
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
-
 import { DateTimeUnits } from '../common';
-
 // tslint:disable: triple-equals
 const _jsEpoch = 62135596800000;
 export const _ticksPerSecond = 1000;
@@ -15,7 +13,7 @@ const _maxMillis = 315537897600000;
 const _minDate = new Date('100/1/1');
 const _maxDate = new Date('9999/12/31');
 
-export function throwErr() {
+export function throwErr(){
   throw new Error('Invalid Time!');
 }
 function add(time: number, value: number, scale: number): number {
@@ -78,14 +76,12 @@ export function getJsTicks(ticks: number): number {
 export abstract class Calendar {
   private _id: string;
   private _type: string;
-
   /**
    * Calendar's ID.
    */
   get id() {
     return this._id;
   }
-
   /**
    * Calendar's type (Gregorian, Chiness, Persian, Islamic, ...).
    * It is possible that you have multiple calendars with the same type and different ID's (multiple implementation for a specific calendar).
@@ -93,19 +89,15 @@ export abstract class Calendar {
   get type() {
     return this._type;
   }
-
   ms(time: number): number {
     return time % 1000;
   }
-
   second(time: number): number {
     return Math.trunc((time / _ticksPerSecond) % 60);
   }
-
   minute(time: number): number {
     return Math.trunc((time / _ticksPerMinute) % 60);
   }
-
   hour(time: number): number {
     return Math.trunc((time / _ticksPerHour) % 24);
   }
@@ -139,7 +131,6 @@ export abstract class Calendar {
     this._id = id;
     this._type = type;
   }
-
   /** Get the week number of the week year (1 to 52). */
   weekNumber(time: number, firstDayOfWeek: number, offset: number): number {
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
@@ -225,25 +216,18 @@ export abstract class Calendar {
 
   /** Returns the number of days in this DateTime's month. */
   abstract addMonths(time: number, months: number): number;
-
   /** */
   abstract addYears(time: number, years: number): number;
-
   /** Gets the day of the year (1 to 366). */
   abstract dayOfYear(time: number): number;
-
   /** Returns the number of days in this DateTime's month. */
   abstract daysInMonth(year: number, month: number): number;
-
   /** Returns the number of days in this DateTime's year. */
   abstract daysInYear(year: number): number;
-
   /** Returns true if this DateTime is in a leap year, false otherwise. */
   abstract isLeapYear(year: number): boolean;
-
   /** */
   abstract getTimestamp(units: DateTimeUnits): number;
-
   /** */
   abstract getUnits(ts: number): DateTimeUnits;
 }
