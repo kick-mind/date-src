@@ -151,9 +151,7 @@ export class Gregorian2 extends Calendar {
     return this.isLeapYear(year) ? 366 : 365;
   }
   isLeapYear(year: number): boolean {
-    if (year >= 1 && year <= _maxYear) {
       return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
-    }
   }
   getTimestamp(units: DateTimeUnits): number {
     throw new Error('Method not implemented.');
