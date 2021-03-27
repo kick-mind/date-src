@@ -5,7 +5,6 @@
 import { DateTimeUnits } from '../../common';
 import { Calendar, _ticksPerDay } from '../calendar';
 const _monthsPerYear = 12;
-const _maxYear = 9000;
 const _DaysToMonth = [
   0,
   31,

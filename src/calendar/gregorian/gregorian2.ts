@@ -5,7 +5,6 @@ import { DateTimeUnits } from '../../common';
 import {
   Calendar,
   checkAddResult,
-  getCalendarTicks,
   getJsTicks,
   throwErr,
   _maxYear,
