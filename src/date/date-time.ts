@@ -1,7 +1,7 @@
 import { Calendar, Calendars } from '../calendar';
 import { Zone, Zones } from '../zone';
 import { Locale, Locales } from '../locale';
-import { DateTimeUnits, IsInt, IsObj, IsStr, padNumber, verifyClassCall, verifyObject } from '../common';
+import { DateTimeUnits, IsInt, IsObj, IsStr, padNumber, verifyClassCall, verifyObject, WeekdayNameFormat } from '../common';
 
 const II = IsInt;
 const IO = IsObj;
@@ -138,6 +138,7 @@ export class DateTime {
 
     /** 
      * Creates a DateTime from a string
+     * @public
      */
     static parse(date: string, format: string, opts?: DateTimeCreateOptions): DateTime {
         throw new Error('Method not implemented.');
@@ -145,6 +146,7 @@ export class DateTime {
 
     /** 
      * Creates a DateTime from an object
+     * @public
      */
     static fromObject(units: DateTimeUnits, opts?: DateTimeCreateOptions): DateTime {
         const u = units;
@@ -175,33 +177,50 @@ export class DateTime {
         return this.toObject().month;
     }
 
-    /** Get the day of the month (1 to 30). */
+    /** 
+     * Get the day of the month (1 to 30). 
+     * @public
+     */
     get day(): number {
         return this.toObject().day;
     }
 
-    /** Get the hour of the day (0 to 23). */
+    /**
+     *  Get the hour of the day (0 to 23). 
+     * @public
+     */
     get hour(): number {
         return this.toObject().hour;
     }
 
-    /** Get the minute of the hour (0 to 59). */
+    /**
+     * Get the minute of the hour (0 to 59). 
+     * @public
+     */
     get minute(): number {
         return this.toObject().minute;
     }
 
-    /** Get the second of the minute (0 to 59). */
+    /**
+     *  Get the second of the minute (0 to 59). 
+     * @public
+     */
     get second(): number {
         return this.toObject().second;
     }
 
-    /** Get the millisecond of the second (0 to 999). */
+    /** 
+     * Get the millisecond of the second (0 to 999). 
+     * @public
+     */
     get ms(): number {
         return this.toObject().ms;
     }
 
-    /** Returns UTC timestamp of this object.  
+    /**
+     * Returns UTC timestamp of this object.  
      * This value can be positive or negetive (it depends on the implementation of the calendar). 
+     * @public
      */
     get ts(): number {
         if (this._.ts == null) {
@@ -209,11 +228,13 @@ export class DateTime {
             const utcTs = zoneTs - this._z.getOffset(zoneTs);
             this._.ts = utcTs;
         }
-
         return this._.ts;
     }
 
-    /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
+    /**
+     * Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). 
+     * @public
+     */
     get weekDay(): number {
         if (this._.weekDay == null) {
             this._.weekDay = this._c.weekDay(this.ts);
@@ -221,17 +242,26 @@ export class DateTime {
         return this._.weekDay;
     }
 
-    /** Get the day of the week with respect of this DateTime's locale (locale aware) */
+    /** 
+     * Get the day of the week with respect of this DateTime's locale (locale aware) 
+     * @public
+     */
     get weekDayLocale(): number {
-        throw new Error('Method not implemented.');
+        return (this.locale.weekStart + this.weekDay) % 7;
     }
 
-    /** Gets the human readable weekday name (locale aware). */
-    weekDayName(format: 'S' | 'L' = 'L'): string {
-        throw new Error('Method not implemented.');
+    /**
+     * Gets the human readable weekday name (locale aware). 
+     * @public
+     */
+    weekDayName(format: WeekdayNameFormat = 'long'): string {
+        return this.locale.getWeekdayNames(format)[this.weekDayLocale];
     }
 
-    /** Gets the day of the year (1 to 366). */
+    /**
+     * Gets the day of the year (1 to 366). 
+     * @public 
+     */
     get dayOfYear(): number {
         if (this._.dayOfYear == null) {
             this._.dayOfYear = this._c.dayOfYear(this.ts);
@@ -239,7 +269,10 @@ export class DateTime {
         return this._.dayOfYear;
     }
 
-    /** Get the week number of the week year (1 to 52). */
+    /**
+     * Get the week number of the week year (1 to 52). 
+     * @public
+     */
     get weekNumber(): number {
         if (this._.weekNumber == null) {
             this._.weekNumber = this._c.weekNumber(this.ts, 1, 1);
@@ -247,7 +280,10 @@ export class DateTime {
         return this._.weekNumber;
     }
 
-    /** Returns the number of days in this DateTime's month. */
+    /**
+     * Returns the number of days in this DateTime's month. 
+     * @public
+     */
     get daysInMonth(): number {
         if (this._.daysInMonth == null) {
             let u = this.toObject();
@@ -256,7 +292,10 @@ export class DateTime {
         return this._.daysInMonth;
     }
 
-    /** Returns the number of days in this DateTime's year. */
+    /**
+     * Returns the number of days in this DateTime's year. 
+     * @public
+     */
     get daysInYear(): number {
         if (this._.daysInYear == null) {
             this._.daysInYear = this._c.daysInYear(this.year);
@@ -272,7 +311,10 @@ export class DateTime {
     //     return this._cache.weeksInYear;
     // }
 
-    /** Returns true if this DateTime is in a leap year, false otherwise. */
+    /**
+     * Returns true if this DateTime is in a leap year, false otherwise. 
+     * @public
+     */
     get isLeapYear(): boolean {
         if (this._.daysInYear == null) {
             this._.isLeapYear = this._c.isLeapYear(this.ts);
@@ -280,29 +322,44 @@ export class DateTime {
         return this._.isLeapYear;
     }
 
-    /** Get the quarter. */
+    /** 
+     * Get the quarter. 
+     * @public
+     */
     get quarter(): number {
         return Math.floor(this.month / 4) + 1;
     }
 
-    /** Returns the configurations of this object (calandar, zone and locale). */
+    /**
+     * Returns the configurations of this object (calandar, zone and locale). 
+     * @public
+     */
     get config(): { calendar: Calendar, zone?: Zone, locale?: Locale } {
         return { calendar: this._c, zone: this._z, locale: this._l };
     }
     //#endregion
 
     //#region Calculation
-    /** Adds a period of time to this DateTime and returns the resulting DateTime. */
+    /**
+     * Adds a period of time to this DateTime and returns the resulting DateTime. 
+     * @public
+     */
     add(units: DateTimeUnits): DateTime {
         return new DateTime(this._c.add(this.ts, units), this.config);
     }
 
-    /** Subtracts a period of time from this DateTime and returns the resulting DateTime. */
+    /** 
+     * Subtracts a period of time from this DateTime and returns the resulting DateTime. 
+     * @public 
+     */
     subtract(units: DateTimeUnits): DateTime {
         return new DateTime(this._c.subtract(this.ts, units), this.config);
     }
 
-    /** Clones this DateTime with time units (hour, minute, second, ms) set to zero. */
+    /**
+     * Clones this DateTime with time units (hour, minute, second, ms) set to zero. 
+     * @public
+     */
     getDate(): DateTime {
         const o = this.toObject();
         return new DateTime(this.config, o.year, o.month, o.day);
@@ -310,39 +367,60 @@ export class DateTime {
     //#endregion
 
     //#region Query
-    /** Returns whether this DateTime is same as another DateTime. */
+    /**
+     * Returns whether this DateTime is same as another DateTime.
+     * @public
+     */
     isSame(dateTime: DateTime): boolean {
         return this.ts === dateTime.ts;
     }
 
-    /** Returns whether this DateTime is after another DateTime. */
+    /**
+     * Returns whether this DateTime is after another DateTime.
+     * @public
+     */
     isAfter(dateTime: DateTime): boolean {
         return this.ts > dateTime.ts;
     }
 
-    /** Returns whether this DateTime is same or after another DateTime. */
+    /** 
+     * Returns whether this DateTime is same or after another DateTime.
+     * @public
+     */
     isSameOrAfter(dateTime: DateTime): boolean {
         return this.ts >= dateTime.ts;
     }
 
-    /** Returns whether this DateTime is before another DateTime. */
+    /** 
+     * Returns whether this DateTime is before another DateTime. 
+     * @public
+     */
     isBefore(dateTime: DateTime): boolean {
         return this.ts < dateTime.ts;
     }
 
-    /** Returns whether this DateTime is same or before another DateTime. */
+    /** 
+     * Returns whether this DateTime is same or before another DateTime. 
+     * @public
+     */
     isSameOrBefore(dateTime: DateTime): boolean {
         return this.ts <= dateTime.ts;
     }
 
-    /** Returns whether this DateTime is between the specified DateTimes. */
+    /** 
+     * Returns whether this DateTime is between the specified DateTimes.
+     * @public
+     */
     isBetween(first: DateTime, second: DateTime): boolean {
         return this.isAfter(first) && this.isBefore(second);
     }
     //#endregion
 
     //#region Display + Convert
-    /** Returns a string representation of this DateTime formatted according to the specified format string. */
+    /** 
+     * Returns a string representation of this DateTime formatted according to the specified format string. 
+     * @public
+     */
     format(format: string): string {
         const matches: any = {
             Y: this.year,
@@ -377,7 +455,10 @@ export class DateTime {
         return format.replace(REGEX_FORMAT, (match, $1) => $1 || matches[match]);
     }
 
-    /** Returns an object with the values of this DateTime. */
+    /**
+     * Returns an object with the values of this DateTime. 
+     * @public
+     */
     toObject(): DateTimeUnits {
         if (this._.units == null) {
             const ts = this._.ts;
@@ -386,52 +467,80 @@ export class DateTime {
         return this._.units;
     }
 
-    /** Returns an Array with the values of this DateTime. */
+    /** 
+     * Returns an Array with the values of this DateTime. 
+     * @public
+     */
     toArray(): number[] {
         const d = this.toObject();
         return [d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms];
     }
 
-    /** Formats this DateTime to ISO8601 standard. */
+    /** 
+     * Formats this DateTime to ISO8601 standard. 
+     * @public
+     */
     toISO(keepTimeZone = false): string {
         throw new Error('Method not implemented.');
     }
 
-    // toJsDate(): Date {
-    //     throw new Error('Method not implemented.');
-    // }
+    /**
+     * Converts this object to a javascript Date
+     * @public
+     */
+    toJsDate(): Date {
+        return new Date(this.ts);
+    }
     //#endregion
 
     //#region Locale
-    /** Get the locale of a DateTime, such 'en-GB'. */
+    /** 
+     * Get the locale of a DateTime, such 'en-GB'.
+     * @public
+     */
     get locale(): Locale {
         return this._l;
     }
 
-    /** Set the DateTime's locale (returns a new DateTime) */
-    setLocale(locale: Locale | string): DateTime {
-        throw new Error('Method not implemented.');
+    /**
+     * Sets the DateTime's locale (returns a new DateTime)
+     * @public
+     */
+    toLocale(locale: Locale | string): DateTime {
+        return new DateTime(this.ts, { locale, calendar: this._c, zone: this._z });
     }
     //#endregion
 
     //#region TimeZone
-    /** Returns the zone of this DateTime object */
+    /** 
+     * Returns the zone of this DateTime object 
+     * @public
+     */
     get zone(): Zone {
         return this._z;
     }
 
-    /** Set the DateTime's zone to UTC (returns a new DateTime) */
+    /**
+     * Set the DateTime's zone to UTC (returns a new DateTime) 
+     * @public
+     */
     toUtc(): DateTime {
-        return this.setZone(Zones.utc);
+        return this.toZone(Zones.utc);
     }
 
-    /** Set the DateTime's zone to the local zone of the system (returns a new DateTime) */
+    /** 
+     * Set the DateTime's zone to the local zone of the system (returns a new DateTime) 
+     * @public
+     */
     toLocal(): DateTime {
-        return this.setZone(Zones.local);
+        return this.toZone(Zones.local);
     }
 
-    /** Set the DateTime's zone (returns a new DateTime) */
-    setZone(zone: Zone | string): DateTime {
+    /** 
+     * Set the DateTime's zone (returns a new DateTime) 
+     * @public
+     */
+    toZone(zone: Zone | string): DateTime {
         return new DateTime(this.ts, { calendar: this._c, zone, locale: this._l });
     }
     //#endregion
@@ -440,13 +549,15 @@ export class DateTime {
 
     /**
      * Returns a new date time with the given calendar.
+     * @public
      */
-    setCalendar(calendar: Calendar | string): DateTime {
+    to(calendar: Calendar | string): DateTime {
         return new DateTime(this.ts, { ...this.config, calendar });
     }
 
     /** 
      * Returns the calendar of this DateTime object
+     * @public
      */
     get calendar() {
         return this._c;
@@ -454,6 +565,21 @@ export class DateTime {
     //#endregion
 
     //#region Misc
+
+    /** 
+     * Clones this DateTime with overrided new unit values.
+     * @public
+     */
+    clone(newUnits?: DateTimeUnits): DateTime {
+        const opts = this.config;
+
+        if (newUnits) {
+            return DateTime.fromObject({ ...this.toObject(), ...newUnits }, opts);
+        } else {
+            return this._.ts ? new DateTime(this._.ts, opts) : DateTime.fromObject(this._.units, opts);
+        }
+    }
+
     /** Returns whether this DateTime is valid.
      * @public
      */
@@ -465,20 +591,12 @@ export class DateTime {
         return this._.isValid;
     }
 
-    /** Returns whether a variable is a JS-Sugar DateTime or not. */
+    /**
+     * Returns whether a variable is a JS-Sugar DateTime or not.
+     * @public
+     */
     static isJssDate(o: any) {
         return o instanceof DateTime;
-    }
-
-    /** Clones this DateTime with overrided new unit values. */
-    set(newUnits?: DateTimeUnits): DateTime {
-        const opts = this.config;
-
-        if (newUnits) {
-            return DateTime.fromObject({ ...this.toObject(), ...newUnits }, opts);
-        } else {
-            return this._.ts ? new DateTime(this._.ts, opts) : DateTime.fromObject(this._.units, opts);
-        }
     }
     //#endregion
 }

@@ -29,9 +29,9 @@ export abstract class Locale {
     }
 
     /** Returns the month names of the given calendar */
-    abstract monthNames(calendar: Calendar, format?: MonthNameFormat): string[];
+    abstract getMonthNames(calendar: Calendar, format?: MonthNameFormat): string[];
 
     /** Returns the weekday names */
-    abstract weekdayNames(format?: WeekdayNameFormat): string[];
+    abstract getWeekdayNames(format?: WeekdayNameFormat): string[];
 }
 

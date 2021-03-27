@@ -31,12 +31,12 @@ export class PackageLocale extends Locale {
         Object.freeze(data); // TODO: Do a deep data freezing!
     }
 
-    monthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
+    getMonthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
         const idx = computeFormatIndex(format);
         return [...this._data.months[calendar.type][idx]];
     }
 
-    weekdayNames(format?: WeekdayNameFormat): string[] {
+    getWeekdayNames(format?: WeekdayNameFormat): string[] {
         const idx = computeFormatIndex(format);
         return [...this._data.weekdays[idx]];
     }

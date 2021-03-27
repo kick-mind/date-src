@@ -25,7 +25,7 @@ export class JsLocale extends Locale {
         _[id] = _[id] ?? { month: {}, weekday: {} };
     }
 
-    weekdayNames(format: WeekdayNameFormat = 'long'): string[] {
+    getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
         let id = this.id;
         let res = _[id].weekday[format];
         if (!res) {
@@ -43,7 +43,7 @@ export class JsLocale extends Locale {
         return res;
     }
 
-    monthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
+    getMonthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
         let id = this.id;
         let res = _[id].month[calendar.type][format];
         if (!res) {
