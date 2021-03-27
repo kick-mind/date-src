@@ -4,7 +4,6 @@
 
 import { DateTimeUnits } from '../../common';
 import { Calendar, _ticksPerDay } from '../calendar';
-import { Calendars } from '../calendars';
 const _monthsPerYear = 12;
 const _maxYear = 9000;
 const _DaysToMonth = [
@@ -75,5 +74,3 @@ export class GregorianCalendar extends Calendar {
     };
   }
 }
-
-Calendars.add(new GregorianCalendar());

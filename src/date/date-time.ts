@@ -45,7 +45,7 @@ export class DateTime {
         daysInYear: number;
         isLeapYear: boolean;
         isValid: boolean;
-    };
+    } = {} as any;
 
     //#region Creations
     /**
@@ -62,8 +62,7 @@ export class DateTime {
         let ts: number;
         let year: number, month: number, day: number, hour: number, minute: number, second: number, ms: number;
         let opts: DateTimeCreateOptions;
-
-
+        
         // Resolve constructor parameters
         const a = arguments, a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
         let now = () => new Date().valueOf();
@@ -186,7 +185,7 @@ export class DateTime {
     }
 
     /**
-     *  Get the hour of the day (0 to 23). 
+     * Get the hour of the day (0 to 23). 
      * @public
      */
     get hour(): number {
@@ -202,7 +201,7 @@ export class DateTime {
     }
 
     /**
-     *  Get the second of the minute (0 to 59). 
+     * Get the second of the minute (0 to 59). 
      * @public
      */
     get second(): number {

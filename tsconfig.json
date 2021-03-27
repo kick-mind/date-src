@@ -4,6 +4,7 @@
     "src/**/*.ts",
   ],
   "exclude": [
+    "src/**/*.spec.ts",
   ],
   "compilerOptions": {
     "baseUrl": "./",
@@ -16,7 +17,8 @@
     "sourceMap": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declaration": true
     // "allowSyntheticDefaultImports": true
   }
 }
