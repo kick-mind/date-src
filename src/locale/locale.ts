@@ -12,7 +12,7 @@ export abstract class Locale {
         verifyClassCall(this, Locale);
 
         let ws = data?.weekStart;
-        if (!ws || !IsInt(ws) || ws < 0 || ws > 6) {
+        if (!IsInt(ws) || ws < 0 || ws > 6) {
             throw new Error('Invalid week start');
         }
         this._ws = ws;
