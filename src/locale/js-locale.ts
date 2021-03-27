@@ -1,39 +1,17 @@
-import { IsInt, MonthNameFormat, verifyClassCall, verifyLocale, verifyType, WeekdayNameFormat } from 'src/common';
+import { IsInt, MonthNameFormat, verifyClassCall, verifyLocale, verifyType, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
 
-// Weekday names cache
-let weekDays: {
-    [localeId: string]: {
-        long?: string[],
-        short?: string[],
-        narrow?: string[],
-    },
-} = {};
-
-// Month names cache
-let monthNames: {
-    [localeId: string]: {
-        [calendarType: string]: {
-            long?: string[],
-            short?: string[],
-            narrow?: string[],
-        },
-    }
-} = {};
-
-// Date formatters cache
-let formatters: {
+// Cache
+let _: {
     [localeId: string]: {
         weekday?: {
-            long?: Intl.DateTimeFormat,
-            short?: Intl.DateTimeFormat,
-            narrow?: Intl.DateTimeFormat,
+            [format: string]: string[]
         },
         month?: {
-            long?: Intl.DateTimeFormat,
-            short?: Intl.DateTimeFormat,
-            narrow?: Intl.DateTimeFormat,
+            [calendarType: string]: {
+                [format: string]: string[]
+            },
         },
     }
 } = {};
@@ -44,39 +22,44 @@ export class JsLocale extends Locale {
         super(id, data);
         verifyClassCall(this, JsLocale);
         verifyLocale(id);
+        _[id] = _[id] ?? { month: {}, weekday: {} };
     }
 
-    weekdayNames(format?: WeekdayNameFormat): string[] {
-        throw new Error('Method not implemented.');
+    weekdayNames(format: WeekdayNameFormat = 'long'): string[] {
+        let id = this.id;
+        let res = _[id].weekday[format];
+        if (!res) {
+            // create/cache weekday names
+            let f = new Intl.DateTimeFormat(id, { weekday: format });
+            res = [];
+            let day = new Date(2021, 4, 28); // Sunday
+            for (let i = 0; i < 7; i++) {
+                res[(i + this.weekStart) % 7] = f.format(day);
+                day.setDate(day.getDate() + 1);
+            }
+            _[id].weekday[format] = res;
+        }
+
+        return res;
     }
 
     monthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
         let id = this.id;
-        // Find or create/cache a month formatter 
-        let lf = formatters[id] || {},
-            mf = lf.month || {},
-            f = mf[format];
-        if (!f) {
-            f = new Intl.DateTimeFormat(id, { month: format });
-            formatters[id].month[format] = f;
-        }
-
-        // Find or create/cache months names
-        let localeMonths = monthNames[id] || {},
-            calMonths = localeMonths[calendar.type] || {},
-            months = calMonths[format];
-        if (!months) {
-            months = [];
+        let res = _[id].month[calendar.type][format];
+        if (!res) {
+            // create/cache month names
+            let f = new Intl.DateTimeFormat(id, { month: format });
+            res = [];
             let now = new Date().valueOf();
             let { year } = calendar.getUnits(now);
             let firstDayOfMonthTs = calendar.getTimestamp({ year, month: 1, day: 1 });
             for (let i = 0; i < 12; i++) {
-                months.push(f.format(new Date(firstDayOfMonthTs)));
+                res.push(f.format(new Date(firstDayOfMonthTs)));
                 firstDayOfMonthTs += calendar.add(firstDayOfMonthTs, { month: 1 });
             }
-            monthNames[id][calendar.type][format] = months;
+            _[id].month[calendar.type][format] = res;
         }
 
-        return months;
+        return res;
     }
 }
