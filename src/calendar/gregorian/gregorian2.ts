@@ -62,7 +62,7 @@ export class GregorianCalendar2 extends Calendar {
     super('gregorian2', 'gregorian');
   }
 
-  private getDateUnits(ticks: number): DateTimeUnits {
+  getDateUnits(ticks: number): DateTimeUnits {
     const du: DateTimeUnits = {
       year: 0,
       month: 0,
@@ -157,15 +157,6 @@ export class GregorianCalendar2 extends Calendar {
   }
   getTimestamp(units: DateTimeUnits): number {
     throw new Error('Method not implemented.');
-  }
-  getUnits(ts: number): DateTimeUnits {
-    ts = getCalendarTicks(ts);
-    const tu = this.getDateUnits(ts);
-    tu.hour = this.hour(ts);
-    tu.minute = this.minute(ts);
-    tu.second = this.second(ts);
-    tu.ms = this.ms(ts);
-    return tu;
   }
 
   getAbsoluteDate(year: number, month: number, day: number): number {
