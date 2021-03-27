@@ -60,7 +60,7 @@ export class Hijri extends Calendar {
     return this.addMonths(time, years * 12);
   }
   dayOfYear(time: number): number {
-    let year; 
+    let year;
     let numDays;
 
     // CheckTicksRange(ticks);
@@ -69,8 +69,8 @@ export class Hijri extends Calendar {
     numDays += this.hijriAdjustment;
     year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
-    let daysToHijriYear = this.daysUpToHijriYear(year); 
-    let daysOfHijriYear = this.daysInYear(year); 
+    let daysToHijriYear = this.daysUpToHijriYear(year);
+    let daysOfHijriYear = this.daysInYear(year);
 
     if (numDays < daysToHijriYear) {
       daysToHijriYear -= daysOfHijriYear;
@@ -102,7 +102,21 @@ export class Hijri extends Calendar {
     return (year * 11 + 14) % 30 < 11;
   }
   getTimestamp(units: DateTimeUnits): number {
-    throw new Error('Method not implemented.');
+    let daysInMonth = this.daysInMonth(units.year, units.month);
+    if (units.day < 1 || units.day > daysInMonth) {
+      throwErr();
+    }
+
+    let lDate = this.getAbsoluteDateHijri(units.year, units.month, units.day);
+
+    if (lDate >= 0) {
+      let ticks =
+        lDate * _ticksPerDay +
+        this.timeToTicks(units.hour, units.minute, units.second, units.ms);
+        return getJsTicks(ticks);
+    } else {
+      throwErr();
+    }
   }
   getUnits(ts: number): DateTimeUnits {
     ts = getCalendarTicks(ts);
@@ -114,7 +128,7 @@ export class Hijri extends Calendar {
     return tu;
   }
 
-  private getDateUnits(ticks: number): DateTimeUnits {
+  getDateUnits(ticks: number): DateTimeUnits {
     const du: DateTimeUnits = {
       year: 0,
       month: 0,
@@ -124,9 +138,9 @@ export class Hijri extends Calendar {
       second: 0,
       ms: 0,
     };
-    let year; 
+    let year;
     let month;
-    let day; 
+    let day;
     let numDays;
 
     // CheckTicksRange(ticks);
@@ -135,8 +149,8 @@ export class Hijri extends Calendar {
     numDays += this.hijriAdjustment;
     year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
-    let daysToHijriYear = this.daysUpToHijriYear(year); 
-    let daysOfHijriYear = this.daysInYear(year); 
+    let daysToHijriYear = this.daysUpToHijriYear(year);
+    let daysOfHijriYear = this.daysInYear(year);
 
     if (numDays < daysToHijriYear) {
       daysToHijriYear -= daysOfHijriYear;

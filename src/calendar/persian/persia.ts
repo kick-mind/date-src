@@ -457,31 +457,6 @@ function getAbsoluteDatePersian(
   throwErr();
 }
 
-function timeToTicks(
-  hour: number,
-  minute: number,
-  second: number,
-  ms: number
-): number {
-  if (
-    hour >= 0 &&
-    hour < 24 &&
-    minute >= 0 &&
-    minute < 60 &&
-    second >= 0 &&
-    second < 60 &&
-    ms >= 0 &&
-    ms < _ticksPerSecond
-  ) {
-    return (
-      hour * _ticksPerHour +
-      minute * _ticksPerMinute +
-      second * _ticksPerSecond +
-      ms
-    );
-  }
-  throwErr();
-}
 export class Persia extends Calendar {
   static MinDate: Date = new Date('622/3/22');
   static MaxDate: Date = new Date('9000/12/31');
@@ -579,24 +554,14 @@ export class Persia extends Calendar {
     if (lDate >= 0) {
       let ticks =
         lDate * _ticksPerDay +
-        timeToTicks(units.hour, units.minute, units.second, units.ms);
+        this.timeToTicks(units.hour, units.minute, units.second, units.ms);
       return getJsTicks(ticks);
     } else {
       throwErr();
     }
   }
 
-  getUnits(ts: number): DateTimeUnits {
-    ts = getCalendarTicks(ts);
-    let tu = this.getDateUnits(ts);
-    tu.hour = this.hour(ts);
-    tu.minute = this.minute(ts);
-    tu.second = this.second(ts);
-    tu.ms = this.ms(ts);
-    return tu;
-  }
-
-  private getDateUnits(ticks: number): DateTimeUnits {
+  getDateUnits(ticks: number): DateTimeUnits {
     let du: DateTimeUnits = {
       year: 0,
       month: 0,

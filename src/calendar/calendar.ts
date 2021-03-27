@@ -1,4 +1,3 @@
-
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 import { DateTimeUnits } from '../common';
@@ -13,7 +12,7 @@ const _maxMillis = 315537897600000;
 const _minDate = new Date('100/1/1');
 const _maxDate = new Date('9999/12/31');
 
-export function throwErr(){
+export function throwErr() {
   throw new Error('Invalid Time!');
 }
 function add(time: number, value: number, scale: number): number {
@@ -59,7 +58,6 @@ function getFirstDayWeekOfYear(
   const offset = (dayForJan1 - firstDayOfWeek + 14) % 7;
   return Math.trunc((dayOfYear + offset) / 7) + 1;
 }
-
 
 export function getCalendarTicks(ticks: number): number {
   return ticks + _jsEpoch;
@@ -214,6 +212,32 @@ export abstract class Calendar {
     return Math.trunc(getCalendarTicks(time) / _ticksPerDay + 1) % 7;
   }
 
+  protected timeToTicks(
+    hour: number,
+    minute: number,
+    second: number,
+    ms: number
+  ): number {
+    if (
+      hour >= 0 &&
+      hour < 24 &&
+      minute >= 0 &&
+      minute < 60 &&
+      second >= 0 &&
+      second < 60 &&
+      ms >= 0 &&
+      ms < _ticksPerSecond
+    ) {
+      return (
+        hour * _ticksPerHour +
+        minute * _ticksPerMinute +
+        second * _ticksPerSecond +
+        ms
+      );
+    }
+    throwErr();
+  }
+
   /** Returns the number of days in this DateTime's month. */
   abstract addMonths(time: number, months: number): number;
   /** */
@@ -229,5 +253,15 @@ export abstract class Calendar {
   /** */
   abstract getTimestamp(units: DateTimeUnits): number;
   /** */
-  abstract getUnits(ts: number): DateTimeUnits;
+  abstract getDateUnits(ts: number): DateTimeUnits;
+
+  getUnits(ts: number): DateTimeUnits {
+    ts = getCalendarTicks(ts);
+    const u = this.getDateUnits(ts);
+    u.hour = this.hour(ts);
+    u.minute = this.minute(ts);
+    u.second = this.second(ts);
+    u.ms = this.ms(ts);
+    return u;
+  }
 }
