@@ -48,7 +48,6 @@ export function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
 }
 
 function getFirstDayWeekOfYear(
-  time: number,
   firstDayOfWeek: number,
   dayOfYear: number,
   weekDay: number
@@ -137,7 +136,6 @@ export abstract class Calendar {
     offset = offset % 8;
     if (offset == 1) {
       return getFirstDayWeekOfYear(
-        time,
         firstDayOfWeek,
         this.dayOfYear(time),
         this.weekDay(time)
