@@ -118,7 +118,7 @@ export class DateTime {
         if (l == null) {
             l = Locales.default;
         } else if (IsStr(l)) {
-            l = Locales.find(l, o);
+            l = Locales.resolve(l, { weekStart: 0 });
         } else {
             verifyObject(l, Locale, true, 'Invalid locale');
         }

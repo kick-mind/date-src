@@ -19,7 +19,7 @@ export abstract class Locale {
     }
 
     /** Gets the locale ID */
-    get id() {
+    get id(): string {
         return this._id;
     }
 

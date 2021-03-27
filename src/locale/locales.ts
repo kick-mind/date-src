@@ -49,6 +49,18 @@ export abstract class Locales {
         return l;
     }
 
+    /**
+     * Tries to find a locale in the repository. If fails, creates a JsLocale, adds it to the repository and return it.
+     * @public
+     */
+    static resolve(id: string, opts?: { weekStart: number }): Locale {
+        let l = this.find(id);
+        if (!l) {
+            l = new JsLocale(id, { weekStart: opts?.weekStart ?? 0 });
+        }
+        return l;
+    }
+
     /** Clears the locales repository. */
     static clear() {
         repo = [];
@@ -60,4 +72,5 @@ export abstract class Locales {
     }
 }
 
+Locales.add(Locales.system);
 Locales.default = Locales.system;
