@@ -155,7 +155,8 @@ export class GregorianCalendar2 extends Calendar {
       return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
   }
   getTimestamp(units: DateTimeUnits): number {
-    throw new Error('Method not implemented.');
+    const u = units;
+    return Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms);
   }
 
   getAbsoluteDate(year: number, month: number, day: number): number {
