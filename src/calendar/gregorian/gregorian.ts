@@ -62,16 +62,17 @@ export class GregorianCalendar extends Calendar {
     const u = units;
     return Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms);
   }
-  getUnits(ts: number): DateTimeUnits {
+
+  getDateUnits(ts: number): DateTimeUnits {
     const d = new Date(ts);
     return {
       year: d.getUTCFullYear(),
       month: d.getUTCMonth(),
       day: d.getUTCDate(),
-      hour: d.getUTCHours(),
-      minute: d.getUTCMinutes(),
-      second: d.getUTCSeconds(),
-      ms: d.getUTCMilliseconds(),
+      hour: 0,
+      minute: 0,
+      second: 0,
+      ms: 0,
     };
   }
 }
