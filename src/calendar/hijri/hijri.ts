@@ -65,7 +65,7 @@ export class Hijri extends Calendar {
 
     // CheckTicksRange(ticks);
 
-    numDays = Math.trunc(time / _ticksPerDay) + 1;
+    numDays = Math.trunc(getCalendarTicks(time) / _ticksPerDay) + 1;
     numDays += this.hijriAdjustment;
     year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
@@ -113,19 +113,10 @@ export class Hijri extends Calendar {
       let ticks =
         lDate * _ticksPerDay +
         this.timeToTicks(units.hour, units.minute, units.second, units.ms);
-        return getJsTicks(ticks);
+      return getJsTicks(ticks);
     } else {
       throwErr();
     }
-  }
-  getUnits(ts: number): DateTimeUnits {
-    ts = getCalendarTicks(ts);
-    let tu = this.getDateUnits(ts);
-    tu.hour = this.hour(ts);
-    tu.minute = this.minute(ts);
-    tu.second = this.second(ts);
-    tu.ms = this.ms(ts);
-    return tu;
   }
 
   getDateUnits(ticks: number): DateTimeUnits {

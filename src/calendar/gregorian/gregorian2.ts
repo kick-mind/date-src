@@ -156,7 +156,7 @@ export class GregorianCalendar2 extends Calendar {
   }
   getTimestamp(units: DateTimeUnits): number {
     const u = units;
-    return Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms);
+    return getJsTicks(Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms));
   }
 
   getAbsoluteDate(year: number, month: number, day: number): number {
