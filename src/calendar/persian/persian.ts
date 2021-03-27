@@ -457,7 +457,7 @@ function getAbsoluteDatePersian(
   throwErr();
 }
 
-export class Persia extends Calendar {
+export class Persian extends Calendar {
   static MinDate: Date = new Date('622/3/22');
   static MaxDate: Date = new Date('9000/12/31');
 
@@ -487,14 +487,12 @@ export class Persia extends Calendar {
     }
     const ticks =
       getAbsoluteDatePersian(y, m, d) * _ticksPerDay + (time % _ticksPerDay);
-    checkAddResult(ticks, Persia.MinDate, Persia.MaxDate);
+    checkAddResult(ticks, Persian.MinDate, Persian.MaxDate);
     return getJsTicks(ticks);
   }
-
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
   }
-
   dayOfYear(time: number): number {
     let NumDays = Math.trunc(getCalendarTicks(time) / _ticksPerDay) + 1;
 
@@ -522,7 +520,6 @@ export class Persia extends Calendar {
     );
     return ordinalDay;
   }
-
   daysInMonth(year: number, month: number): number {
     let daysInMonth = _DaysToMonth[month] - _DaysToMonth[month - 1];
     if (month == _monthsPerYear && !this.isLeapYear(year)) {
@@ -530,11 +527,9 @@ export class Persia extends Calendar {
     }
     return daysInMonth;
   }
-
   daysInYear(year: number): number {
     return this.isLeapYear(year) ? 366 : 365;
   }
-
   isLeapYear(year: number): boolean {
     return (
       getAbsoluteDatePersian(year + 1, 1, 1) -
@@ -542,7 +537,6 @@ export class Persia extends Calendar {
       366
     );
   }
-
   getTimestamp(units: DateTimeUnits): number {
     const daysInMonth = this.daysInMonth(units.year, units.month);
     if (units.day < 1 || units.day > daysInMonth) {
@@ -560,7 +554,6 @@ export class Persia extends Calendar {
       throwErr();
     }
   }
-
   getDateUnits(ticks: number): DateTimeUnits {
     let du: DateTimeUnits = {
       year: 0,

@@ -61,6 +61,61 @@ export class GregorianCalendar2 extends Calendar {
     super('gregorian2', 'gregorian');
   }
 
+  addMonths(time: number, months: number): number {
+    if (months < -120000 || months > 120000) {
+      throwErr();
+    }
+
+    const ut = this.getUnits(time);
+    let y = ut.year;
+    let m = ut.month;
+    let d = ut.day;
+    // int y, m, d;
+    // this.GetDatePart(time.Ticks, out y, out m, out d);
+
+    const i = m - 1 + months;
+    if (i >= 0) {
+      m = (i % 12) + 1;
+      y = Math.trunc(y + i / 12);
+    } else {
+      m = 12 + ((i + 1) % 12);
+      y = Math.trunc(y + (i - 11) / 12);
+    }
+    const daysArray = this.isLeapYear(y) ? _daysToMonth366 : _daysToMonth365;
+    const days = daysArray[m] - daysArray[m - 1];
+
+    if (d > days) {
+      d = days;
+    }
+    const ticks = this.dateToTicks(y, m, d) + (time % _ticksPerDay);
+    checkAddResult(ticks, GregorianCalendar2.MinDate, GregorianCalendar2.MaxDate);
+
+    return getJsTicks(ticks);
+  }
+  addYears(time: number, years: number): number {
+    return this.addMonths(time, years * 12);
+  }
+  // check this method later
+  dayOfYear(time: number): number {
+    const now = new Date(time);
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now.getTime() - start.getTime();
+    return Math.floor(diff / _ticksPerDay);
+  }
+  daysInMonth(year: number, month: number): number {
+    const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
+    return days[month] - days[month - 1];
+  }
+  daysInYear(year: number): number {
+    return this.isLeapYear(year) ? 366 : 365;
+  }
+  isLeapYear(year: number): boolean {
+      return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+  }
+  getTimestamp(units: DateTimeUnits): number {
+    const u = units;
+    return getJsTicks(Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms));
+  }
   getDateUnits(ticks: number): DateTimeUnits {
     const du: DateTimeUnits = {
       year: 0,
@@ -102,64 +157,7 @@ export class GregorianCalendar2 extends Calendar {
     return du;
   }
 
-  addMonths(time: number, months: number): number {
-    if (months < -120000 || months > 120000) {
-      throwErr();
-    }
-
-    const ut = this.getUnits(time);
-    let y = ut.year;
-    let m = ut.month;
-    let d = ut.day;
-    // int y, m, d;
-    // this.GetDatePart(time.Ticks, out y, out m, out d);
-
-    const i = m - 1 + months;
-    if (i >= 0) {
-      m = (i % 12) + 1;
-      y = Math.trunc(y + i / 12);
-    } else {
-      m = 12 + ((i + 1) % 12);
-      y = Math.trunc(y + (i - 11) / 12);
-    }
-    const daysArray = this.isLeapYear(y) ? _daysToMonth366 : _daysToMonth365;
-    const days = daysArray[m] - daysArray[m - 1];
-
-    if (d > days) {
-      d = days;
-    }
-    const ticks = this.dateToTicks(y, m, d) + (time % _ticksPerDay);
-    checkAddResult(ticks, GregorianCalendar2.MinDate, GregorianCalendar2.MaxDate);
-
-    return getJsTicks(ticks);
-  }
-  addYears(time: number, years: number): number {
-    return this.addMonths(time, years * 12);
-  }
-
-  // check this method later
-  dayOfYear(time: number): number {
-    const now = new Date(time);
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now.getTime() - start.getTime();
-    return Math.floor(diff / _ticksPerDay);
-  }
-  daysInMonth(year: number, month: number): number {
-    const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
-    return days[month] - days[month - 1];
-  }
-  daysInYear(year: number): number {
-    return this.isLeapYear(year) ? 366 : 365;
-  }
-  isLeapYear(year: number): boolean {
-      return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
-  }
-  getTimestamp(units: DateTimeUnits): number {
-    const u = units;
-    return getJsTicks(Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms));
-  }
-
-  getAbsoluteDate(year: number, month: number, day: number): number {
+  private getAbsoluteDate(year: number, month: number, day: number): number {
     if (year >= 1 && year <= _maxYear && month >= 1 && month <= 12) {
       const days =
         year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
@@ -175,7 +173,6 @@ export class GregorianCalendar2 extends Calendar {
     }
     throwErr();
   }
-
   private dateToTicks(year: number, month: number, day: number): number {
     return this.getAbsoluteDate(year, month, day) * _ticksPerDay;
   }

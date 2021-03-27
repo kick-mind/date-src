@@ -118,7 +118,6 @@ export class Hijri extends Calendar {
       throwErr();
     }
   }
-
   getDateUnits(ticks: number): DateTimeUnits {
     const du: DateTimeUnits = {
       year: 0,
@@ -180,7 +179,6 @@ export class Hijri extends Calendar {
         this.hijriAdjustment
     );
   }
-
   private daysUpToHijriYear(year: number): number {
     let numDays;
     let numYear30;
