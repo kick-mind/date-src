@@ -5,16 +5,28 @@
 import { DateTimeUnits } from '../../common';
 import { Calendar, _ticksPerDay } from '../calendar';
 const _monthsPerYear = 12;
-const _DaysToMonth = [
+const _daysToMonth365 = [
+  0,
+  31,
+  59,
+  90,
+  120,
+  151,
+  181,
+  212,
+  243,
+  273,
+  304,
+  334,
+  365,
+];
+const _daysToMonth366 = [
   0,
   31,
   60,
   91,
   121,
   152,
-  182,
-  213,
-  244,
   274,
   305,
   335,
@@ -43,11 +55,8 @@ export class GregorianCalendar extends Calendar {
     return Math.floor(diff / _ticksPerDay);
   }
   daysInMonth(year: number, month: number): number {
-    let daysInMonth = _DaysToMonth[month] - _DaysToMonth[month - 1];
-    if (month == _monthsPerYear && !this.isLeapYear(year)) {
-      --daysInMonth;
-    }
-    return daysInMonth;
+    const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
+    return days[month] - days[month - 1];
   }
   daysInYear(year: number): number {
     return this.isLeapYear(year) ? 366 : 365;
@@ -61,11 +70,19 @@ export class GregorianCalendar extends Calendar {
     return Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms);
   }
 
+  getUnits(ts: number): DateTimeUnits {
+    const u = this.getDateUnits(ts);
+    u.hour = this.hour(ts);
+    u.minute = this.minute(ts);
+    u.second = this.second(ts);
+    u.ms = this.ms(ts);
+    return u;
+  }
   getDateUnits(ts: number): DateTimeUnits {
     const d = new Date(ts);
     return {
       year: d.getUTCFullYear(),
-      month: d.getUTCMonth(),
+      month: d.getUTCMonth() + 1,
       day: d.getUTCDate(),
       hour: 0,
       minute: 0,
