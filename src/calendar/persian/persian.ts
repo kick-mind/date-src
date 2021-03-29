@@ -498,11 +498,9 @@ export class Persian extends Calendar {
 
     const yearStart = PersianNewYearOnOrBefore(NumDays);
     const y =
-      Math.trunc(
         Math.floor(
           (yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5
-        )
-      ) + 1;
+        ) + 1;
 
     const ordinalDay = Math.trunc(
       NumDays -
@@ -569,11 +567,9 @@ export class Persian extends Calendar {
     NumDays = Math.trunc(ticks / _ticksPerDay) + 1;
     const yearStart = PersianNewYearOnOrBefore(NumDays);
     const y =
-      Math.trunc(
         Math.floor(
           (yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5
-        )
-      ) + 1;
+        ) + 1;
 
     const ordinalDay = Math.trunc(
       NumDays -
