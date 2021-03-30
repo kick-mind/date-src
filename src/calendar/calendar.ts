@@ -148,36 +148,35 @@ export abstract class Calendar {
   /** Adds a period of time to this DateTime and returns the resulting DateTime. */
   add(ts: number, units: Partial<DateTimeUnits>): number {
     const isInt = Number.isInteger;
-    let t: number = ts;
-    if (isInt(units.ms)) {
-      t = addMs(t, units.ms);
+    if (isInt(units.ms) && units.ms != 0) {
+      ts = addMs(ts, units.ms);
     }
 
-    if (isInt(units.second)) {
-      t = addSeconds(t, units.second);
+    if (isInt(units.second) && units.second != 0) {
+      ts = addSeconds(ts, units.second);
     }
 
-    if (isInt(units.minute)) {
-      t = addMinutes(t, units.minute);
+    if (isInt(units.minute) && units.minute != 0) {
+      ts = addMinutes(ts, units.minute);
     }
 
-    if (isInt(units.hour)) {
-      t = addHours(t, units.hour);
+    if (isInt(units.hour) && units.hour != 0) {
+      ts = addHours(ts, units.hour);
     }
 
-    if (isInt(units.day)) {
-      t = addDays(t, units.day);
+    if (isInt(units.day) && units.day != 0) {
+      ts = addDays(ts, units.day);
     }
 
-    if (isInt(units.month)) {
-      t = this.addMonths(t, units.month);
+    if (isInt(units.month) && units.month != 0) {
+      ts = this.addMonths(ts, units.month);
     }
 
-    if (isInt(units.year)) {
-      t = this.addYears(t, units.year);
+    if (isInt(units.year) && units.year != 0) {
+      ts = this.addYears(ts, units.year);
     }
 
-    return t;
+    return ts;
   }
 
   /** Subtracts a period of time from this DateTime and returns the resulting DateTime. */

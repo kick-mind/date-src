@@ -51,7 +51,7 @@ export class Hijri extends Calendar {
       d = days;
     }
     const ticks =
-      this.getAbsoluteDateHijri(y, m, d) * _ticksPerDay + (time % _ticksPerDay);
+      this.getAbsoluteDateHijri(y, m, d) * _ticksPerDay + (getCalendarTicks(time) % _ticksPerDay);
     //   Calendar.CheckAddResult(ticks, MinSupportedDateTime, MaxSupportedDateTime);
     return getJsTicks(ticks);
   }

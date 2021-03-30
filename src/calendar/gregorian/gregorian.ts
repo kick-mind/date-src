@@ -20,19 +20,8 @@ const _daysToMonth365 = [
   334,
   365,
 ];
-const _daysToMonth366 = [
-  0,
-  31,
-  60,
-  91,
-  121,
-  152,
-  274,
-  305,
-  335,
-  366,
-];
 
+const _daysToMonth366 = [0, 31, 60, 91, 121, 152, 274, 305, 335, 366];
 /** Gregorian calendar */
 export class GregorianCalendar extends Calendar {
   constructor() {
@@ -67,7 +56,15 @@ export class GregorianCalendar extends Calendar {
 
   getTimestamp(units: DateTimeUnits): number {
     const u = units;
-    return Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms);
+    return Date.UTC(
+      u.year,
+      u.month - 1,
+      u.day,
+      u.hour,
+      u.minute,
+      u.second,
+      u.ms
+    );
   }
 
   getUnits(ts: number): DateTimeUnits {

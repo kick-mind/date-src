@@ -5,6 +5,7 @@ import { DateTimeUnits } from '../../common';
 import {
   Calendar,
   checkAddResult,
+  getCalendarTicks,
   getJsTicks,
   throwErr,
   _maxYear,
@@ -87,8 +88,12 @@ export class GregorianCalendar2 extends Calendar {
     if (d > days) {
       d = days;
     }
-    const ticks = this.dateToTicks(y, m, d) + (time % _ticksPerDay);
-    checkAddResult(ticks, GregorianCalendar2.MinDate, GregorianCalendar2.MaxDate);
+    const ticks = this.dateToTicks(y, m, d) + (getCalendarTicks(time) % _ticksPerDay);
+    checkAddResult(
+      ticks,
+      GregorianCalendar2.MinDate,
+      GregorianCalendar2.MaxDate
+    );
 
     return getJsTicks(ticks);
   }
@@ -114,7 +119,7 @@ export class GregorianCalendar2 extends Calendar {
   }
   getTimestamp(units: DateTimeUnits): number {
     const u = units;
-    return getJsTicks(Date.UTC(u.year, u.month, u.day, u.hour, u.month, u.second, u.ms));
+    return Date.UTC(u.year, u.month - 1, u.day, u.hour, u.minute, u.second, u.ms);
   }
   getDateUnits(ticks: number): DateTimeUnits {
     const du: DateTimeUnits = {
@@ -159,15 +164,10 @@ export class GregorianCalendar2 extends Calendar {
 
   private getAbsoluteDate(year: number, month: number, day: number): number {
     if (year >= 1 && year <= _maxYear && month >= 1 && month <= 12) {
-      const days =
-        year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
-          ? _daysToMonth366
-          : _daysToMonth365;
+      const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
       if (day >= 1 && day <= days[month] - days[month - 1]) {
         const y = year - 1;
-        const absoluteDate = Math.trunc(
-          y * 365 + y / 4 - y / 100 + y / 400 + days[month - 1] + day - 1
-        );
+        const absoluteDate = y * 365 + Math.trunc(y / 4) - Math.trunc(y / 100) + Math.trunc(y / 400) + days[month - 1] + day - 1;
         return absoluteDate;
       }
     }

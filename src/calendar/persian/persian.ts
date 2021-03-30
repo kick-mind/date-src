@@ -486,7 +486,7 @@ export class Persian extends Calendar {
       d = days;
     }
     const ticks =
-      getAbsoluteDatePersian(y, m, d) * _ticksPerDay + (time % _ticksPerDay);
+      getAbsoluteDatePersian(y, m, d) * _ticksPerDay + (getCalendarTicks(time) % _ticksPerDay);
     checkAddResult(ticks, Persian.MinDate, Persian.MaxDate);
     return getJsTicks(ticks);
   }
