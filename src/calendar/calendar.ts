@@ -1,6 +1,6 @@
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
-import { DateTimeUnits } from '../common';
+import { DateTimeUnits, TimeUnits } from '../common';
 // tslint:disable: triple-equals
 const _jsEpoch = 62135596800000;
 export const _ticksPerSecond = 1000;
@@ -9,8 +9,6 @@ export const _ticksPerHour = _ticksPerMinute * 60;
 export const _ticksPerDay = _ticksPerHour * 24;
 export const _maxYear = 9000;
 const _maxMillis = 315537897600000;
-const _minDate = new Date('100/1/1');
-const _maxDate = new Date('9999/12/31');
 
 export function throwErr() {
   throw new Error('Invalid Time!');
@@ -21,7 +19,6 @@ function add(time: number, value: number, scale: number): number {
     throwErr();
   }
   const ticks: number = time + millis;
-  checkAddResult(ticks, _minDate, _maxDate);
   return ticks;
 }
 
@@ -41,11 +38,6 @@ function addDays(time: number, days: number): number {
   return add(time, days, _ticksPerDay);
 }
 
-export function checkAddResult(ticks: number, minValue: Date, maxValue: Date) {
-  if (ticks < minValue.getTime() || ticks > maxValue.getTime()) {
-    throwErr();
-  }
-}
 
 function getFirstDayWeekOfYear(
   firstDayOfWeek: number,
@@ -77,6 +69,15 @@ function minute(time: number): number {
 }
 function hour(time: number): number {
   return Math.trunc((time / _ticksPerHour) % 24);
+}
+
+export function getTimeUnits(time: number): TimeUnits{
+   return {
+     hour: hour(time),
+     minute: minute(time),
+     second: second(time),
+     ms: ms(time)
+   };
 }
 /**
  * An base class for all calendars.
@@ -250,15 +251,5 @@ export abstract class Calendar {
   /** */
   abstract getTimestamp(units: DateTimeUnits): number;
   /** */
-  abstract getDateUnits(ts: number): DateTimeUnits;
-
-  getUnits(ts: number): DateTimeUnits {
-    ts = getCalendarTicks(ts);
-    const u = this.getDateUnits(ts);
-    u.hour = hour(ts);
-    u.minute = minute(ts);
-    u.second = second(ts);
-    u.ms = ms(ts);
-    return u;
-  }
+  abstract getUnits(ts: number): DateTimeUnits;
 }

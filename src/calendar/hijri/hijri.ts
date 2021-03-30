@@ -3,6 +3,7 @@ import {
   Calendar,
   getCalendarTicks,
   getJsTicks,
+  getTimeUnits,
   throwErr,
   _ticksPerDay,
 } from '../calendar';
@@ -51,7 +52,8 @@ export class Hijri extends Calendar {
       d = days;
     }
     const ticks =
-      this.getAbsoluteDateHijri(y, m, d) * _ticksPerDay + (getCalendarTicks(time) % _ticksPerDay);
+      this.getAbsoluteDateHijri(y, m, d) * _ticksPerDay +
+      (getCalendarTicks(time) % _ticksPerDay);
     //   Calendar.CheckAddResult(ticks, MinSupportedDateTime, MaxSupportedDateTime);
     return getJsTicks(ticks);
   }
@@ -118,7 +120,12 @@ export class Hijri extends Calendar {
       throwErr();
     }
   }
-  getDateUnits(ticks: number): DateTimeUnits {
+  getUnits(ts: number): DateTimeUnits {
+    ts = getCalendarTicks(ts);
+    return { ...this.getDateUnits(ts), ...getTimeUnits(ts) };
+  }
+
+  private getDateUnits(ticks: number): DateTimeUnits {
     const du: DateTimeUnits = {
       year: 0,
       month: 0,

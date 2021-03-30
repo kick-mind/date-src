@@ -9,6 +9,13 @@ export interface DateTimeUnits {
     ms?: number;
 }
 
+export interface TimeUnits{
+    hour?: number;
+    minute?: number;
+    second?: number;
+    ms?: number;
+}
+
 /** Weekday name format */
 export type WeekdayNameFormat = 'long' | 'short' | 'narrow';
 

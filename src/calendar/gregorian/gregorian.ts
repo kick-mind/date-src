@@ -3,7 +3,7 @@
 // tslint:disable: triple-equals
 
 import { DateTimeUnits } from '../../common';
-import { Calendar, _ticksPerDay } from '../calendar';
+import { Calendar, getTimeUnits, _ticksPerDay } from '../calendar';
 const _monthsPerYear = 12;
 const _daysToMonth365 = [
   0,
@@ -68,13 +68,9 @@ export class GregorianCalendar extends Calendar {
   }
 
   getUnits(ts: number): DateTimeUnits {
-    const u = this.getDateUnits(ts);
-    u.hour = this.hour(ts);
-    u.minute = this.minute(ts);
-    u.second = this.second(ts);
-    u.ms = this.ms(ts);
-    return u;
+    return { ...this.getDateUnits(ts), ...getTimeUnits(ts) };
   }
+
   getDateUnits(ts: number): DateTimeUnits {
     const d = new Date(ts);
     return {

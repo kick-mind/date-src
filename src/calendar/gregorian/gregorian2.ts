@@ -4,9 +4,9 @@
 import { DateTimeUnits } from '../../common';
 import {
   Calendar,
-  checkAddResult,
   getCalendarTicks,
   getJsTicks,
+  getTimeUnits,
   throwErr,
   _maxYear,
   _ticksPerDay,
@@ -55,8 +55,6 @@ const _daysToMonth366 = [
 
 /** Gregorian2 calendar */
 export class GregorianCalendar2 extends Calendar {
-  static MinDate: Date = new Date('1/1/1');
-  static MaxDate: Date = new Date('9000/12/31');
 
   constructor() {
     super('gregorian2', 'gregorian');
@@ -89,12 +87,6 @@ export class GregorianCalendar2 extends Calendar {
       d = days;
     }
     const ticks = this.dateToTicks(y, m, d) + (getCalendarTicks(time) % _ticksPerDay);
-    checkAddResult(
-      ticks,
-      GregorianCalendar2.MinDate,
-      GregorianCalendar2.MaxDate
-    );
-
     return getJsTicks(ticks);
   }
   addYears(time: number, years: number): number {
@@ -121,7 +113,13 @@ export class GregorianCalendar2 extends Calendar {
     const u = units;
     return Date.UTC(u.year, u.month - 1, u.day, u.hour, u.minute, u.second, u.ms);
   }
-  getDateUnits(ticks: number): DateTimeUnits {
+
+  getUnits(ts: number): DateTimeUnits {
+    ts = getCalendarTicks(ts);
+    return { ...this.getDateUnits(ts), ...getTimeUnits(ts) };
+  }
+
+  private getDateUnits(ticks: number): DateTimeUnits {
     const du: DateTimeUnits = {
       year: 0,
       month: 0,

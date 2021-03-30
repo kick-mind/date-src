@@ -1,9 +1,9 @@
 import { DateTimeUnits } from '../../common';
 import {
   Calendar,
-  checkAddResult,
   getCalendarTicks,
   getJsTicks,
+  getTimeUnits,
   throwErr,
   _maxYear,
   _ticksPerDay,
@@ -457,10 +457,7 @@ function getAbsoluteDatePersian(
   throwErr();
 }
 
-export class Persian extends Calendar {
-  static MinDate: Date = new Date('622/3/22');
-  static MaxDate: Date = new Date('9000/12/31');
-
+export class PersianCalendar extends Calendar {
   constructor() {
     super('persian', 'persian');
   }
@@ -487,7 +484,7 @@ export class Persian extends Calendar {
     }
     const ticks =
       getAbsoluteDatePersian(y, m, d) * _ticksPerDay + (getCalendarTicks(time) % _ticksPerDay);
-    checkAddResult(ticks, Persian.MinDate, Persian.MaxDate);
+    
     return getJsTicks(ticks);
   }
   addYears(time: number, years: number): number {
@@ -552,7 +549,13 @@ export class Persian extends Calendar {
       throwErr();
     }
   }
-  getDateUnits(ticks: number): DateTimeUnits {
+  
+  getUnits(ts: number): DateTimeUnits {
+    ts = getCalendarTicks(ts);
+    return { ...this.getDateUnits(ts), ...getTimeUnits(ts) };
+  }
+
+  private getDateUnits(ticks: number): DateTimeUnits {
     let du: DateTimeUnits = {
       year: 0,
       month: 0,
