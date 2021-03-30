@@ -3,8 +3,9 @@ import {
   getCalendarTimestamp,
   getJsTimestamp,
   msPerDay,
+  throwInvalidParam
 } from '../../common';
-import { Calendar, getTimeUnits, throwErr, _maxYear } from '../calendar';
+import { Calendar, getTimeUnits, _maxYear } from '../calendar';
 
 // tslint:disable: member-ordering
 // tslint:disable: variable-name
@@ -447,7 +448,7 @@ function getAbsoluteDatePersian(
     yearStart += ordinalDay;
     return yearStart;
   }
-  throwErr();
+  throwInvalidParam();
 }
 
 export class PersianCalendar extends Calendar {
@@ -456,9 +457,6 @@ export class PersianCalendar extends Calendar {
   }
 
   addMonths(time: number, months: number): number {
-    if (months < -120000 || months > 120000) {
-      throwErr();
-    }
     let ut = this.getUnits(time);
     let y = ut.year;
     let m = ut.month;
@@ -528,7 +526,7 @@ export class PersianCalendar extends Calendar {
   getTimestamp(units: DateTimeUnits): number {
     const daysInMonth = this.daysInMonth(units.year, units.month);
     if (units.day < 1 || units.day > daysInMonth) {
-      throwErr();
+      throwInvalidParam();
     }
 
     const lDate = getAbsoluteDatePersian(units.year, units.month, units.day);
@@ -539,7 +537,7 @@ export class PersianCalendar extends Calendar {
         this.timeToTicks(units.hour, units.minute, units.second, units.ms);
       return getJsTimestamp(ticks);
     } else {
-      throwErr();
+      throwInvalidParam();
     }
   }
 

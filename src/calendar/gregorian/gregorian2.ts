@@ -6,8 +6,9 @@ import {
   getCalendarTimestamp,
   getJsTimestamp,
   msPerDay,
+  throwInvalidParam
 } from '../../common';
-import { Calendar, getTimeUnits, throwErr, _maxYear } from '../calendar';
+import { Calendar, getTimeUnits, _maxYear } from '../calendar';
 import { Calendars } from '../calendars';
 
 // Number of days in a non-leap year
@@ -57,10 +58,6 @@ export class GregorianCalendar2 extends Calendar {
   }
 
   addMonths(time: number, months: number): number {
-    if (months < -120000 || months > 120000) {
-      throwErr();
-    }
-
     const ut = this.getUnits(time);
     let y = ut.year;
     let m = ut.month;
@@ -181,7 +178,7 @@ export class GregorianCalendar2 extends Calendar {
         return absoluteDate;
       }
     }
-    throwErr();
+    throwInvalidParam();
   }
   private dateToTicks(year: number, month: number, day: number): number {
     return this.getAbsoluteDate(year, month, day) * msPerDay;

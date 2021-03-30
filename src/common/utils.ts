@@ -79,3 +79,7 @@ export function getCalendarTimestamp(ticks: number): number {
 export function getJsTimestamp(ticks: number): number {
   return ticks - jsEpoch;
 }
+
+export function throwInvalidParam(param?: string) {
+  throw new Error(`Invalid parameter: [${param}]`);
+}

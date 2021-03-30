@@ -2,9 +2,10 @@ import {
   DateTimeUnits,
   getCalendarTimestamp,
   getJsTimestamp,
-  msPerDay
-} from 'src/common';
-import { Calendar, getTimeUnits, throwErr } from '../calendar';
+  msPerDay,
+  throwInvalidParam
+} from '../../common';
+import { Calendar, getTimeUnits } from '../calendar';
 
 const _hijriMonthDays = [
   0,
@@ -27,10 +28,6 @@ export class Hijri extends Calendar {
     super('hijri', 'hijri');
   }
   addMonths(time: number, months: number): number {
-    if (months < -120000 || months > 120000) {
-      throwErr();
-    }
-
     // Get the date in Hijri calendar.
     let ut = this.getUnits(time);
     let y = ut.year;
@@ -103,10 +100,6 @@ export class Hijri extends Calendar {
   }
   getTimestamp(units: DateTimeUnits): number {
     let daysInMonth = this.daysInMonth(units.year, units.month);
-    if (units.day < 1 || units.day > daysInMonth) {
-      throwErr();
-    }
-
     let lDate = this.getAbsoluteDateHijri(units.year, units.month, units.day);
 
     if (lDate >= 0) {
@@ -115,7 +108,7 @@ export class Hijri extends Calendar {
         this.timeToTicks(units.hour, units.minute, units.second, units.ms);
       return getJsTimestamp(ticks);
     } else {
-      throwErr();
+      throwInvalidParam();
     }
   }
   getUnits(ts: number): DateTimeUnits {

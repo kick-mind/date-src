@@ -8,19 +8,14 @@ import {
   msPerHour,
   msPerMinute,
   msPerSecond,
+  throwInvalidParam
 } from '../common';
 // tslint:disable: triple-equals
 export const _maxYear = 9000;
 const _maxMillis = 315537897600000;
 
-export function throwErr() {
-  throw new Error('Invalid Time!');
-}
 function add(time: number, value: number, scale: number): number {
   const millis: number = value * scale;
-  if (!(millis > -Number(_maxMillis) && millis < Number(_maxMillis))) {
-    throwErr();
-  }
   const ticks: number = time + millis;
   return ticks;
 }
@@ -118,7 +113,7 @@ export abstract class Calendar {
     };
 
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
-      throwErr();
+      throwInvalidParam('fisrtDayOfWeek');
     }
     offset = offset % 8;
     if (offset == 1) {
@@ -216,7 +211,7 @@ export abstract class Calendar {
         hour * msPerHour + minute * msPerMinute + second * msPerSecond + ms
       );
     }
-    throwErr();
+    throwInvalidParam();
   }
 
   /** Returns the number of days in this DateTime's month. */
