@@ -66,6 +66,18 @@ export function getJsTicks(ticks: number): number {
   return ticks - _jsEpoch;
 }
 
+function ms(time: number): number {
+  return time % 1000;
+}
+function second(time: number): number {
+  return Math.trunc((time / _ticksPerSecond) % 60);
+}
+function minute(time: number): number {
+  return Math.trunc((time / _ticksPerMinute) % 60);
+}
+function hour(time: number): number {
+  return Math.trunc((time / _ticksPerHour) % 24);
+}
 /**
  * An base class for all calendars.
  * @public
@@ -86,50 +98,38 @@ export abstract class Calendar {
   get type() {
     return this._type;
   }
-  ms(time: number): number {
-    return time % 1000;
-  }
-  second(time: number): number {
-    return Math.trunc((time / _ticksPerSecond) % 60);
-  }
-  minute(time: number): number {
-    return Math.trunc((time / _ticksPerMinute) % 60);
-  }
-  hour(time: number): number {
-    return Math.trunc((time / _ticksPerHour) % 24);
-  }
-
-  private getWeekOfYearFullDays(
-    time: number,
-    firstDayOfWeek: number,
-    fullDays: number
-  ): number {
-    let dayForJan1: number;
-    let offset: number;
-    let day: number;
-    const dayOfYear = this.dayOfYear(time) - 1;
-    dayForJan1 = this.weekDay(time) - (dayOfYear % 7);
-    offset = (firstDayOfWeek - dayForJan1 + 14) % 7;
-    if (offset != 0 && offset >= fullDays) {
-      offset -= 7;
-    }
-    day = dayOfYear - offset;
-    if (day >= 0) {
-      return Math.trunc(day / 7) + 1;
-    }
-    return this.getWeekOfYearFullDays(
-      addDays(time, -(dayOfYear + 1)),
-      firstDayOfWeek,
-      fullDays
-    );
-  }
 
   constructor(id: string, type: string) {
     this._id = id;
     this._type = type;
   }
   /** Get the week number of the week year (1 to 52). */
-  weekNumber(time: number, firstDayOfWeek: number, offset: number): number {
+  weekNumber(time: number, firstDayOfWeek: number, offset: number = 1): number {
+    let fn = (
+      tm: number,
+      firstDay: number,
+      fullDays: number
+    ): number => {
+      let dayForJan1: number;
+      let offst: number;
+      let day: number;
+      const dayOfYear = this.dayOfYear(tm) - 1;
+      dayForJan1 = this.weekDay(tm) - (dayOfYear % 7);
+      offst = (firstDay - dayForJan1 + 14) % 7;
+      if (offst != 0 && offst >= fullDays) {
+        offst -= 7;
+      }
+      day = dayOfYear - offst;
+      if (day >= 0) {
+        return Math.trunc(day / 7) + 1;
+      }
+      return fn(
+        addDays(tm, -(dayOfYear + 1)),
+        firstDay,
+        fullDays
+      );
+    };
+
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
       throwErr();
     }
@@ -141,7 +141,7 @@ export abstract class Calendar {
         this.weekDay(time)
       );
     } else {
-      return this.getWeekOfYearFullDays(time, firstDayOfWeek, offset);
+      return fn(time, firstDayOfWeek, offset);
     }
   }
 
@@ -255,10 +255,10 @@ export abstract class Calendar {
   getUnits(ts: number): DateTimeUnits {
     ts = getCalendarTicks(ts);
     const u = this.getDateUnits(ts);
-    u.hour = this.hour(ts);
-    u.minute = this.minute(ts);
-    u.second = this.second(ts);
-    u.ms = this.ms(ts);
+    u.hour = hour(ts);
+    u.minute = minute(ts);
+    u.second = second(ts);
+    u.ms = ms(ts);
     return u;
   }
 }
