@@ -1,16 +1,13 @@
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 // tslint:disable: triple-equals
-import { DateTimeUnits } from '../../common';
 import {
-  Calendar,
-  getCalendarTicks,
-  getJsTicks,
-  getTimeUnits,
-  throwErr,
-  _maxYear,
-  _ticksPerDay,
-} from '../calendar';
+  DateTimeUnits,
+  getCalendarTimestamp,
+  getJsTimestamp,
+  msPerDay,
+} from '../../common';
+import { Calendar, getTimeUnits, throwErr, _maxYear } from '../calendar';
 import { Calendars } from '../calendars';
 
 // Number of days in a non-leap year
@@ -55,7 +52,6 @@ const _daysToMonth366 = [
 
 /** Gregorian2 calendar */
 export class GregorianCalendar2 extends Calendar {
-
   constructor() {
     super('gregorian2', 'gregorian');
   }
@@ -86,8 +82,9 @@ export class GregorianCalendar2 extends Calendar {
     if (d > days) {
       d = days;
     }
-    const ticks = this.dateToTicks(y, m, d) + (getCalendarTicks(time) % _ticksPerDay);
-    return getJsTicks(ticks);
+    const ticks =
+      this.dateToTicks(y, m, d) + (getCalendarTimestamp(time) % msPerDay);
+    return getJsTimestamp(ticks);
   }
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
@@ -97,7 +94,7 @@ export class GregorianCalendar2 extends Calendar {
     const now = new Date(time);
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now.getTime() - start.getTime();
-    return Math.floor(diff / _ticksPerDay);
+    return Math.floor(diff / msPerDay);
   }
   daysInMonth(year: number, month: number): number {
     const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
@@ -107,15 +104,23 @@ export class GregorianCalendar2 extends Calendar {
     return this.isLeapYear(year) ? 366 : 365;
   }
   isLeapYear(year: number): boolean {
-      return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+    return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
   }
   getTimestamp(units: DateTimeUnits): number {
     const u = units;
-    return Date.UTC(u.year, u.month - 1, u.day, u.hour, u.minute, u.second, u.ms);
+    return Date.UTC(
+      u.year,
+      u.month - 1,
+      u.day,
+      u.hour,
+      u.minute,
+      u.second,
+      u.ms
+    );
   }
 
   getUnits(ts: number): DateTimeUnits {
-    ts = getCalendarTicks(ts);
+    ts = getCalendarTimestamp(ts);
     return { ...this.getDateUnits(ts), ...getTimeUnits(ts) };
   }
 
@@ -130,7 +135,7 @@ export class GregorianCalendar2 extends Calendar {
       ms: 0,
     };
 
-    let n = Math.trunc(ticks / _ticksPerDay);
+    let n = Math.trunc(ticks / msPerDay);
     const y400 = Math.trunc(n / _daysPer400Years);
     n -= y400 * _daysPer400Years;
     let y100 = Math.trunc(n / _daysPer100Years);
@@ -165,14 +170,21 @@ export class GregorianCalendar2 extends Calendar {
       const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
       if (day >= 1 && day <= days[month] - days[month - 1]) {
         const y = year - 1;
-        const absoluteDate = y * 365 + Math.trunc(y / 4) - Math.trunc(y / 100) + Math.trunc(y / 400) + days[month - 1] + day - 1;
+        const absoluteDate =
+          y * 365 +
+          Math.trunc(y / 4) -
+          Math.trunc(y / 100) +
+          Math.trunc(y / 400) +
+          days[month - 1] +
+          day -
+          1;
         return absoluteDate;
       }
     }
     throwErr();
   }
   private dateToTicks(year: number, month: number, day: number): number {
-    return this.getAbsoluteDate(year, month, day) * _ticksPerDay;
+    return this.getAbsoluteDate(year, month, day) * msPerDay;
   }
 }
 

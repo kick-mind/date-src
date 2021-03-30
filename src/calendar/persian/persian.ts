@@ -1,16 +1,10 @@
-import { DateTimeUnits } from '../../common';
 import {
-  Calendar,
-  getCalendarTicks,
-  getJsTicks,
-  getTimeUnits,
-  throwErr,
-  _maxYear,
-  _ticksPerDay,
-  _ticksPerHour,
-  _ticksPerMinute,
-  _ticksPerSecond,
-} from '../calendar';
+  DateTimeUnits,
+  getCalendarTimestamp,
+  getJsTimestamp,
+  msPerDay,
+} from '../../common';
+import { Calendar, getTimeUnits, throwErr, _maxYear } from '../calendar';
 
 // tslint:disable: member-ordering
 // tslint:disable: variable-name
@@ -370,7 +364,7 @@ function estimatePrior(longitude: number, time: number): number {
 
 function getNumberOfDays(jsdate: number): number {
   return Math.trunc(
-    getCalendarTicks(jsdate) / (_secondsPerDay * _millisecondsPerSecond)
+    getCalendarTimestamp(jsdate) / (_secondsPerDay * _millisecondsPerSecond)
   );
 }
 
@@ -398,13 +392,12 @@ function getDaysTicks(numberOfDays: number): number {
   const daysTotalTicks = Math.trunc(
     Math.floor(numberOfDays) * _secondsPerDay * _millisecondsPerSecond
   );
-  return getJsTicks(daysTotalTicks);
+  return getJsTimestamp(daysTotalTicks);
 }
-
 
 //#endregion
 
-const _persianEpoch: number = 19603728000000 / _ticksPerDay;
+const _persianEpoch: number = 19603728000000 / msPerDay;
 const _approximateHalfYear = 180;
 const _monthsPerYear = 12;
 const _DaysToMonth = [
@@ -483,21 +476,21 @@ export class PersianCalendar extends Calendar {
       d = days;
     }
     const ticks =
-      getAbsoluteDatePersian(y, m, d) * _ticksPerDay + (getCalendarTicks(time) % _ticksPerDay);
-    
-    return getJsTicks(ticks);
+      getAbsoluteDatePersian(y, m, d) * msPerDay +
+      (getCalendarTimestamp(time) % msPerDay);
+
+    return getJsTimestamp(ticks);
   }
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
   }
   dayOfYear(time: number): number {
-    let NumDays = Math.trunc(getCalendarTicks(time) / _ticksPerDay) + 1;
+    let NumDays = Math.trunc(getCalendarTimestamp(time) / msPerDay) + 1;
 
     const yearStart = PersianNewYearOnOrBefore(NumDays);
     const y =
-        Math.floor(
-          (yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5
-        ) + 1;
+      Math.floor((yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5) +
+      1;
 
     const ordinalDay = Math.trunc(
       NumDays -
@@ -542,16 +535,16 @@ export class PersianCalendar extends Calendar {
 
     if (lDate >= 0) {
       let ticks =
-        lDate * _ticksPerDay +
+        lDate * msPerDay +
         this.timeToTicks(units.hour, units.minute, units.second, units.ms);
-      return getJsTicks(ticks);
+      return getJsTimestamp(ticks);
     } else {
       throwErr();
     }
   }
-  
+
   getUnits(ts: number): DateTimeUnits {
-    ts = getCalendarTicks(ts);
+    ts = getCalendarTimestamp(ts);
     return { ...this.getDateUnits(ts), ...getTimeUnits(ts) };
   }
 
@@ -567,12 +560,11 @@ export class PersianCalendar extends Calendar {
     };
 
     let NumDays;
-    NumDays = Math.trunc(ticks / _ticksPerDay) + 1;
+    NumDays = Math.trunc(ticks / msPerDay) + 1;
     const yearStart = PersianNewYearOnOrBefore(NumDays);
     const y =
-        Math.floor(
-          (yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5
-        ) + 1;
+      Math.floor((yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5) +
+      1;
 
     const ordinalDay = Math.trunc(
       NumDays -

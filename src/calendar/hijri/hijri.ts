@@ -1,12 +1,10 @@
-import { DateTimeUnits } from 'src/common';
 import {
-  Calendar,
-  getCalendarTicks,
-  getJsTicks,
-  getTimeUnits,
-  throwErr,
-  _ticksPerDay,
-} from '../calendar';
+  DateTimeUnits,
+  getCalendarTimestamp,
+  getJsTimestamp,
+  msPerDay
+} from 'src/common';
+import { Calendar, getTimeUnits, throwErr } from '../calendar';
 
 const _hijriMonthDays = [
   0,
@@ -52,10 +50,10 @@ export class Hijri extends Calendar {
       d = days;
     }
     const ticks =
-      this.getAbsoluteDateHijri(y, m, d) * _ticksPerDay +
-      (getCalendarTicks(time) % _ticksPerDay);
+      this.getAbsoluteDateHijri(y, m, d) * msPerDay +
+      (getCalendarTimestamp(time) % msPerDay);
     //   Calendar.CheckAddResult(ticks, MinSupportedDateTime, MaxSupportedDateTime);
-    return getJsTicks(ticks);
+    return getJsTimestamp(ticks);
   }
 
   addYears(time: number, years: number): number {
@@ -67,7 +65,7 @@ export class Hijri extends Calendar {
 
     // CheckTicksRange(ticks);
 
-    numDays = Math.trunc(getCalendarTicks(time) / _ticksPerDay) + 1;
+    numDays = Math.trunc(getCalendarTimestamp(time) / msPerDay) + 1;
     numDays += this.hijriAdjustment;
     year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
@@ -113,15 +111,15 @@ export class Hijri extends Calendar {
 
     if (lDate >= 0) {
       let ticks =
-        lDate * _ticksPerDay +
+        lDate * msPerDay +
         this.timeToTicks(units.hour, units.minute, units.second, units.ms);
-      return getJsTicks(ticks);
+      return getJsTimestamp(ticks);
     } else {
       throwErr();
     }
   }
   getUnits(ts: number): DateTimeUnits {
-    ts = getCalendarTicks(ts);
+    ts = getCalendarTimestamp(ts);
     return { ...this.getDateUnits(ts), ...getTimeUnits(ts) };
   }
 
@@ -142,7 +140,7 @@ export class Hijri extends Calendar {
 
     // CheckTicksRange(ticks);
 
-    numDays = Math.trunc(ticks / _ticksPerDay) + 1;
+    numDays = Math.trunc(ticks / msPerDay) + 1;
     numDays += this.hijriAdjustment;
     year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 

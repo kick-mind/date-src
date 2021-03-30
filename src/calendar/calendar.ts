@@ -1,12 +1,15 @@
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
-import { DateTimeUnits, TimeUnits } from '../common';
+import {
+  DateTimeUnits,
+  getCalendarTimestamp,
+  TimeUnits,
+  msPerDay,
+  msPerHour,
+  msPerMinute,
+  msPerSecond,
+} from '../common';
 // tslint:disable: triple-equals
-const _jsEpoch = 62135596800000;
-export const _ticksPerSecond = 1000;
-export const _ticksPerMinute = _ticksPerSecond * 60;
-export const _ticksPerHour = _ticksPerMinute * 60;
-export const _ticksPerDay = _ticksPerHour * 24;
 export const _maxYear = 9000;
 const _maxMillis = 315537897600000;
 
@@ -26,18 +29,17 @@ function addMs(time: number, milliseconds: number): number {
   return add(time, milliseconds, 1);
 }
 function addSeconds(time: number, seconds: number): number {
-  return add(time, seconds, _ticksPerSecond);
+  return add(time, seconds, msPerSecond);
 }
 function addMinutes(time: number, minutes: number): number {
-  return add(time, minutes, _ticksPerMinute);
+  return add(time, minutes, msPerMinute);
 }
 function addHours(time: number, hours: number): number {
-  return add(time, hours, _ticksPerHour);
+  return add(time, hours, msPerHour);
 }
 function addDays(time: number, days: number): number {
-  return add(time, days, _ticksPerDay);
+  return add(time, days, msPerDay);
 }
-
 
 function getFirstDayWeekOfYear(
   firstDayOfWeek: number,
@@ -50,34 +52,26 @@ function getFirstDayWeekOfYear(
   return Math.trunc((dayOfYear + offset) / 7) + 1;
 }
 
-export function getCalendarTicks(ticks: number): number {
-  return ticks + _jsEpoch;
-}
-
-export function getJsTicks(ticks: number): number {
-  return ticks - _jsEpoch;
-}
-
 function ms(time: number): number {
   return time % 1000;
 }
 function second(time: number): number {
-  return Math.trunc((time / _ticksPerSecond) % 60);
+  return Math.trunc((time / msPerSecond) % 60);
 }
 function minute(time: number): number {
-  return Math.trunc((time / _ticksPerMinute) % 60);
+  return Math.trunc((time / msPerMinute) % 60);
 }
 function hour(time: number): number {
-  return Math.trunc((time / _ticksPerHour) % 24);
+  return Math.trunc((time / msPerHour) % 24);
 }
 
-export function getTimeUnits(time: number): TimeUnits{
-   return {
-     hour: hour(time),
-     minute: minute(time),
-     second: second(time),
-     ms: ms(time)
-   };
+export function getTimeUnits(time: number): TimeUnits {
+  return {
+    hour: hour(time),
+    minute: minute(time),
+    second: second(time),
+    ms: ms(time),
+  };
 }
 /**
  * An base class for all calendars.
@@ -106,11 +100,7 @@ export abstract class Calendar {
   }
   /** Get the week number of the week year (1 to 52). */
   weekNumber(time: number, firstDayOfWeek: number, offset: number = 1): number {
-    let fn = (
-      tm: number,
-      firstDay: number,
-      fullDays: number
-    ): number => {
+    let fn = (tm: number, firstDay: number, fullDays: number): number => {
       let dayForJan1: number;
       let offst: number;
       let day: number;
@@ -124,11 +114,7 @@ export abstract class Calendar {
       if (day >= 0) {
         return Math.trunc(day / 7) + 1;
       }
-      return fn(
-        addDays(tm, -(dayOfYear + 1)),
-        firstDay,
-        fullDays
-      );
+      return fn(addDays(tm, -(dayOfYear + 1)), firstDay, fullDays);
     };
 
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
@@ -207,7 +193,7 @@ export abstract class Calendar {
 
   /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
   weekDay(time: number): number {
-    return Math.trunc(getCalendarTicks(time) / _ticksPerDay + 1) % 7;
+    return Math.trunc(getCalendarTimestamp(time) / msPerDay + 1) % 7;
   }
 
   protected timeToTicks(
@@ -224,13 +210,10 @@ export abstract class Calendar {
       second >= 0 &&
       second < 60 &&
       ms >= 0 &&
-      ms < _ticksPerSecond
+      ms < msPerSecond
     ) {
       return (
-        hour * _ticksPerHour +
-        minute * _ticksPerMinute +
-        second * _ticksPerSecond +
-        ms
+        hour * msPerHour + minute * msPerMinute + second * msPerSecond + ms
       );
     }
     throwErr();
