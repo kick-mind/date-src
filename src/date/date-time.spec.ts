@@ -1,7 +1,7 @@
 import { DateTime } from './date-time';
 
 describe('DateTime', () => {
-  it('create without parameter (current time, system locale, system zone)', () => {
+  it('create without parameter', () => {
     const d = new DateTime();
     const jd = new Date();
     expect(d.year).toBe(jd.getFullYear());
@@ -27,7 +27,9 @@ describe('DateTime', () => {
 
   });
 
-  it('can be created from string', () => {
+  it('can format dates', () => {
+    const d = new DateTime(2000, 1, 1, 12, 15, 45, 500);
+    expect(d.format('YYYY')).toBe('2000');
   });
 
   it('can be created from date-time units', () => {

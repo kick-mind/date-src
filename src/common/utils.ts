@@ -18,7 +18,7 @@ export function IsObj(x: any) {
 
 /** Pads a number */
 export function padNumber(value: number, length: number) {
-  value.toString().slice(-length).padStart(length, '0');
+  return value.toString().slice(-length).padStart(length, '0');
 }
 
 /** Verifies an object's to ensure that it has a specific type */

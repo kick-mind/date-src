@@ -7,7 +7,6 @@ const II = IsInt;
 const IO = IsObj;
 const IIN = (x: any) => x == null || IsInt(x); /** Is integer or null or undefined */
 const C = (x: any) => ({ ...x }); // Clone object (shallow)
-const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g;
 
 /** DateTime create options. */
 export interface DateTimeCreateOptions {
@@ -415,6 +414,8 @@ export class DateTime {
     }
     //#endregion
 
+    REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,2}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|S|SSS|a|A|Z{1,2}/g;
+
     //#region Display + Convert
     /** 
      * Returns a string representation of this DateTime formatted according to the specified format string. 
@@ -423,35 +424,38 @@ export class DateTime {
     format(format: string): string {
         const matches: any = {
             Y: this.year,
-            Y2: padNumber(this.year, 2),
-            Y4: padNumber(this.year, 4),
+            YY: padNumber(this.year, 2),
+            YYYY: padNumber(this.year, 4),
             M: this.month,
             MM: padNumber(this.month, 2),
             // MMM: getShort(locale.monthsShort, $M, months, 3),
             // MMMM: getShort(months, $M),
             D: this.day,
-            D2: padNumber(this.day, 2),
+            DD: padNumber(this.day, 2),
             // d: String(this.$W),
             // dd: getShort(locale.weekdaysMin, this.$W, weekdays, 2),
             // ddd: getShort(locale.weekdaysShort, this.$W, weekdays, 3),
             // dddd: weekdays[this.$W],
             H: this.hour,
-            H2: padNumber(this.hour, 2),
+            HH: padNumber(this.hour, 2),
             // h: get$H(1),
             // hh: get$H(2),
             // a: meridiemFunc($H, $m, true),
             // A: meridiemFunc($H, $m, false),
             m: this.minute,
-            m2: padNumber(this.minute, 2),
+            mm: padNumber(this.minute, 2),
             s: this.second,
-            s2: padNumber(this.second, 2),
-            ms: this.ms,
-            ms3: padNumber(this.ms, 3),
+            ss: padNumber(this.second, 2),
+            S: this.ms,
+            SSS: padNumber(this.ms, 3),
             // SSS: Utils.s(this.$ms, 3, '0'),
             // Z: zoneStr // 'ZZ' logic below
         };
 
-        return format.replace(REGEX_FORMAT, (match, $1) => $1 || matches[match]);
+        return format.replace(this.REGEX_FORMAT, (match, $1) => {
+            const r = $1 || matches[match];
+            return r;
+        });
     }
 
     /**
