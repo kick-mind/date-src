@@ -1,7 +1,7 @@
 import { Calendar, Calendars } from '../calendar';
 import { Zone, Zones } from '../zone';
 import { Locale, Locales } from '../locale';
-import { DateTimeUnits, IsInt, IsObj, IsStr, padNumber, verifyClassCall, verifyObject, WeekdayNameFormat } from '../common';
+import { DateTimeUnits, IsInt, IsObj, IsStr, padNum, verifyClassCall, verifyObject, WeekdayNameFormat } from '../common';
 
 const II = IsInt;
 const IO = IsObj;
@@ -61,7 +61,7 @@ export class DateTime {
         let ts: number;
         let year: number, month: number, day: number, hour: number, minute: number, second: number, ms: number;
         let opts: DateTimeCreateOptions;
-        
+
         // Resolve constructor parameters
         const a = arguments, a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
         let now = () => new Date().valueOf();
@@ -249,14 +249,6 @@ export class DateTime {
     }
 
     /**
-     * Gets the human readable weekday name (locale aware). 
-     * @public
-     */
-    weekDayName(format: WeekdayNameFormat = 'long'): string {
-        return this.locale.getWeekdayNames(format)[this.weekDayLocale];
-    }
-
-    /**
      * Gets the day of the year (1 to 366). 
      * @public 
      */
@@ -422,38 +414,58 @@ export class DateTime {
      * @public
      */
     format(format: string): string {
+        const zone = () => {
+            let o = this._z.getOffset(this.ts); // offset
+            let s = o > 0 ? 1 : -1; // sign
+            return {
+                s,
+                o,
+                hr: Math.floor(o / 60) * s,
+                min: Math.floor(o % 60) * s,
+            };
+        };
+
         const matches: any = {
-            Y: this.year,
-            YY: padNumber(this.year, 2),
-            YYYY: padNumber(this.year, 4),
-            M: this.month,
-            MM: padNumber(this.month, 2),
-            // MMM: getShort(locale.monthsShort, $M, months, 3),
-            // MMMM: getShort(months, $M),
-            D: this.day,
-            DD: padNumber(this.day, 2),
-            // d: String(this.$W),
-            // dd: getShort(locale.weekdaysMin, this.$W, weekdays, 2),
-            // ddd: getShort(locale.weekdaysShort, this.$W, weekdays, 3),
-            // dddd: weekdays[this.$W],
-            H: this.hour,
-            HH: padNumber(this.hour, 2),
-            // h: get$H(1),
-            // hh: get$H(2),
-            // a: meridiemFunc($H, $m, true),
-            // A: meridiemFunc($H, $m, false),
-            m: this.minute,
-            mm: padNumber(this.minute, 2),
-            s: this.second,
-            ss: padNumber(this.second, 2),
-            S: this.ms,
-            SSS: padNumber(this.ms, 3),
-            // SSS: Utils.s(this.$ms, 3, '0'),
-            // Z: zoneStr // 'ZZ' logic below
+            Y: () => this.year,
+            YY: () => padNum(this.year, 2),
+            YYYY: () => padNum(this.year, 4),
+            M: () => this.month,
+            MM: () => padNum(this.month, 2),
+            MMM: () => this._l.getMonthNames(this._c, 'short')[this.month - 1], // month as an abbreviated localized string
+            MMMM: () => this._l.getMonthNames(this._c, 'long')[this.month - 1], // month as an abbreviated localized string
+            d: () => this.day,
+            dd: () => padNum(this.day, 2),
+            H: () => this.hour,
+            HH: () => padNum(this.hour, 2),
+            h: () => this.hour % 12,
+            hh: () => padNum(this.hour % 12, 2),
+            m: () => this.minute,
+            mm: () => padNum(this.minute, 2),
+            s: () => this.second,
+            ss: () => padNum(this.second, 2),
+            S: () => this.ms,
+            SSS: () => padNum(this.ms, 3),
+            c: () => this.weekDay,
+            cc: () => this.weekDayLocale,
+            ccc: () => this._l.getWeekdayNames('short')[this.weekDayLocale],
+            cccc: () => this._l.getWeekdayNames('long')[this.weekDayLocale],
+            ccccc: () => this._l.getWeekdayNames('narrow')[this.weekDayLocale],
+            Z: () => { // Zone: +5
+                let z = zone();
+                return z.s > 0 ? `+${z.o}` : z.o;
+            },
+            ZZ: () => { // Zone: +05:00
+                let z = zone();
+                return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}:${padNum(z.min, 2)};`;
+            },
+            ZZZ: () => { // Zone: +0500
+                let z = zone();
+                return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)};`;
+            },
         };
 
         return format.replace(this.REGEX_FORMAT, (match, $1) => {
-            const r = $1 || matches[match];
+            const r = $1 || (matches[match] && matches[match]()) || match;
             return r;
         });
     }

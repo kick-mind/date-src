@@ -31,7 +31,4 @@ describe('DateTime', () => {
     const d = new DateTime(2000, 1, 1, 12, 15, 45, 500);
     expect(d.format('YYYY')).toBe('2000');
   });
-
-  it('can be created from date-time units', () => {
-  });
 });
