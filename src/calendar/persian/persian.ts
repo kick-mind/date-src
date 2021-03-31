@@ -3,7 +3,8 @@ import {
   getCalendarTimestamp,
   getJsTimestamp,
   msPerDay,
-  throwInvalidParam
+  throwInvalidParam,
+  timeToTicks
 } from '../../common';
 import { Calendar, getTimeUnits, _maxYear } from '../calendar';
 
@@ -534,7 +535,7 @@ export class PersianCalendar extends Calendar {
     if (lDate >= 0) {
       let ticks =
         lDate * msPerDay +
-        this.timeToTicks(units.hour, units.minute, units.second, units.ms);
+        timeToTicks(units.hour, units.minute, units.second, units.ms);
       return getJsTimestamp(ticks);
     } else {
       throwInvalidParam();

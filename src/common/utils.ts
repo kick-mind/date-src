@@ -1,4 +1,4 @@
-import { jsEpoch } from './const';
+import { jsEpoch, msPerHour, msPerMinute, msPerSecond } from './const';
 
 export function hasIntl(): boolean {
   return Intl != null && typeof Intl.DateTimeFormat === 'function';
@@ -82,4 +82,27 @@ export function getJsTimestamp(ticks: number): number {
 
 export function throwInvalidParam(param?: string) {
   throw new Error(`Invalid parameter: [${param}]`);
+}
+
+export function timeToTicks(
+  hour: number,
+  minute: number,
+  second: number,
+  ms: number
+): number {
+  if (
+    hour >= 0 &&
+    hour < 24 &&
+    minute >= 0 &&
+    minute < 60 &&
+    second >= 0 &&
+    second < 60 &&
+    ms >= 0 &&
+    ms < msPerSecond
+  ) {
+    return (
+      hour * msPerHour + minute * msPerMinute + second * msPerSecond + ms
+    );
+  }
+  throwInvalidParam();
 }

@@ -191,29 +191,6 @@ export abstract class Calendar {
     return Math.trunc(getCalendarTimestamp(time) / msPerDay + 1) % 7;
   }
 
-  protected timeToTicks(
-    hour: number,
-    minute: number,
-    second: number,
-    ms: number
-  ): number {
-    if (
-      hour >= 0 &&
-      hour < 24 &&
-      minute >= 0 &&
-      minute < 60 &&
-      second >= 0 &&
-      second < 60 &&
-      ms >= 0 &&
-      ms < msPerSecond
-    ) {
-      return (
-        hour * msPerHour + minute * msPerMinute + second * msPerSecond + ms
-      );
-    }
-    throwInvalidParam();
-  }
-
   /** Returns the number of days in this DateTime's month. */
   abstract addMonths(time: number, months: number): number;
   /** */
