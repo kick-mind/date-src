@@ -450,6 +450,7 @@ export class DateTime {
             ccc: () => this._l.getWeekdayNames('short')[this.weekDayLocale],
             cccc: () => this._l.getWeekdayNames('long')[this.weekDayLocale],
             ccccc: () => this._l.getWeekdayNames('narrow')[this.weekDayLocale],
+            z: () => this._z.id, // Zone ID: America/New_York
             Z: () => { // Zone: +5
                 let z = zone();
                 return z.s > 0 ? `+${z.o}` : z.o;
@@ -462,6 +463,8 @@ export class DateTime {
                 let z = zone();
                 return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)};`;
             },
+            ZZZZ: () => this._z.getName('short'), // Zone (short): EST
+            ZZZZZ: () => this._z.getName('long'), // Zone (long): Eastern Standard Time          
         };
 
         return format.replace(this.REGEX_FORMAT, (match, $1) => {
