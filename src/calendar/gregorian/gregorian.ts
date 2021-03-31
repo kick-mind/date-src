@@ -21,6 +21,19 @@ const _daysToMonth365 = [
 ];
 
 const _daysToMonth366 = [0, 31, 60, 91, 121, 152, 274, 305, 335, 366];
+
+function getDateUnits(ts: number): DateTimeUnits {
+  const d = new Date(ts);
+  return {
+    year: d.getUTCFullYear(),
+    month: d.getUTCMonth() + 1,
+    day: d.getUTCDate(),
+    hour: 0,
+    minute: 0,
+    second: 0,
+    ms: 0,
+  };
+}
 /** Gregorian calendar */
 export class GregorianCalendar extends Calendar {
   constructor() {
@@ -67,19 +80,7 @@ export class GregorianCalendar extends Calendar {
   }
 
   getUnits(ts: number): DateTimeUnits {
-    return { ...this.getDateUnits(ts), ...getTimeUnits(ts) };
+    return { ...getDateUnits(ts), ...getTimeUnits(ts) };
   }
 
-  getDateUnits(ts: number): DateTimeUnits {
-    const d = new Date(ts);
-    return {
-      year: d.getUTCFullYear(),
-      month: d.getUTCMonth() + 1,
-      day: d.getUTCDate(),
-      hour: 0,
-      minute: 0,
-      second: 0,
-      ms: 0,
-    };
-  }
 }
