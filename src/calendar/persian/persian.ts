@@ -452,6 +452,56 @@ function getAbsoluteDatePersian(
   throwInvalidParam();
 }
 
+function getTimestamp(units: DateTimeUnits): number {
+  const lDate = getAbsoluteDatePersian(units.year, units.month, units.day);
+
+  if (lDate >= 0) {
+    let ticks =
+      lDate * msPerDay +
+      timeToTicks(units.hour, units.minute, units.second, units.ms);
+    return getJsTimestamp(ticks);
+  } else {
+    throwInvalidParam();
+  }
+}
+
+function getDateUnits(ticks: number): DateTimeUnits {
+  let du: DateTimeUnits = {
+    year: 0,
+    month: 0,
+    day: 0,
+    hour: 0,
+    minute: 0,
+    second: 0,
+    ms: 0,
+  };
+
+  let NumDays;
+  NumDays = Math.trunc(ticks / msPerDay) + 1;
+  const yearStart = PersianNewYearOnOrBefore(NumDays);
+  const y =
+    Math.floor((yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5) +
+    1;
+
+  const ordinalDay = Math.trunc(
+    NumDays -
+      getNumberOfDays(
+        getTimestamp({
+          year: y,
+          month: 1,
+          day: 1,
+          hour: 0,
+          minute: 0,
+          second: 0,
+          ms: 0,
+        })
+      )
+  );
+  du.year = y;
+  du.month = monthFromOrdinalDay(ordinalDay);
+  du.day = ordinalDay - daysInPreviousMonths(du.month);
+  return du;
+}
 export class PersianCalendar extends Calendar {
   constructor() {
     super('persian', 'persian');
@@ -525,63 +575,11 @@ export class PersianCalendar extends Calendar {
     );
   }
   getTimestamp(units: DateTimeUnits): number {
-    const daysInMonth = this.daysInMonth(units.year, units.month);
-    if (units.day < 1 || units.day > daysInMonth) {
-      throwInvalidParam();
-    }
-
-    const lDate = getAbsoluteDatePersian(units.year, units.month, units.day);
-
-    if (lDate >= 0) {
-      let ticks =
-        lDate * msPerDay +
-        timeToTicks(units.hour, units.minute, units.second, units.ms);
-      return getJsTimestamp(ticks);
-    } else {
-      throwInvalidParam();
-    }
+    return getTimestamp(units);
   }
 
   getUnits(ts: number): DateTimeUnits {
     ts = getCalendarTimestamp(ts);
-    return { ...this.getDateUnits(ts), ...getTimeUnits(ts) };
-  }
-
-  private getDateUnits(ticks: number): DateTimeUnits {
-    let du: DateTimeUnits = {
-      year: 0,
-      month: 0,
-      day: 0,
-      hour: 0,
-      minute: 0,
-      second: 0,
-      ms: 0,
-    };
-
-    let NumDays;
-    NumDays = Math.trunc(ticks / msPerDay) + 1;
-    const yearStart = PersianNewYearOnOrBefore(NumDays);
-    const y =
-      Math.floor((yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5) +
-      1;
-
-    const ordinalDay = Math.trunc(
-      NumDays -
-        getNumberOfDays(
-          this.getTimestamp({
-            ['year']: y,
-            month: 1,
-            day: 1,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            ms: 0,
-          })
-        )
-    );
-    du.year = y;
-    du.month = monthFromOrdinalDay(ordinalDay);
-    du.day = ordinalDay - daysInPreviousMonths(du.month);
-    return du;
+    return { ...getDateUnits(ts), ...getTimeUnits(ts) };
   }
 }
