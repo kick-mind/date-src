@@ -2,7 +2,7 @@ import {
   DateTimeUnits,
   getCalendarTimestamp,
   getJsTimestamp,
-  msPerDay,
+  MsPerDay,
   throwInvalidParam,
   timeToTicks,
 } from '../../common';
@@ -67,7 +67,7 @@ function getDateUnits(ticks: number): DateTimeUnits {
   let day;
   let numDays;
 
-  numDays = Math.trunc(ticks / msPerDay) + 1;
+  numDays = Math.trunc(ticks / MsPerDay) + 1;
   numDays += this.hijriAdjustment;
   year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
@@ -125,8 +125,8 @@ export class Hijri extends Calendar {
       d = days;
     }
     const ticks =
-      getAbsoluteDateHijri(y, m, d) * msPerDay +
-      (getCalendarTimestamp(time) % msPerDay);
+      getAbsoluteDateHijri(y, m, d) * MsPerDay +
+      (getCalendarTimestamp(time) % MsPerDay);
 
     return getJsTimestamp(ticks);
   }
@@ -138,7 +138,7 @@ export class Hijri extends Calendar {
     let year;
     let numDays;
 
-    numDays = Math.trunc(getCalendarTimestamp(time) / msPerDay) + 1;
+    numDays = Math.trunc(getCalendarTimestamp(time) / MsPerDay) + 1;
     numDays += this.hijriAdjustment;
     year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
@@ -180,7 +180,7 @@ export class Hijri extends Calendar {
 
     if (lDate >= 0) {
       let ticks =
-        lDate * msPerDay +
+        lDate * MsPerDay +
         timeToTicks(units.hour, units.minute, units.second, units.ms);
       return getJsTimestamp(ticks);
     } else {

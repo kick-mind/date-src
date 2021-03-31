@@ -4,10 +4,10 @@ import {
   DateTimeUnits,
   getCalendarTimestamp,
   TimeUnits,
-  msPerDay,
-  msPerHour,
-  msPerMinute,
-  msPerSecond,
+  MsPerDay,
+  MsPerHour,
+  MsPerMinute,
+  MsPerSecond,
   throwInvalidParam
 } from '../common';
 // tslint:disable: triple-equals
@@ -24,16 +24,16 @@ function addMs(time: number, milliseconds: number): number {
   return add(time, milliseconds, 1);
 }
 function addSeconds(time: number, seconds: number): number {
-  return add(time, seconds, msPerSecond);
+  return add(time, seconds, MsPerSecond);
 }
 function addMinutes(time: number, minutes: number): number {
-  return add(time, minutes, msPerMinute);
+  return add(time, minutes, MsPerMinute);
 }
 function addHours(time: number, hours: number): number {
-  return add(time, hours, msPerHour);
+  return add(time, hours, MsPerHour);
 }
 function addDays(time: number, days: number): number {
-  return add(time, days, msPerDay);
+  return add(time, days, MsPerDay);
 }
 
 function getFirstDayWeekOfYear(
@@ -51,13 +51,13 @@ function ms(time: number): number {
   return time % 1000;
 }
 function second(time: number): number {
-  return Math.trunc((time / msPerSecond) % 60);
+  return Math.trunc((time / MsPerSecond) % 60);
 }
 function minute(time: number): number {
-  return Math.trunc((time / msPerMinute) % 60);
+  return Math.trunc((time / MsPerMinute) % 60);
 }
 function hour(time: number): number {
-  return Math.trunc((time / msPerHour) % 24);
+  return Math.trunc((time / MsPerHour) % 24);
 }
 
 export function getTimeUnits(time: number): TimeUnits {
@@ -188,7 +188,7 @@ export abstract class Calendar {
 
   /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
   weekDay(time: number): number {
-    return Math.trunc(getCalendarTimestamp(time) / msPerDay + 1) % 7;
+    return Math.trunc(getCalendarTimestamp(time) / MsPerDay + 1) % 7;
   }
 
   /** Returns the number of days in this DateTime's month. */

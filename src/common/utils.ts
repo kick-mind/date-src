@@ -1,4 +1,4 @@
-import { jsEpoch, msPerHour, msPerMinute, msPerSecond } from './const';
+import { JsEpoch, MsPerHour, MsPerMinute, MsPerSecond } from './const';
 
 export function hasIntl(): boolean {
   return Intl != null && typeof Intl.DateTimeFormat === 'function';
@@ -73,11 +73,11 @@ export function verifyLocale(name: string, err = 'Unsupported locale') {
 }
 
 export function getCalendarTimestamp(ticks: number): number {
-  return ticks + jsEpoch;
+  return ticks + JsEpoch;
 }
 
 export function getJsTimestamp(ticks: number): number {
-  return ticks - jsEpoch;
+  return ticks - JsEpoch;
 }
 
 export function throwInvalidParam(param?: string) {
@@ -98,10 +98,10 @@ export function timeToTicks(
     second >= 0 &&
     second < 60 &&
     ms >= 0 &&
-    ms < msPerSecond
+    ms < MsPerSecond
   ) {
     return (
-      hour * msPerHour + minute * msPerMinute + second * msPerSecond + ms
+      hour * MsPerHour + minute * MsPerMinute + second * MsPerSecond + ms
     );
   }
   throwInvalidParam();

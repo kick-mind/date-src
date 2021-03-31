@@ -2,7 +2,7 @@ import {
   DateTimeUnits,
   getCalendarTimestamp,
   getJsTimestamp,
-  msPerDay,
+  MsPerDay,
   throwInvalidParam,
   timeToTicks
 } from '../../common';
@@ -399,7 +399,7 @@ function getDaysTicks(numberOfDays: number): number {
 
 //#endregion
 
-const _persianEpoch: number = 19603728000000 / msPerDay;
+const _persianEpoch: number = 19603728000000 / MsPerDay;
 const _approximateHalfYear = 180;
 const _monthsPerYear = 12;
 const _DaysToMonth = [
@@ -457,7 +457,7 @@ function getTimestamp(units: DateTimeUnits): number {
 
   if (lDate >= 0) {
     let ticks =
-      lDate * msPerDay +
+      lDate * MsPerDay +
       timeToTicks(units.hour, units.minute, units.second, units.ms);
     return getJsTimestamp(ticks);
   } else {
@@ -477,7 +477,7 @@ function getDateUnits(ticks: number): DateTimeUnits {
   };
 
   let NumDays;
-  NumDays = Math.trunc(ticks / msPerDay) + 1;
+  NumDays = Math.trunc(ticks / MsPerDay) + 1;
   const yearStart = PersianNewYearOnOrBefore(NumDays);
   const y =
     Math.floor((yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5) +
@@ -525,8 +525,8 @@ export class PersianCalendar extends Calendar {
       d = days;
     }
     const ticks =
-      getAbsoluteDatePersian(y, m, d) * msPerDay +
-      (getCalendarTimestamp(time) % msPerDay);
+      getAbsoluteDatePersian(y, m, d) * MsPerDay +
+      (getCalendarTimestamp(time) % MsPerDay);
 
     return getJsTimestamp(ticks);
   }
@@ -534,7 +534,7 @@ export class PersianCalendar extends Calendar {
     return this.addMonths(time, years * 12);
   }
   dayOfYear(time: number): number {
-    let NumDays = Math.trunc(getCalendarTimestamp(time) / msPerDay) + 1;
+    let NumDays = Math.trunc(getCalendarTimestamp(time) / MsPerDay) + 1;
 
     const yearStart = PersianNewYearOnOrBefore(NumDays);
     const y =

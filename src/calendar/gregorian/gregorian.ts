@@ -1,7 +1,7 @@
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 // tslint:disable: triple-equals
-import { DateTimeUnits, msPerDay } from '../../common';
+import { DateTimeUnits, MsPerDay } from '../../common';
 import { Calendar, getTimeUnits } from '../calendar';
 const _monthsPerYear = 12;
 const _daysToMonth365 = [
@@ -40,7 +40,7 @@ export class GregorianCalendar extends Calendar {
     const now = new Date(time);
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now.getTime() - start.getTime();
-    return Math.floor(diff / msPerDay);
+    return Math.floor(diff / MsPerDay);
   }
   daysInMonth(year: number, month: number): number {
     const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
