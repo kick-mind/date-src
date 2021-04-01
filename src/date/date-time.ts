@@ -150,6 +150,15 @@ export class DateTime {
         const u = units;
         return new DateTime(u.year, u.month, u.day, u.hour, u.minute, u.second, u.ms, opts);
     }
+
+    /** 
+     * Creates a DateTime from a Javascript Date object
+     * @public
+     */
+    static fromJsDate(date: Date, opts?: { zone?: Zone | string, locale?: Locale | string }) {
+        return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.findById('gregorian') });
+    }
+
     //#endregion
 
     //#region Get
