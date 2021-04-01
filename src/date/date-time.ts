@@ -406,7 +406,7 @@ export class DateTime {
     }
     //#endregion
 
-    REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|S|SSS|a|A|Z{1,2}/g;
+    REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|f{1,3}|c{1,2}|C{1,3}|a|A|z{1,3}|Z{1,3}/g;
 
     //#region Display + Convert
     /** 
@@ -431,8 +431,8 @@ export class DateTime {
             YYYY: () => padNum(this.year, 4),
             M: () => this.month,
             MM: () => padNum(this.month, 2),
-            MMM: () => this._l.getMonthNames(this._c, 'short')[this.month - 1], // month as an abbreviated localized string
-            MMMM: () => this._l.getMonthNames(this._c, 'long')[this.month - 1], // month as an abbreviated localized string
+            MMM: () => this._l.getMonthNames(this._c, 'short')[this.month - 1],
+            MMMM: () => this._l.getMonthNames(this._c, 'long')[this.month - 1],
             d: () => this.day,
             dd: () => padNum(this.day, 2),
             H: () => this.hour,
@@ -443,32 +443,39 @@ export class DateTime {
             mm: () => padNum(this.minute, 2),
             s: () => this.second,
             ss: () => padNum(this.second, 2),
-            S: () => this.ms,
-            SSS: () => padNum(this.ms, 3),
+            f: () => this.ms,
+            fff: () => padNum(this.ms, 3),
             c: () => this.weekDay,
             cc: () => this.weekDayLocale,
-            ccc: () => this._l.getWeekdayNames('short')[this.weekDayLocale],
-            cccc: () => this._l.getWeekdayNames('long')[this.weekDayLocale],
-            ccccc: () => this._l.getWeekdayNames('narrow')[this.weekDayLocale],
-            z: () => this._z.id, // Zone ID: America/New_York
-            Z: () => { // Zone: +5
+            C: () => this._l.getWeekdayNames('narrow')[this.weekDayLocale],
+            CC: () => this._l.getWeekdayNames('short')[this.weekDayLocale],
+            CCC: () => this._l.getWeekdayNames('long')[this.weekDayLocale],
+            z: () => { // Zone offset: +5
                 let z = zone();
                 return z.s > 0 ? `+${z.o}` : z.o;
             },
-            ZZ: () => { // Zone: +05:00
+            zz: () => { // Zone offset: +05:00
                 let z = zone();
-                return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}:${padNum(z.min, 2)};`;
+                return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}:${padNum(z.min, 2)}`;
             },
-            ZZZ: () => { // Zone: +0500
+            zzz: () => { // Zone offset: +0500
                 let z = zone();
-                return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)};`;
+                return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
             },
-            ZZZZ: () => this._z.getName('short'), // Zone (short): EST
-            ZZZZZ: () => this._z.getName('long'), // Zone (long): Eastern Standard Time          
+            Z: () => this._z.id, // Zone ID: America/New_York
+            ZZ: () => this._z.getName('short'), // Short zone name: EST
+            ZZZ: () => this._z.getName('long'), // Long zone name: Eastern Standard Time          
         };
 
         return format.replace(this.REGEX_FORMAT, (match, $1) => {
-            const r = $1 || (matches[match] && matches[match]()) || match;
+            let r;
+            if ($1) {
+                r = $1;
+            } else if (matches[match]) {
+                r = matches[match]();
+            } else {
+                r = match;
+            }
             return r;
         });
     }

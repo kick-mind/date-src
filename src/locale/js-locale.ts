@@ -62,17 +62,20 @@ export class JsLocale extends Locale {
     }
 
     getMonthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
-        let id = this.id, ct = calendar.type;
-        let cm = _[id].month[ct],
-            res = cm && cm[format];
+        let id = this.id,
+            ct = calendar.type,
+            m = _[id].month;
 
-        if (!res) {
-            if (isSupportedCalendar(ct)) {
+        if (!m[ct]) {
+            if (!isSupportedCalendar(ct)) {
                 throw new Error('Unsupported calendar.');
             }
+            m[ct] = {};
+        }
+        let res = m[ct][format];
 
+        if (!res) {
             // create/cache month names
-            _[id].month[ct] = cm ?? {};
             res = [];
             let f = new Intl.DateTimeFormat(id, { calendar: ct, month: format } as any),
                 now = calendar.getUnits(new Date().valueOf()),
@@ -81,7 +84,7 @@ export class JsLocale extends Locale {
                 res.push(f.format(new Date(firstDayOfMonthTs)));
                 firstDayOfMonthTs += calendar.add(firstDayOfMonthTs, { month: 1 });
             }
-            _[id].month[calendar.type][format] = res;
+            m[ct][format] = res;
         }
 
         return res;

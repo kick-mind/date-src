@@ -48,15 +48,18 @@ describe('DateTime', () => {
     f = d.format('ss');
     f = d.format('S');
     f = d.format('SSS');
-    f = d.format('c')
+    f = d.format('c');
     f = d.format('cc');
-    f = d.format('ccc');
-    f = d.format('cccc');
-    f = d.format('ccccc');
+    f = d.format('C');
+    f = d.format('CC');
+    f = d.format('CCC');
     f = d.format('z');
+    f = d.format('zz');
+    f = d.format('zz');
     f = d.format('Z');
     f = d.format('ZZ');
-    f = d.format('ZZZZ');
-    f = d.format('ZZZZZ');
+    f = d.format('ZZZ');
+    f = d.format('Y:M:d');
+
   });
 });
