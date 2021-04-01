@@ -1,6 +1,24 @@
-import { IsInt, MonthNameFormat, verifyClassCall, verifyLocale, verifyType, WeekdayNameFormat } from '../common';
+import { IsInt, isSupportedLocale, MonthNameFormat, verifyClassCall, verifyLocale, verifyType, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
+
+function isSupportedCalendar(calendarName: string) {
+    return [
+        'buddhist',
+        'chinese',
+        'coptic',
+        'ethiopia',
+        'ethiopic',
+        'gregory',
+        'hebrew',
+        'indian',
+        'islamic',
+        'iso8601',
+        'japanese',
+        'persian',
+        'roc'
+    ].findIndex(x => x === calendarName) > -1;
+}
 
 // Cache
 let _: {
@@ -44,20 +62,29 @@ export class JsLocale extends Locale {
     }
 
     getMonthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
-        let id = this.id;
-        let res = _[id].month[calendar.type][format];
+        let id = this.id,
+            ct = calendar.type,
+            m = _[id].month;
+
+        if (!m[ct]) {
+            if (!isSupportedCalendar(ct)) {
+                throw new Error('Unsupported calendar.');
+            }
+            m[ct] = {};
+        }
+        let res = m[ct][format];
+
         if (!res) {
             // create/cache month names
-            let f = new Intl.DateTimeFormat(id, { month: format });
             res = [];
-            let now = new Date().valueOf();
-            let { year } = calendar.getUnits(now);
-            let firstDayOfMonthTs = calendar.getTimestamp({ year, month: 1, day: 1 });
+            let f = new Intl.DateTimeFormat(id, { calendar: ct, month: format } as any),
+                now = calendar.getUnits(new Date().valueOf()),
+                firstDayOfMonthTs = calendar.getTimestamp({ ...now, month: 1, day: 1 });
             for (let i = 0; i < 12; i++) {
                 res.push(f.format(new Date(firstDayOfMonthTs)));
                 firstDayOfMonthTs += calendar.add(firstDayOfMonthTs, { month: 1 });
             }
-            _[id].month[calendar.type][format] = res;
+            m[ct][format] = res;
         }
 
         return res;
