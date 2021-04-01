@@ -406,7 +406,7 @@ export class DateTime {
     }
     //#endregion
 
-    REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,2}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|S|SSS|a|A|Z{1,2}/g;
+    REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|S|SSS|a|A|Z{1,2}/g;
 
     //#region Display + Convert
     /** 

@@ -10,7 +10,7 @@ describe('DateTime', () => {
     expect(d.minute).toBe(jd.getMinutes());
     expect(d.second).toBe(jd.getSeconds());
   });
-  
+
   it('create from timestamp', () => {
     const d1 = new DateTime(12345);
     expect(d1.year).toBe(1000);
@@ -29,6 +29,34 @@ describe('DateTime', () => {
 
   it('can format dates', () => {
     const d = new DateTime(2000, 1, 1, 12, 15, 45, 500);
-    expect(d.format('YYYY')).toBe('2000');
+    let f = d.format('Y');
+    f = d.format('YY');
+    f = d.format('YYYY');
+    f = d.format('M');
+    f = d.format('MM');
+    f = d.format('MMM');
+    f = d.format('MMMM');
+    f = d.format('d');
+    f = d.format('dd');
+    f = d.format('H');
+    f = d.format('HH');
+    f = d.format('h');
+    f = d.format('hh');
+    f = d.format('m');
+    f = d.format('mm');
+    f = d.format('s');
+    f = d.format('ss');
+    f = d.format('S');
+    f = d.format('SSS');
+    f = d.format('c')
+    f = d.format('cc');
+    f = d.format('ccc');
+    f = d.format('cccc');
+    f = d.format('ccccc');
+    f = d.format('z');
+    f = d.format('Z');
+    f = d.format('ZZ');
+    f = d.format('ZZZZ');
+    f = d.format('ZZZZZ');
   });
 });
