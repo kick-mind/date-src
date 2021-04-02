@@ -1,7 +1,7 @@
 import { Calendar, Calendars } from '../calendar';
 import { Zone, Zones } from '../zone';
 import { Locale, Locales } from '../locale';
-import { DateTimeUnits, IsInt, IsObj, IsStr, padNum, verifyClassCall, verifyObject, WeekdayNameFormat } from '../common';
+import { DateTimeUnits, IsInt, IsObj, IsStr, padNum, throwInvalidParam, verifyClassCall, verifyObject, WeekdayNameFormat } from '../common';
 
 const II = IsInt;
 const IO = IsObj;
@@ -14,20 +14,6 @@ export interface DateTimeCreateOptions {
     zone?: Zone | string; // | number :: zone offset (for next versions)
     locale?: Locale | string;
 }
-
-interface DateTimeCachedValues {
-    units: DateTimeUnits;
-    /** Timestamp (UTC) */
-    ts: number;
-    weekDay: number;
-    dayOfYear: number;
-    weekNumber: number;
-    daysInMonth: number;
-    daysInYear: number;
-    isLeapYear: boolean;
-    isValid: boolean;
-}
-
 
 /** JS-Sugar DateTime. */
 export class DateTime {
@@ -65,22 +51,27 @@ export class DateTime {
         // Resolve constructor parameters
         const a = arguments, a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
         let now = () => new Date().valueOf();
-        if (a.length == 0) { // 1'st overload
+        if (a.length == 0) {
+            // 1'st overload
             ts = now();
-        } else if (IO(a0)) {  // 2'nd overload
+        } else if (IO(a0)) {
+            // 2'nd overload
             ts = now();
             opts = C(a1);
-        } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) { // 3'nd overload
+        } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) {
+            // 3'nd overload
             year = a0; month = a1; day = a2; hour = a3; minute = a4; second = a5; ms = a6;
             opts = C(a7);
-        } else if (IO(a0) && II(a1), II(a2), IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) { // 4'rd overload
+        } else if (IO(a0) && II(a1), II(a2), IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) {
+            // 4'rd overload
             opts = a0;
             year = a1; month = a2; day = a3; hour = a4; minute = a5; second = a6; ms = a7;
-        } else if (II(a0) && (a1 == null || IO(a1))) { // 5'th overload (create by timestamp)
+        } else if (II(a0) && (a1 == null || IO(a1))) {
+            // 5'th overload (create by timestamp)
             ts = a0;
             opts = C(a1);
         } else {
-            throw new Error('Invalid parameters.');
+            throwInvalidParam();
         }
 
         // Set DateTime value
@@ -102,7 +93,7 @@ export class DateTime {
 
         // Resolve zone
         let z: any = opts?.zone;
-        if (z == null) {
+        if (!z) {
             z = Zones.local;
         } else if (IsStr(z)) {
             z = Zones.find(z, o);
@@ -113,7 +104,7 @@ export class DateTime {
 
         // Resolve locale
         let l: any = opts?.locale;
-        if (l == null) {
+        if (!l) {
             l = Locales.default;
         } else if (IsStr(l)) {
             l = Locales.resolve(l, { weekStart: 0 });
@@ -124,7 +115,7 @@ export class DateTime {
 
         // Resolve calendar
         let c: any = opts?.calendar;
-        if (c == null) {
+        if (!c) {
             c = Calendars.default;
         } else if (IsStr(c)) {
             c = Calendars.findById(c, o);
@@ -232,8 +223,7 @@ export class DateTime {
     get ts(): number {
         if (this._.ts == null) {
             const zoneTs = this._c.getTimestamp(this._.units);
-            const utcTs = zoneTs - this._z.getOffset(zoneTs);
-            this._.ts = utcTs;
+            this._.ts = zoneTs - this._z.getOffset(zoneTs);
         }
         return this._.ts;
     }
@@ -315,7 +305,7 @@ export class DateTime {
      * @public
      */
     get isLeapYear(): boolean {
-        if (this._.daysInYear == null) {
+        if (this._.isLeapYear == null) {
             this._.isLeapYear = this._c.isLeapYear(this.ts);
         }
         return this._.isLeapYear;
@@ -371,7 +361,7 @@ export class DateTime {
      * @public
      */
     isSame(dateTime: DateTime): boolean {
-        return this.ts === dateTime.ts;
+        return this.ts == dateTime.ts;
     }
 
     /**
@@ -411,7 +401,7 @@ export class DateTime {
      * @public
      */
     isBetween(first: DateTime, second: DateTime): boolean {
-        return this.isAfter(first) && this.isBefore(second);
+        return this.ts > first.ts && this.ts < second.ts;
     }
     //#endregion
 
@@ -495,8 +485,7 @@ export class DateTime {
      */
     toObject(): DateTimeUnits {
         if (this._.units == null) {
-            const ts = this._.ts;
-            this._.units = this._c.getUnits(ts + this._z.getOffset(ts));
+            this._.units = this._c.getUnits(this._.ts + this._z.getOffset(this._.ts));
         }
         return this._.units;
     }
@@ -605,13 +594,7 @@ export class DateTime {
      * @public
      */
     clone(newUnits?: DateTimeUnits): DateTime {
-        const opts = this.config;
-
-        if (newUnits) {
-            return DateTime.fromObject({ ...this.toObject(), ...newUnits }, opts);
-        } else {
-            return this._.ts ? new DateTime(this._.ts, opts) : DateTime.fromObject(this._.units, opts);
-        }
+        return this._.ts ? new DateTime(this._.ts, this.config) : DateTime.fromObject({ ...this._.units, ...newUnits }, this.config);
     }
 
     /** Returns whether this DateTime is valid.

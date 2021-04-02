@@ -16,6 +16,10 @@ export function IsObj(x: any) {
   return typeof x == 'object';
 }
 
+export function throwInvalidParam(param?: string) {
+  throw new Error(`Invalid parameter(s)${param ? ': ' + param : ''}`);
+}
+
 /** Pads a number */
 export function padNum(value: number, length: number) {
   return value.toString().slice(-length).padStart(length, '0');
@@ -78,10 +82,6 @@ export function getCalendarTimestamp(ticks: number): number {
 
 export function getJsTimestamp(ticks: number): number {
   return ticks - JsEpoch;
-}
-
-export function throwInvalidParam(param?: string) {
-  throw new Error(`Invalid parameter: [${param}]`);
 }
 
 export function timeToTicks(
