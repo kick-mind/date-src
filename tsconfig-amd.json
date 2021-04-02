@@ -1,10 +1,10 @@
 {
   "include": [
     // "index.ts",
-    "src/**/*.ts",
+    "src/**/*.ts"
   ],
   "exclude": [
-    "src/**/*.spec.ts",
+    "src/**/*.spec.ts"
   ],
   "compilerOptions": {
     "baseUrl": "./",
@@ -12,7 +12,7 @@
     "outDir": "dist/",
     "noImplicitAny": true,
     "esModuleInterop": true,
-    "module": "CommonJS",
+    "module": "AMD",
     "target": "ES6",
     "sourceMap": true,
     "removeComments": true,

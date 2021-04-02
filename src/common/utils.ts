@@ -17,7 +17,7 @@ export function IsObj(x: any) {
 }
 
 /** Pads a number */
-export function padNumber(value: number, length: number) {
+export function padNum(value: number, length: number) {
   return value.toString().slice(-length).padStart(length, '0');
 }
 
