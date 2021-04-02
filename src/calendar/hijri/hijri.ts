@@ -36,7 +36,7 @@ function daysUpToHijriYear(year: number): number {
   let numYear30;
   let numYearsLeft;
 
-  numYear30 = Math.trunc(((year - 1) / 30) * 30);
+  numYear30 = Math.trunc((year - 1) / 30) * 30;
   numYearsLeft = year - numYear30 - 1;
   numDays = Math.trunc((numYear30 * 10631) / 30) + 227013;
   while (numYearsLeft > 0) {
@@ -46,13 +46,18 @@ function daysUpToHijriYear(year: number): number {
   return numDays;
 }
 
-function getAbsoluteDateHijri(y: number, m: number, d: number) {
-  return Math.trunc(
-    daysUpToHijriYear(y) + _hijriMonthDays[m - 1] + d - 1 - this.hijriAdjustment
+function getAbsoluteDateHijri(
+  y: number,
+  m: number,
+  d: number,
+  hijriAdjustment: number
+) {
+  return (
+    daysUpToHijriYear(y) + _hijriMonthDays[m - 1] + d - 1 - hijriAdjustment
   );
 }
 
-function getDateUnits(ticks: number): DateTimeUnits {
+function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
   const du: DateTimeUnits = {
     year: 0,
     month: 0,
@@ -68,11 +73,11 @@ function getDateUnits(ticks: number): DateTimeUnits {
   let numDays;
 
   numDays = Math.trunc(ticks / MsPerDay) + 1;
-  numDays += this.hijriAdjustment;
+  numDays += hijriAdjustment;
   year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
   let daysToHijriYear = daysUpToHijriYear(year);
-  let daysOfHijriYear = daysInYear(year);
+  const daysOfHijriYear = daysInYear(year);
 
   if (numDays < daysToHijriYear) {
     daysToHijriYear -= daysOfHijriYear;
@@ -97,7 +102,7 @@ function getDateUnits(ticks: number): DateTimeUnits {
   month--;
   du.month = month;
 
-  day = Math.trunc(numDays - _hijriMonthDays[month - 1]);
+  day = numDays - _hijriMonthDays[month - 1];
   du.day = day;
   return du;
 }
@@ -107,12 +112,12 @@ export class Hijri extends Calendar {
   }
   addMonths(time: number, months: number): number {
     // Get the date in Hijri calendar.
-    let ut = this.getUnits(time);
+    const ut = this.getUnits(time);
     let y = ut.year;
     let m = ut.month;
     let d = ut.day;
 
-    let i = m - 1 + months;
+    const i = m - 1 + months;
     if (i >= 0) {
       m = (i % 12) + 1;
       y = Math.trunc(y + i / 12);
@@ -120,12 +125,12 @@ export class Hijri extends Calendar {
       m = 12 + ((i + 1) % 12);
       y = Math.trunc(y + (i - 11) / 12);
     }
-    let days = this.daysInMonth(y, m);
+    const days = this.daysInMonth(y, m);
     if (d > days) {
       d = days;
     }
     const ticks =
-      getAbsoluteDateHijri(y, m, d) * MsPerDay +
+      getAbsoluteDateHijri(y, m, d, this.hijriAdjustment) * MsPerDay +
       (getCalendarTimestamp(time) % MsPerDay);
 
     return getJsTimestamp(ticks);
@@ -143,7 +148,7 @@ export class Hijri extends Calendar {
     year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
     let daysToHijriYear = daysUpToHijriYear(year);
-    let daysOfHijriYear = this.daysInYear(year);
+    const daysOfHijriYear = this.daysInYear(year);
 
     if (numDays < daysToHijriYear) {
       daysToHijriYear -= daysOfHijriYear;
@@ -160,7 +165,7 @@ export class Hijri extends Calendar {
 
     numDays -= daysToHijriYear;
 
-    return Math.trunc(numDays);
+    return numDays;
   }
   daysInMonth(year: number, month: number): number {
     if (month == 12) {
@@ -175,11 +180,16 @@ export class Hijri extends Calendar {
     return isLeapYear(year);
   }
   getTimestamp(units: DateTimeUnits): number {
-    let daysInMonth = this.daysInMonth(units.year, units.month);
-    let lDate = getAbsoluteDateHijri(units.year, units.month, units.day);
+    const daysInMonth = this.daysInMonth(units.year, units.month);
+    const lDate = getAbsoluteDateHijri(
+      units.year,
+      units.month,
+      units.day,
+      this.hijriAdjustment
+    );
 
     if (lDate >= 0) {
-      let ticks =
+      const ticks =
         lDate * MsPerDay +
         timeToTicks(units.hour, units.minute, units.second, units.ms);
       return getJsTimestamp(ticks);
@@ -189,6 +199,6 @@ export class Hijri extends Calendar {
   }
   getUnits(ts: number): DateTimeUnits {
     ts = getCalendarTimestamp(ts);
-    return { ...getDateUnits(ts), ...getTimeUnits(ts) };
+    return { ...getDateUnits(ts, this.hijriAdjustment), ...getTimeUnits(ts) };
   }
 }
