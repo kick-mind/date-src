@@ -1,3 +1,5 @@
+import { Locales } from '../locale';
+import { Zones } from '../zone';
 import { DateTime } from './date-time';
 
 describe('DateTime', () => {
@@ -28,38 +30,20 @@ describe('DateTime', () => {
   });
 
   it('can format dates', () => {
-    const d = new DateTime(2000, 1, 1, 12, 15, 45, 500);
-    let f = d.format('Y');
-    f = d.format('YY');
-    f = d.format('YYYY');
-    f = d.format('M');
-    f = d.format('MM');
-    f = d.format('MMM');
-    f = d.format('MMMM');
-    f = d.format('d');
-    f = d.format('dd');
-    f = d.format('H');
-    f = d.format('HH');
-    f = d.format('h');
-    f = d.format('hh');
-    f = d.format('m');
-    f = d.format('mm');
-    f = d.format('s');
-    f = d.format('ss');
-    f = d.format('S');
-    f = d.format('SSS');
-    f = d.format('c');
-    f = d.format('cc');
-    f = d.format('C');
-    f = d.format('CC');
-    f = d.format('CCC');
-    f = d.format('z');
-    f = d.format('zz');
-    f = d.format('zz');
-    f = d.format('Z');
-    f = d.format('ZZ');
-    f = d.format('ZZZ');
-    f = d.format('Y:M:d');
-
+    const l = Locales.find('fa-IR');
+    const z = Zones.utc;
+    const d = new DateTime(2001, 9, 8, 18, 5, 4, 90, { locale: l, zone: z });
+    expect(d.format('Y YY YYYY')).toBe('2001 01 2001');
+    expect(d.format('M MM MMM MMMM')).toBe('9 09 نوامبر نوامبر');
+    expect(d.format('d dd')).toBe('8 08');
+    expect(d.format('H HH h hh')).toBe('18 18 6 06');
+    expect(d.format('m mm')).toBe('5 05');
+    expect(d.format('s ss')).toBe('4 04');
+    expect(d.format('f fff')).toBe('90 090');
+    expect(d.format('c cc C CC CCC')).toBe('');
+    expect(d.format('z zz zzz Z ZZ ZZZ')).toBe('0 00:00 0000 UTC utc utc');
+    expect(d.format('[Now:] YYYY/MM/dd HH:mm:ss')).toBe('Now: 2001/09/08 18:05:04');
+    expect(d.format('[This Text and [this text] should be skipped] [and the date is:] YYYY/MM/dd'))
+      .toBe('This Text and [this text] should be skipped and the date is: 2001/09/08');
   });
 });

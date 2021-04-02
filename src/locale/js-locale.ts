@@ -82,7 +82,7 @@ export class JsLocale extends Locale {
                 firstDayOfMonthTs = calendar.getTimestamp({ ...now, month: 1, day: 1 });
             for (let i = 0; i < 12; i++) {
                 res.push(f.format(new Date(firstDayOfMonthTs)));
-                firstDayOfMonthTs += calendar.add(firstDayOfMonthTs, { month: 1 });
+                firstDayOfMonthTs = calendar.add(firstDayOfMonthTs, { month: 1 });
             }
             m[ct][format] = res;
         }

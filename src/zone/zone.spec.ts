@@ -4,7 +4,7 @@
  */
 import { JsIANAZone } from './js-iana-zone';
 
-describe('JS IANA Zone', () => {
+describe('Zone', () => {
     it('Should create a zone for "Asia/Tehran"', () => {
         const z = new JsIANAZone('Asia/tehran');
         
@@ -20,4 +20,15 @@ describe('JS IANA Zone', () => {
         const shortName = z.getName('short');
         expect(shortName).toBe('GMT+4:30');
     });
+
+    // it('Should display local name correctly', () => {
+    //     const z = LocalZone.instance;
+        
+    //     const longName = z.getName();
+    //     expect(longName).toBe('Asia/Tehran');
+        
+    //     const shortName = z.getName('short');
+    //     expect(shortName).toBeDefined('Asia/Tehran');
+    // });
+
 });
