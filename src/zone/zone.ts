@@ -1,3 +1,5 @@
+import { Locale } from '../locale';
+
 /** An abstract base class for all zones */
 export abstract class Zone {
     #id: string;
@@ -14,5 +16,5 @@ export abstract class Zone {
     abstract getOffset(timestamp: number): number;
 
     /** Gets the name of the zone */
-    abstract getName(format: 'long' | 'short'): string;
+    abstract getName(format: 'long' | 'short', locale?: Locale | 'string'): string;
 }

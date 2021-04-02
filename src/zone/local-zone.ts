@@ -1,3 +1,4 @@
+import { Locale } from '../locale';
 import { hasIntl } from '../common';
 import { Zone } from './zone';
 
@@ -9,26 +10,26 @@ export class LocalZone extends Zone {
      */
     private constructor() {
         super('Local');
-        if (instance) {
+        if (o) {
             throw new Error('Invalid Operation');
         }
     }
 
     /** Returns the local zone */
     static get instance() {
-        if (!instance) {
-            instance = new LocalZone();
+        if (!o) {
+            o = new LocalZone();
         }
-        return instance;
+        return o;
     }
 
     getOffset(timestamp: number): number {
         return -new Date(timestamp).getTimezoneOffset();
     }
 
-    getName(format: 'long' | 'short' = 'long'): string {
+    getName(format: 'long' | 'short' = 'long', locale?: Locale): string {
         if (hasIntl()) {
-            let f = new Intl.DateTimeFormat([], { timeZoneName: format });
+            let f = new Intl.DateTimeFormat(locale instanceof Locale ? locale.id : [], { timeZoneName: format });
             return f.resolvedOptions().timeZone;
         } else {
             return format === 'short' ? 'Local' : 'Local Time Zone';
@@ -36,4 +37,4 @@ export class LocalZone extends Zone {
     }
 }
 
-let instance: LocalZone;
+let o: LocalZone;
