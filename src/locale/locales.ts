@@ -1,6 +1,7 @@
-import { verifyObject } from '../common/utils';
+import { hasIntl, verifyObject } from '../common/utils';
 import { Locale } from './locale';
 import { JsLocale } from './js-locale';
+import { FallbackLocale } from './fallback-locale';
 
 let repo: Locale[] = [];
 let sysLocale: JsLocale; // System Locale
@@ -22,9 +23,9 @@ export abstract class Locales {
     /** Gets the system locale. */
     static get system(): Locale {
         if (!sysLocale) {
-            let f = new Intl.DateTimeFormat([], { weekday: 'long' });
-            let id = f.resolvedOptions().locale; // system locale id
-            sysLocale = new JsLocale(id, { weekStart: 0 }); // We can not compute the weekstart by javascript.
+            sysLocale = hasIntl() ?
+                new JsLocale(JsLocale.getSystemLocaleId(), { weekStart: 0 }) : // We can not compute the weekstart by javascript.
+                new FallbackLocale();
         }
         return sysLocale;
     }

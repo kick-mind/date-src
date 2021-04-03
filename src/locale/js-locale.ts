@@ -43,6 +43,12 @@ export class JsLocale extends Locale {
         _[id] = _[id] ?? { month: {}, weekday: {} };
     }
 
+    /** Gets system locale Id by using Intl API */
+    static getSystemLocaleId(): string {
+        let f = new Intl.DateTimeFormat([], { weekday: 'long' });
+        return f.resolvedOptions().locale;
+    }
+
     getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
         let id = this.id;
         let res = _[id].weekday[format];

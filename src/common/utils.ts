@@ -59,11 +59,7 @@ export function verifyClassCall(inst: any, cls: any) {
 /** Determines if a locale is supported by the Javascript environment or not. */
 export function isSupportedLocale(name: string) {
   try {
-    return (
-      Intl.DateTimeFormat.supportedLocalesOf([name], {
-        localeMatcher: 'lookup',
-      }).length == 1
-    );
+    return Intl.DateTimeFormat.supportedLocalesOf([name], { localeMatcher: 'lookup' }).length == 1;
   } catch {
     return false;
   }
