@@ -27,8 +27,7 @@ export abstract class Zones {
         if (z) { return z; }
 
         try {
-            z = new JsIANAZone(id);
-            cache[key] = z;
+            z = cache[key] = new JsIANAZone(id);
         } catch {
             if (opts && opts.throwError) { throw new Error('Zone not found.'); }
         }

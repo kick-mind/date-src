@@ -26,8 +26,7 @@ export class JsIANAZone extends IANAZone {
     }
 
     getOffset(timestamp: number): number {
-        const date = new Date(timestamp);
-        const parts = this.#long.formatToParts(date);
+        const parts = this.#long.formatToParts(new Date(timestamp));
         const units = ['year', 'month', 'day', 'hour', 'minute', 'second'].map(key => parseInt(parts.find(x => x.type === key).value, 10));
 
         // Workaround for the same behavior in different node version

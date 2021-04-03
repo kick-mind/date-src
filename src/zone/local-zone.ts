@@ -2,6 +2,12 @@ import { Locale } from '../locale';
 import { hasIntl } from '../common';
 import { Zone } from './zone';
 
+let o: LocalZone;
+// let cache: {
+//     short?: string;
+//     long?: string;
+// } = {};
+
 /** The local zone of this computer (singleton object) */
 export class LocalZone extends Zone {
     /**
@@ -28,13 +34,9 @@ export class LocalZone extends Zone {
     }
 
     getName(format: 'long' | 'short' = 'long', locale?: Locale): string {
-        if (hasIntl()) {
-            let f = new Intl.DateTimeFormat(locale instanceof Locale ? locale.id : [], { timeZoneName: format });
-            return f.resolvedOptions().timeZone;
-        } else {
-            return format === 'short' ? 'Local' : 'Local Time Zone';
-        }
+        return hasIntl() ?
+            new Intl.DateTimeFormat(locale instanceof Locale ? locale.id : [], { timeZoneName: format })
+                .formatToParts(new Date()).find(m => m.type.toLowerCase() === 'timezonename').value :
+            (format === 'short' ? 'Local' : 'Local Time Zone');
     }
 }
-
-let o: LocalZone;
