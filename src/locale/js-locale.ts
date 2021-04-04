@@ -1,6 +1,7 @@
-import { IsInt, isSupportedLocale, MonthNameFormat, verifyClassCall, verifyLocale, verifyType, WeekdayNameFormat } from '../common';
+import { MonthNameFormat, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
+import { verifyLocale } from 'src/common/intl';
 
 function isSupportedCalendar(calendarName: string) {
     return [
@@ -21,7 +22,7 @@ function isSupportedCalendar(calendarName: string) {
 }
 
 // Cache
-let _: {
+let cache: {
     [localeId: string]: {
         weekday?: {
             [format: string]: string[]
@@ -36,22 +37,15 @@ let _: {
 
 /** A locale created by using javascript Intl API. */
 export class JsLocale extends Locale {
-    constructor(id: string, data: { weekStart: number }) {
-        super(id, data);
-        verifyClassCall(this, JsLocale);
-        verifyLocale(id);
-        _[id] = _[id] ?? { month: {}, weekday: {} };
-    }
-
-    /** Gets system locale Id by using Intl API */
-    static getSystemLocaleId(): string {
-        let f = new Intl.DateTimeFormat([], { weekday: 'long' });
-        return f.resolvedOptions().locale;
+    constructor(id: string | null, data: { weekStart: number }) {
+        let res = verifyLocale(id, true, true);
+        super(res.resolvedId, data);
+        cache[id] = cache[id] || { month: {}, weekday: {} };
     }
 
     getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
-        let id = this.id;
-        let res = _[id].weekday[format];
+        let id = this.resolvedId;
+        let res = cache[id].weekday[format];
         if (!res) {
             // create/cache weekday names
             let f = new Intl.DateTimeFormat(id, { weekday: format });
@@ -61,16 +55,16 @@ export class JsLocale extends Locale {
                 res[(i + this.weekStart) % 7] = f.format(day);
                 day.setDate(day.getDate() + 1);
             }
-            _[id].weekday[format] = res;
+            cache[id].weekday[format] = res;
         }
 
         return res;
     }
 
     getMonthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
-        let id = this.id,
+        let id = this.resolvedId,
             ct = calendar.type,
-            m = _[id].month;
+            m = cache[id].month;
 
         if (!m[ct]) {
             if (!isSupportedCalendar(ct)) {

@@ -1,9 +1,5 @@
 import { JsEpoch, MsPerHour, MsPerMinute, MsPerSecond } from './const';
 
-export function hasIntl(): boolean {
-  return Intl != null && typeof Intl.DateTimeFormat === 'function';
-}
-
 export function IsStr(x: any) {
   return typeof x === 'string';
 }
@@ -25,8 +21,8 @@ export function padNum(value: number, length: number) {
   return value.toString().slice(-length).padStart(length, '0');
 }
 
-/** Verifies an object's to ensure that it has a specific type */
-export function verifyObject(
+/** Verifies an object to ensure that it has a specific type */
+export function vObj(
   x: any,
   type: any,
   required = true,
@@ -38,7 +34,7 @@ export function verifyObject(
 }
 
 /** Verifies an object's type */
-export function verifyType(
+export function vType(
   x: any,
   type: 'object' | 'string' | 'number' | 'boolean' | 'function',
   required = true,
@@ -50,25 +46,9 @@ export function verifyType(
 }
 
 /** Verifies class call and ensures that a class is called by new operator */
-export function verifyClassCall(inst: any, cls: any) {
+export function vClsCall(inst: any, cls: any) {
   if (!(inst instanceof cls)) {
     throw new TypeError('Cannot call a class as a function');
-  }
-}
-
-/** Determines if a locale is supported by the Javascript environment or not. */
-export function isSupportedLocale(name: string) {
-  try {
-    return Intl.DateTimeFormat.supportedLocalesOf([name], { localeMatcher: 'lookup' }).length == 1;
-  } catch {
-    return false;
-  }
-}
-
-/** If the given locale is not supported, throws an error */
-export function verifyLocale(name: string, err = 'Unsupported locale') {
-  if (!isSupportedLocale(name)) {
-    throw new Error(err);
   }
 }
 

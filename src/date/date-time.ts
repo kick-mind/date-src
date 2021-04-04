@@ -1,7 +1,7 @@
 import { Calendar, Calendars } from '../calendar';
 import { Zone, Zones } from '../zone';
 import { Locale, Locales } from '../locale';
-import { DateTimeUnits, IsInt, IsObj, IsStr, padNum, throwInvalidParam, verifyClassCall, verifyObject, WeekdayNameFormat } from '../common';
+import { DateTimeUnits, IsInt, IsObj, IsStr, padNum, throwInvalidParam, vClsCall, vObj, WeekdayNameFormat } from '../common';
 
 const II = IsInt;
 const IO = IsObj;
@@ -43,7 +43,7 @@ export class DateTime {
     constructor(opts: DateTimeCreateOptions, year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number)
     constructor(timestamp: number, opts?: DateTimeCreateOptions)
     constructor() {
-        verifyClassCall(this, DateTime);
+        vClsCall(this, DateTime);
         let ts: number;
         let year: number, month: number, day: number, hour: number, minute: number, second: number, ms: number;
         let opts: DateTimeCreateOptions;
@@ -98,7 +98,7 @@ export class DateTime {
         } else if (IsStr(z)) {
             z = Zones.find(z, o);
         } else {
-            verifyObject(z, Zone, true, 'Invalid zone');
+            vObj(z, Zone, true, 'Invalid zone');
         }
         this._z = z;
 
@@ -109,7 +109,7 @@ export class DateTime {
         } else if (IsStr(l)) {
             l = Locales.resolve(l, { weekStart: 0 });
         } else {
-            verifyObject(l, Locale, true, 'Invalid locale');
+            vObj(l, Locale, true, 'Invalid locale');
         }
         this._l = l;
 
@@ -120,7 +120,7 @@ export class DateTime {
         } else if (IsStr(c)) {
             c = Calendars.findById(c, o);
         } else {
-            verifyObject(c, Calendar, true, 'Invalid calendar');
+            vObj(c, Calendar, true, 'Invalid calendar');
         }
         this._c = c;
     }

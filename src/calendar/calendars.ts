@@ -1,4 +1,4 @@
-import { verifyObject } from '../common/utils';
+import { vObj } from '../common/utils';
 import { Calendar } from './calendar';
 import { GregorianCalendar } from './gregorian/gregorian';
 
@@ -17,7 +17,7 @@ export abstract class Calendars {
 
     /** Adds a [Calendar] to the calendars repository. */
     static add(c: Calendar): void {
-        verifyObject(c, Calendar);
+        vObj(c, Calendar);
         if (!this.findById(c.id)) {
             calendars.push(c);
             if (calendars.length === 0) {

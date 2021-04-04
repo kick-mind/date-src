@@ -1,4 +1,4 @@
-import { IsInt, isSupportedLocale, MonthNameFormat, verifyClassCall, verifyLocale, verifyType, WeekdayNameFormat } from '../common';
+import { MonthNameFormat, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
 
