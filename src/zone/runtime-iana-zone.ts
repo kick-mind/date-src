@@ -4,7 +4,7 @@ import { IANAZone } from './iana-zone';
 let cache: { [zoneId: string]: Intl.DateTimeFormat } = {};
 
 /** An IANA zone created by using Javascript Intl API */
-export class JsIANAZone extends IANAZone {
+export class RuntimeIANAZone extends IANAZone {
     constructor(id: string) {
         super(id);
         let key = id.toLowerCase();

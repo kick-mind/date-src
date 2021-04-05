@@ -1,10 +1,10 @@
 import { hasIntl, vObj } from '../common';
 import { Locale } from './locale';
-import { JsLocale } from './js-locale';
+import { RuntimeLocale } from './runtime-locale';
 import { FallbackLocale } from './fallback-locale';
 
 let repo: Locale[] = [];
-let sysLocale: JsLocale; // System Locale
+let sysLocale: RuntimeLocale; // System Locale
 let defLocale: Locale;
 
 /** A class with some static methods for managing locales. */
@@ -23,7 +23,7 @@ export abstract class Locales {
     /** Gets the system locale. */
     static get system(): Locale {
         if (!sysLocale) {
-            sysLocale = hasIntl() ? new JsLocale(null, { weekStart: 0 }) : new FallbackLocale();
+            sysLocale = hasIntl() ? new RuntimeLocale(null, { weekStart: 0 }) : new FallbackLocale();
         }
         return sysLocale;
     }
@@ -55,7 +55,7 @@ export abstract class Locales {
     static resolve(id: string, opts?: { weekStart: number }): Locale {
         let l = this.find(id);
         if (!l) {
-            l = new JsLocale(id, { weekStart: opts?.weekStart ?? 0 });
+            l = new RuntimeLocale(id, { weekStart: opts?.weekStart ?? 0 });
         }
         return l;
     }

@@ -1,7 +1,7 @@
 import { Locales } from '../locales';
-import { PackageLocale } from '../package-locale';
+import { StaticLocale } from '../static-locale';
 
-Locales.add(new PackageLocale({
+Locales.add(new StaticLocale({
     id: 'fa-IR',
     weekStart: 6,
     weekdays: [

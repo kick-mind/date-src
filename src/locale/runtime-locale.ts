@@ -42,7 +42,7 @@ let cache: {
 } = {};
 
 /** A locale created by using javascript Intl API. */
-export class JsLocale extends Locale {
+export class RuntimeLocale extends Locale {
     constructor(id: string | null, data: { weekStart: number }) {
         let res = verifyLocale(id, true, true);
         super(res.resolvedId, data);

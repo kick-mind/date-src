@@ -22,8 +22,8 @@ export interface LocaleData {
     };
 }
 
-/** A locale provided in the package (package-based locale). */
-export class PackageLocale extends Locale {
+/** A locale with predefined(fixed) data. */
+export class StaticLocale extends Locale {
     private _data: LocaleData;
 
     constructor(data: LocaleData) {

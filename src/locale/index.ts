@@ -1,4 +1,4 @@
-export * from './package-locale';
-export * from './js-locale';
+export * from './static-locale';
+export * from './runtime-locale';
 export * from './locale';
 export * from './locales';
