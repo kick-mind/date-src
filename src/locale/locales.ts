@@ -4,8 +4,8 @@ import { RuntimeLocale } from './runtime-locale';
 import { FallbackLocale } from './fallback-locale';
 
 let repo: Locale[] = [];
-let sysLocale: RuntimeLocale; // System Locale
-let defLocale: Locale;
+let defLocale = hasIntl() ? new RuntimeLocale(null, { weekStart: 0 }) : new FallbackLocale();
+let sysLocale = defLocale instanceof RuntimeLocale ? defLocale : undefined;
 
 /** A class with some static methods for managing locales. */
 export abstract class Locales {
@@ -20,11 +20,8 @@ export abstract class Locales {
         return defLocale;
     }
 
-    /** Gets the system locale. */
-    static get system(): Locale {
-        if (!sysLocale) {
-            sysLocale = hasIntl() ? new RuntimeLocale(null, { weekStart: 0 }) : new FallbackLocale();
-        }
+    /** Tries to return system locale. If Javascript Intl API is not supported, this method retuens undefined. */
+    static getSystemLocale(): Locale {
         return sysLocale;
     }
 
@@ -48,8 +45,10 @@ export abstract class Locales {
         return l;
     }
 
+    // TODO: Incomplete doc
     /**
-     * Tries to find a locale in the repository. If fails, creates a JsLocale, adds it to the repository and return it.
+     * Tries to resolve a locale. It first tries to create a RuntimeLocale.
+     * If fails (you runtime environment doesn't support Intl API) ... .
      * @public
      */
     static resolve(id: string, opts?: { weekStart: number }): Locale {
@@ -71,5 +70,4 @@ export abstract class Locales {
     }
 }
 
-Locales.add(Locales.system);
-Locales.default = Locales.system;
+Locales.add(Locales.default);
