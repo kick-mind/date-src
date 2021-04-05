@@ -2,6 +2,7 @@ import { MonthNameFormat, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
 import { verifyLocale } from 'src/common/intl';
+import { Zone } from 'src/zone';
 
 function isSupportedCalendar(calendarName: string) {
     return [
@@ -32,6 +33,11 @@ let cache: {
                 [format: string]: string[]
             },
         },
+        zone?: {
+            [zoneId: string]: {
+                [format: string]: Intl.DateTimeFormat
+            },
+        },
     }
 } = {};
 
@@ -40,7 +46,7 @@ export class JsLocale extends Locale {
     constructor(id: string | null, data: { weekStart: number }) {
         let res = verifyLocale(id, true, true);
         super(res.resolvedId, data);
-        cache[id] = cache[id] || { month: {}, weekday: {} };
+        cache[id] = cache[id] || { month: {}, weekday: {}, zone: {} };
     }
 
     getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
@@ -88,5 +94,18 @@ export class JsLocale extends Locale {
         }
 
         return res;
+    }
+
+    getZoneName(zone: Zone, format: 'long' | 'short'): string {
+        let id = this.resolvedId,
+            zId = zone.id,
+            cacheZone = cache[id].zone;
+        cacheZone[zId] = cacheZone[zId] || {};
+        let formatter = cacheZone[zId][format];
+        if (!formatter) {
+            cacheZone[zId][format] = formatter = new Intl.DateTimeFormat([], { timeZone: zId, timeZoneName: format });
+        }
+
+        return formatter.formatToParts(new Date()).find(m => m.type.toLowerCase() === 'timezonename').value;
     }
 }

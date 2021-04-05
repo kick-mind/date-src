@@ -1,5 +1,6 @@
 import { IsInt, MonthNameFormat, vClsCall, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
+import { Zone } from 'src/zone';
 
 
 /** An abstract base class for all locales (PackageLocale, SystemLocale) */
@@ -33,5 +34,9 @@ export abstract class Locale {
 
     /** Returns the weekday names */
     abstract getWeekdayNames(format?: WeekdayNameFormat): string[];
+
+    
+    /** Gets the name of a zone */
+    abstract getZoneName(zone: Zone, format: 'long' | 'short'): string;
 }
 

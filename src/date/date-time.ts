@@ -462,8 +462,8 @@ export class DateTime {
                 return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
             },
             Z: () => this._z.id, // Zone ID: America/New_York
-            ZZ: () => this._z.getName('short'), // Short zone name: EST
-            ZZZ: () => this._z.getName('long'), // Long zone name: Eastern Standard Time          
+            ZZ: () => this._l.getZoneName(this._z, 'short'), // Short zone name: EST
+            ZZZ: () => this._l.getZoneName(this._z, 'long'), // Long zone name: Eastern Standard Time          
         };
 
         return format.replace(this.REGEX_FORMAT, (match, $1) => {

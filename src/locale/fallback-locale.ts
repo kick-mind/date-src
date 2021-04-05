@@ -1,6 +1,7 @@
 import { MonthNameFormat, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
+import { Zone } from 'src/zone';
 
 const m = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const ms = m.map(x => x.substring(0, 2));
@@ -36,5 +37,9 @@ export class FallbackLocale extends Locale {
             throw new Error('only greogrian calendar is supported');
         }
         return [...cache.m[format]];
+    }
+
+    getZoneName(zone: Zone, format: 'long' | 'short'): string {
+        return zone.id;
     }
 }
