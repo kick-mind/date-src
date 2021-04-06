@@ -6,10 +6,12 @@ import { Zone } from 'src/zone';
 /** An abstract base class for all locales (PackageLocale, SystemLocale) */
 export abstract class Locale {
     private _id: string;
+    private _name: string;
     private _ws: number;
 
-    constructor(id: string, data: { weekStart: number }) {
+    constructor(id: string, resolvedName: string, data: { weekStart: number }) {
         this._id = id;
+        this._name = resolvedName;
         vClsCall(this, Locale);
 
         let ws = data?.weekStart;
@@ -19,11 +21,16 @@ export abstract class Locale {
         this._ws = ws;
     }
 
-    /** Gets the resolved locale ID */
-    get resolvedId(): string {
+    /** Gets the locale ID */
+    get id(): string {
         return this._id;
     }
 
+    /** Gets the resolved locale name */
+    get resolvedName(): string {
+        return this._name;
+    }
+    
     /** Gets the week strat day (an offset from Sunday). */
     get weekStart(): number {
         return this._ws;

@@ -1,10 +1,11 @@
 import { hasIntl, vObj } from '../common';
 import { Locale } from './locale';
 import { RuntimeLocale } from './runtime-locale';
-import { FallbackLocale } from './fallback-locale';
+import { FallbackLocale } from './fallback';
+import { StaticLocale } from './static-locale';
 
 let repo: Locale[] = [];
-let defLocale = hasIntl() ? new RuntimeLocale(null, { weekStart: 0 }) : new FallbackLocale();
+let defLocale = hasIntl() ? new RuntimeLocale('system', null, { weekStart: 0 }) : FallbackLocale;
 let sysLocale = defLocale instanceof RuntimeLocale ? defLocale : undefined;
 
 /** A class with some static methods for managing locales. */
@@ -28,21 +29,18 @@ export abstract class Locales {
     /** Adds a [Locale] to the locales repository. */
     static add(l: Locale) {
         vObj(l, Locale);
-        if (!repo.find(x => x === l)) {
-            repo.push(l);
+        if (repo.find(x => x.id === l.id)) {
+            throw Error('Locale with the same id exist');
         }
+        repo.push(l);
     }
 
     /**
-     * Tries to find a locale in the repository.
+     * Finds a locale in the repository by ID.
      * @public
      */
-    static find(id: string, opts?: { throwError: boolean }): Locale {
-        let l = repo.find(x => x.resolvedId === id);
-        if (!l && opts && opts.throwError) {
-            throw new Error('Locale not found');
-        }
-        return l;
+    static find(id: string): Locale {
+        return repo.find(x => x.id === id);
     }
 
     // TODO: Incomplete doc
@@ -51,10 +49,15 @@ export abstract class Locales {
      * If fails (you runtime environment doesn't support Intl API) ... .
      * @public
      */
-    static resolve(id: string, opts?: { weekStart: number }): Locale {
-        let l = this.find(id);
-        if (!l) {
-            l = new RuntimeLocale(id, { weekStart: opts?.weekStart ?? 0 });
+    static resolve(name: string, opts?: { weekStart: number }): Locale {
+        let l: Locale;
+        let matchs = repo.filter(x => x.resolvedName.toLowerCase() === name.toLowerCase());
+
+        if (matchs.length == 0) {
+            l = new RuntimeLocale(`${name}.r`, name, { weekStart: opts?.weekStart ?? 0 });
+        } else {
+            l = matchs.find(x => x instanceof RuntimeLocale); // We prefer runtime locales
+            l = l || matchs[0];
         }
         return l;
     }
@@ -65,7 +68,7 @@ export abstract class Locales {
     }
 
     /** Returns a cloned array of all locales in the repository. */
-    static all(): Locale[] {
+    static get all(): Locale[] {
         return [...repo];
     }
 }

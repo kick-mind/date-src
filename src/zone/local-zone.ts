@@ -35,7 +35,7 @@ export class LocalZone extends Zone {
 
     getName(format: 'long' | 'short' = 'long', locale?: Locale): string {
         return hasIntl() ?
-            new Intl.DateTimeFormat(locale instanceof Locale ? locale.resolvedId : [], { timeZoneName: format })
+            new Intl.DateTimeFormat(locale instanceof Locale ? locale.resolvedName : [], { timeZoneName: format })
                 .formatToParts(new Date()).find(m => m.type.toLowerCase() === 'timezonename').value :
             (format === 'short' ? 'Local' : 'Local Time Zone');
     }
