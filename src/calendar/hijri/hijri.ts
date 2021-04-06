@@ -9,7 +9,7 @@ import {
 import { Calendar, getTimeUnits } from '../calendar';
 import { Calendars } from '../calendars';
 
-const MnthDys = [
+const MonthDays = [
   0,
   30,
   59,
@@ -32,7 +32,7 @@ function isLeapYear(year: number): boolean {
   return (year * 11 + 14) % 30 < 11;
 }
 
-function dy2yr(year: number): number {
+function daysUpToHijriYear(year: number): number {
   let numDays;
   let numYear30;
   let numYearsLeft;
@@ -47,18 +47,18 @@ function dy2yr(year: number): number {
   return numDays;
 }
 
-function gtAbsDt(
+function getAbsoluteDateHijri(
   y: number,
   m: number,
   d: number,
   hijriAdjustment: number
 ) {
   return (
-    dy2yr(y) + MnthDys[m - 1] + d - 1 - hijriAdjustment
+    daysUpToHijriYear(y) + MonthDays[m - 1] + d - 1 - hijriAdjustment
   );
 }
 
-function gtDtUnts(ticks: number, hijriAdjustment: number): DateTimeUnits {
+function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
   const du: DateTimeUnits = {
     year: 0,
     month: 0,
@@ -77,7 +77,7 @@ function gtDtUnts(ticks: number, hijriAdjustment: number): DateTimeUnits {
   numDays += hijriAdjustment;
   year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
-  let daysToHijriYear = dy2yr(year);
+  let daysToHijriYear = daysUpToHijriYear(year);
   const daysOfHijriYear = daysInYear(year);
 
   if (numDays < daysToHijriYear) {
@@ -97,13 +97,13 @@ function gtDtUnts(ticks: number, hijriAdjustment: number): DateTimeUnits {
   month = 1;
   numDays -= daysToHijriYear;
 
-  while (month <= 12 && numDays > MnthDys[month - 1]) {
+  while (month <= 12 && numDays > MonthDays[month - 1]) {
     month++;
   }
   month--;
   du.month = month;
 
-  day = numDays - MnthDys[month - 1];
+  day = numDays - MonthDays[month - 1];
   du.day = day;
   return du;
 }
@@ -134,7 +134,7 @@ export class HijriCalendar extends Calendar {
       d = days;
     }
     const ticks =
-      gtAbsDt(y, m, d, this.hijriAdjustment) * MsPerDay +
+      getAbsoluteDateHijri(y, m, d, this.hijriAdjustment) * MsPerDay +
       (getCalendarTimestamp(time) % MsPerDay);
 
     return getJsTimestamp(ticks);
@@ -152,7 +152,7 @@ export class HijriCalendar extends Calendar {
     numDays += this.hijriAdjustment;
     year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
-    let daysToHijriYear = dy2yr(year);
+    let daysToHijriYear = daysUpToHijriYear(year);
     const daysOfHijriYear = this.daysInYear(year);
 
     if (numDays < daysToHijriYear) {
@@ -190,7 +190,7 @@ export class HijriCalendar extends Calendar {
 
   getTimestamp(units: DateTimeUnits): number {
     const daysInMonth = this.daysInMonth(units.year, units.month);
-    const lDate = gtAbsDt(
+    const lDate = getAbsoluteDateHijri(
       units.year,
       units.month,
       units.day,
@@ -209,7 +209,7 @@ export class HijriCalendar extends Calendar {
 
   getUnits(ts: number): DateTimeUnits {
     ts = getCalendarTimestamp(ts);
-    return { ...gtDtUnts(ts, this.hijriAdjustment), ...getTimeUnits(ts) };
+    return { ...getDateUnits(ts, this.hijriAdjustment), ...getTimeUnits(ts) };
   }
 }
 
