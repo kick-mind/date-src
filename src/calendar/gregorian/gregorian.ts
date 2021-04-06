@@ -86,6 +86,3 @@ export class GregorianCalendar extends Calendar {
   }
 
 }
-declare var Jss_core: any;
-Jss_core.GregorianCalendar  = GregorianCalendar;
-Calendars.add(new Jss_core.GregorianCalendar());

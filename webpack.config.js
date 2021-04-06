@@ -2,8 +2,9 @@ const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
-module.exports = {
+const config = {
   entry: {
+    core: "./src/index.ts",
     gregorian: {
       import: "./src/calendar/gregorian/gregorian.ts",
       dependOn: "core",
@@ -20,11 +21,6 @@ module.exports = {
       import: "./src/calendar/hijri/hijri.ts",
       dependOn: "core",
     },
-    hijri: {
-      import: "./src/locale/repo/fa-ir.ts",
-      dependOn: "core",
-    },
-    core: "./src/index.ts",
   },
   plugins: [new CleanWebpackPlugin({ cleanStaleWebpackAssets: false })],
 
@@ -38,16 +34,57 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [
-        new TerserPlugin({
-            terserOptions: {
-                keep_classnames: true
-            }
-          })
-        ]
+      new TerserPlugin({
+        terserOptions: {
+          keep_classnames: true,
+        },
+      }),
+    ],
+  },
+  mode: "production",
+  devtool: "source-map",
+  resolve: {
+    extensions: [".ts", ".js"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+    ],
   },
   // optimization: {
   //   splitChunks: {
-  //     chunks: "initial",
+  //     chunks: 'all',
   //   },
   // },
 };
+const node = {
+  ...config,
+  output: {
+    ...config.output,
+    libraryTarget: "commonjs2",
+    path: path.resolve(__dirname, "dist/build/node"),
+  },
+};
+const browser = {
+  ...config,
+  output: {
+    ...config.output,
+    libraryTarget: "umd",
+    path: path.resolve(__dirname, "dist/build/brwser"),
+  },
+};
+
+const amd = {
+  ...config,
+  output: {
+    ...config.output,
+    libraryTarget: "amd",
+    path: path.resolve(__dirname, "dist/build/amd"),
+  },
+};
+
+module.exports = [amd, browser, node];
