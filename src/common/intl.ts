@@ -1,7 +1,7 @@
 /** Locale verification result */
 export interface LocaleVerificationResult {
     supported: boolean;
-    resolvedId: string;
+    resolvedName: string;
 }
 
 /** Does environment have Intl API support */
@@ -11,11 +11,11 @@ export function hasIntl(): boolean {
 
 /** Verifies a locale */
 export function verifyLocale(id: string | null, strict = true, throwErr = false): LocaleVerificationResult {
-    let supported: boolean, resolvedId: string;
+    let supported: boolean, resolvedName: string;
 
     try {
-        resolvedId = new Intl.DateTimeFormat(id || [], { weekday: 'long' }).resolvedOptions().locale;
-        if (strict && id && id.toLowerCase() !== resolvedId.toLowerCase()) {
+        resolvedName = new Intl.DateTimeFormat(id || [], { weekday: 'long' }).resolvedOptions().locale;
+        if (strict && id && id.toLowerCase() !== resolvedName.toLowerCase()) {
             throw Error();
         }
         supported = true;
@@ -26,5 +26,5 @@ export function verifyLocale(id: string | null, strict = true, throwErr = false)
         supported = false;
     }
 
-    return { supported, resolvedId };
+    return { supported, resolvedName };
 }

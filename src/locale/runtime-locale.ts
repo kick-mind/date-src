@@ -43,34 +43,34 @@ let cache: {
 
 /** A locale created by using javascript Intl API. */
 export class RuntimeLocale extends Locale {
-    constructor(id: string | null, data: { weekStart: number }) {
-        let res = verifyLocale(id, true, true);
-        super(res.resolvedId, data);
+    constructor(id: string, name: string | null, data: { weekStart: number }) {
+        let res = verifyLocale(name, true, true);
+        super(id, res.resolvedName, data);
         cache[id] = cache[id] || { month: {}, weekday: {}, zone: {} };
     }
 
     getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
-        let id = this.resolvedId;
-        let res = cache[id].weekday[format];
+        let name = this.resolvedName;
+        let res = cache[this.id].weekday[format];
         if (!res) {
             // create/cache weekday names
-            let f = new Intl.DateTimeFormat(id, { weekday: format });
+            let f = new Intl.DateTimeFormat(name, { weekday: format });
             res = [];
             let day = new Date(2021, 4, 28); // Sunday
             for (let i = 0; i < 7; i++) {
                 res[(i + this.weekStart) % 7] = f.format(day);
                 day.setDate(day.getDate() + 1);
             }
-            cache[id].weekday[format] = res;
+            cache[name].weekday[format] = res;
         }
 
         return res;
     }
 
     getMonthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
-        let id = this.resolvedId,
+        let name = this.resolvedName,
             ct = calendar.type,
-            m = cache[id].month;
+            m = cache[name].month;
 
         if (!m[ct]) {
             if (!isSupportedCalendar(ct)) {
@@ -83,7 +83,7 @@ export class RuntimeLocale extends Locale {
         if (!res) {
             // create/cache month names
             res = [];
-            let f = new Intl.DateTimeFormat(id, { calendar: ct, month: format } as any),
+            let f = new Intl.DateTimeFormat(name, { calendar: ct, month: format } as any),
                 now = calendar.getUnits(new Date().valueOf()),
                 firstDayOfMonthTs = calendar.getTimestamp({ ...now, month: 1, day: 1 });
             for (let i = 0; i < 12; i++) {
@@ -97,13 +97,13 @@ export class RuntimeLocale extends Locale {
     }
 
     getZoneName(zone: Zone, format: 'long' | 'short'): string {
-        let id = this.resolvedId,
+        let name = this.resolvedName,
             zId = zone.id,
-            cacheZone = cache[id].zone;
+            cacheZone = cache[this.id].zone;
         cacheZone[zId] = cacheZone[zId] || {};
         let formatter = cacheZone[zId][format];
         if (!formatter) {
-            cacheZone[zId][format] = formatter = new Intl.DateTimeFormat([], { timeZone: zId, timeZoneName: format });
+            cacheZone[zId][format] = formatter = new Intl.DateTimeFormat([name], { timeZone: zId, timeZoneName: format });
         }
 
         return formatter.formatToParts(new Date()).find(m => m.type.toLowerCase() === 'timezonename').value;
