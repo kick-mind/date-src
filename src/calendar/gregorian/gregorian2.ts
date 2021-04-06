@@ -186,4 +186,6 @@ export class GregorianCalendar2 extends Calendar {
   }
 }
 
-Calendars.add(new GregorianCalendar2());
+declare var Jss_core: any;
+Jss_core.GregorianCalendar2  = GregorianCalendar2;
+Calendars.add(new Jss_core.GregorianCalendar2());

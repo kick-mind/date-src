@@ -7,6 +7,7 @@ import {
   timeToTicks,
 } from '../../common';
 import { Calendar, getTimeUnits } from '../calendar';
+import { Calendars } from "../calendars";
 
 const _hijriMonthDays = [
   0,
@@ -202,3 +203,6 @@ export class Hijri extends Calendar {
     return { ...getDateUnits(ts, this.hijriAdjustment), ...getTimeUnits(ts) };
   }
 }
+declare var Jss_core: any;
+Jss_core.Hijri  = Hijri;
+Calendars.add(new Jss_core.Hijri());

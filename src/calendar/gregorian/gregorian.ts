@@ -3,6 +3,8 @@
 // tslint:disable: triple-equals
 import { DateTimeUnits, MsPerDay } from '../../common';
 import { Calendar, getTimeUnits } from '../calendar';
+import { Calendars } from "../calendars";
+
 const _monthsPerYear = 12;
 const _daysToMonth365 = [
   0,
@@ -84,3 +86,6 @@ export class GregorianCalendar extends Calendar {
   }
 
 }
+declare var Jss_core: any;
+Jss_core.GregorianCalendar  = GregorianCalendar;
+Calendars.add(new Jss_core.GregorianCalendar());
