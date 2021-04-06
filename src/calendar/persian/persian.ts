@@ -4,9 +4,10 @@ import {
   getJsTimestamp,
   MsPerDay,
   throwInvalidParam,
-  timeToTicks
-} from '../../common';
-import { Calendar, getTimeUnits, _maxYear } from '../calendar';
+  timeToTicks,
+} from "../../common";
+import { Calendar, getTimeUnits, _maxYear } from "../calendar";
+import { Calendars } from "../calendars";
 
 // tslint:disable: member-ordering
 // tslint:disable: variable-name
@@ -480,8 +481,7 @@ function getDateUnits(ticks: number): DateTimeUnits {
   NumDays = Math.trunc(ticks / MsPerDay) + 1;
   const yearStart = PersianNewYearOnOrBefore(NumDays);
   const y =
-    Math.floor((yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5) +
-    1;
+    Math.floor((yearStart - _persianEpoch) / _meanTropicalYearInDays + 0.5) + 1;
 
   const ordinalDay = Math.trunc(
     NumDays -
@@ -504,7 +504,7 @@ function getDateUnits(ticks: number): DateTimeUnits {
 }
 export class PersianCalendar extends Calendar {
   constructor() {
-    super('persian', 'persian');
+    super("persian", "persian");
   }
 
   addMonths(time: number, months: number): number {
@@ -583,3 +583,6 @@ export class PersianCalendar extends Calendar {
     return { ...getDateUnits(ts), ...getTimeUnits(ts) };
   }
 }
+declare var Jss_core: any;
+Jss_core.PersianCalendar  = PersianCalendar;
+Calendars.add(new Jss_core.PersianCalendar());
