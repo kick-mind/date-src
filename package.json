@@ -25,7 +25,7 @@
   "scripts": {
     "test": "jasmine-ts --config=jasmine.json",
     "build-tsc": "tsc",
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack",
     "docs": "esdoc -c docs/index.js"
   },
   "keywords": [],
