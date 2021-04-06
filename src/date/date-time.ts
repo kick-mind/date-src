@@ -1,7 +1,8 @@
 import { Calendar, Calendars } from '../calendar';
 import { Zone, Zones } from '../zone';
 import { Locale, Locales } from '../locale';
-import { DateTimeUnits, IsInt, IsObj, IsStr, padNum, verifyClassCall, verifyObject, WeekdayNameFormat } from '../common';
+import { DateTimeUnits, IsInt, IsObj, IsStr, padNum, throwInvalidParam, vClsCall, vObj, WeekdayNameFormat } from '../common';
+const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|f{1,3}|c{1,2}|C{1,3}|a|A|z{1,3}|Z{1,3}/g;
 
 const II = IsInt;
 const IO = IsObj;
@@ -15,26 +16,15 @@ export interface DateTimeCreateOptions {
     locale?: Locale | string;
 }
 
-interface DateTimeCachedValues {
-    units: DateTimeUnits;
-    /** Timestamp (UTC) */
-    ts: number;
-    weekDay: number;
-    dayOfYear: number;
-    weekNumber: number;
-    daysInMonth: number;
-    daysInYear: number;
-    isLeapYear: boolean;
-    isValid: boolean;
-}
-
-
-/** JS-Sugar DateTime. */
+/** 
+ * JS-Sugar DateTime. 
+ * @public
+ */
 export class DateTime {
-    private _c: Calendar;
-    private _z: Zone;
-    private _l: Locale;
-    private _: { // Cache
+    #c: Calendar;
+    #z: Zone;
+    #l: Locale;
+    #_: { // cache
         units: DateTimeUnits;
         ts: number; /** Timestamp (UTC) */
         weekDay: number;
@@ -57,7 +47,7 @@ export class DateTime {
     constructor(opts: DateTimeCreateOptions, year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number)
     constructor(timestamp: number, opts?: DateTimeCreateOptions)
     constructor() {
-        verifyClassCall(this, DateTime);
+        vClsCall(this, DateTime);
         let ts: number;
         let year: number, month: number, day: number, hour: number, minute: number, second: number, ms: number;
         let opts: DateTimeCreateOptions;
@@ -65,29 +55,34 @@ export class DateTime {
         // Resolve constructor parameters
         const a = arguments, a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3], a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
         let now = () => new Date().valueOf();
-        if (a.length == 0) { // 1'st overload
+        if (a.length == 0) {
+            // 1'st overload
             ts = now();
-        } else if (IO(a0)) {  // 2'nd overload
+        } else if (IO(a0)) {
+            // 2'nd overload
             ts = now();
             opts = C(a1);
-        } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) { // 3'nd overload
+        } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) {
+            // 3'nd overload
             year = a0; month = a1; day = a2; hour = a3; minute = a4; second = a5; ms = a6;
             opts = C(a7);
-        } else if (IO(a0) && II(a1), II(a2), IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) { // 4'rd overload
+        } else if (IO(a0) && II(a1), II(a2), IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) {
+            // 4'rd overload
             opts = a0;
             year = a1; month = a2; day = a3; hour = a4; minute = a5; second = a6; ms = a7;
-        } else if (II(a0) && (a1 == null || IO(a1))) { // 5'th overload (create by timestamp)
+        } else if (II(a0) && (a1 == null || IO(a1))) {
+            // 5'th overload (create by timestamp)
             ts = a0;
             opts = C(a1);
         } else {
-            throw new Error('Invalid parameters.');
+            throwInvalidParam();
         }
 
         // Set DateTime value
         if (ts) {
-            this._.ts = ts;
+            this.#_.ts = ts;
         } else {
-            this._.units = {
+            this.#_.units = {
                 year,
                 month,
                 day: day ? day : 1,
@@ -102,45 +97,45 @@ export class DateTime {
 
         // Resolve zone
         let z: any = opts?.zone;
-        if (z == null) {
+        if (!z) {
             z = Zones.local;
         } else if (IsStr(z)) {
             z = Zones.find(z, o);
         } else {
-            verifyObject(z, Zone, true, 'Invalid zone');
+            vObj(z, Zone, true, 'Invalid zone');
         }
-        this._z = z;
+        this.#z = z;
 
         // Resolve locale
         let l: any = opts?.locale;
-        if (l == null) {
+        if (!l) {
             l = Locales.default;
         } else if (IsStr(l)) {
             l = Locales.resolve(l, { weekStart: 0 });
         } else {
-            verifyObject(l, Locale, true, 'Invalid locale');
+            vObj(l, Locale, true, 'Invalid locale');
         }
-        this._l = l;
+        this.#l = l;
 
         // Resolve calendar
         let c: any = opts?.calendar;
-        if (c == null) {
+        if (!c) {
             c = Calendars.default;
         } else if (IsStr(c)) {
             c = Calendars.findById(c, o);
         } else {
-            verifyObject(c, Calendar, true, 'Invalid calendar');
+            vObj(c, Calendar, true, 'Invalid calendar');
         }
-        this._c = c;
+        this.#c = c;
     }
 
-    /** 
-     * Creates a DateTime from a string
-     * @public
-     */
-    static parse(date: string, format: string, opts?: DateTimeCreateOptions): DateTime {
-        throw new Error('Method not implemented.');
-    }
+    // /** 
+    //  * Creates a DateTime from a string
+    //  * @public
+    //  */
+    // static parse(date: string, format: string, opts?: DateTimeCreateOptions): DateTime {
+    //     throw new Error('Method not implemented.');
+    // }
 
     /** 
      * Creates a DateTime from an object
@@ -230,12 +225,11 @@ export class DateTime {
      * @public
      */
     get ts(): number {
-        if (this._.ts == null) {
-            const zoneTs = this._c.getTimestamp(this._.units);
-            const utcTs = zoneTs - this._z.getOffset(zoneTs);
-            this._.ts = utcTs;
+        if (this.#_.ts == null) {
+            const zoneTs = this.#c.getTimestamp(this.#_.units);
+            this.#_.ts = zoneTs - this.#z.getOffset(zoneTs);
         }
-        return this._.ts;
+        return this.#_.ts;
     }
 
     /**
@@ -243,10 +237,10 @@ export class DateTime {
      * @public
      */
     get weekDay(): number {
-        if (this._.weekDay == null) {
-            this._.weekDay = this._c.weekDay(this.ts);
+        if (this.#_.weekDay == null) {
+            this.#_.weekDay = this.#c.weekDay(this.ts);
         }
-        return this._.weekDay;
+        return this.#_.weekDay;
     }
 
     /** 
@@ -262,10 +256,10 @@ export class DateTime {
      * @public 
      */
     get dayOfYear(): number {
-        if (this._.dayOfYear == null) {
-            this._.dayOfYear = this._c.dayOfYear(this.ts);
+        if (this.#_.dayOfYear == null) {
+            this.#_.dayOfYear = this.#c.dayOfYear(this.ts);
         }
-        return this._.dayOfYear;
+        return this.#_.dayOfYear;
     }
 
     /**
@@ -273,10 +267,10 @@ export class DateTime {
      * @public
      */
     get weekNumber(): number {
-        if (this._.weekNumber == null) {
-            this._.weekNumber = this._c.weekNumber(this.ts, 1, 1);
+        if (this.#_.weekNumber == null) {
+            this.#_.weekNumber = this.#c.weekNumber(this.ts, 1, 1);
         }
-        return this._.weekNumber;
+        return this.#_.weekNumber;
     }
 
     /**
@@ -284,11 +278,11 @@ export class DateTime {
      * @public
      */
     get daysInMonth(): number {
-        if (this._.daysInMonth == null) {
+        if (this.#_.daysInMonth == null) {
             let u = this.toObject();
-            this._.daysInMonth = this._c.daysInMonth(u.year, u.month);
+            this.#_.daysInMonth = this.#c.daysInMonth(u.year, u.month);
         }
-        return this._.daysInMonth;
+        return this.#_.daysInMonth;
     }
 
     /**
@@ -296,10 +290,10 @@ export class DateTime {
      * @public
      */
     get daysInYear(): number {
-        if (this._.daysInYear == null) {
-            this._.daysInYear = this._c.daysInYear(this.year);
+        if (this.#_.daysInYear == null) {
+            this.#_.daysInYear = this.#c.daysInYear(this.year);
         }
-        return this._.daysInYear;
+        return this.#_.daysInYear;
     }
 
     /** Returns the number of weeks in this DateTime's year. */
@@ -315,10 +309,10 @@ export class DateTime {
      * @public
      */
     get isLeapYear(): boolean {
-        if (this._.daysInYear == null) {
-            this._.isLeapYear = this._c.isLeapYear(this.ts);
+        if (this.#_.isLeapYear == null) {
+            this.#_.isLeapYear = this.#c.isLeapYear(this.ts);
         }
-        return this._.isLeapYear;
+        return this.#_.isLeapYear;
     }
 
     /** 
@@ -334,7 +328,7 @@ export class DateTime {
      * @public
      */
     get config(): { calendar: Calendar, zone?: Zone, locale?: Locale } {
-        return { calendar: this._c, zone: this._z, locale: this._l };
+        return { calendar: this.#c, zone: this.#z, locale: this.#l };
     }
     //#endregion
 
@@ -344,7 +338,7 @@ export class DateTime {
      * @public
      */
     add(units: DateTimeUnits): DateTime {
-        return new DateTime(this._c.add(this.ts, units), this.config);
+        return new DateTime(this.#c.add(this.ts, units), this.config);
     }
 
     /** 
@@ -352,7 +346,7 @@ export class DateTime {
      * @public 
      */
     subtract(units: DateTimeUnits): DateTime {
-        return new DateTime(this._c.subtract(this.ts, units), this.config);
+        return new DateTime(this.#c.subtract(this.ts, units), this.config);
     }
 
     /**
@@ -371,7 +365,7 @@ export class DateTime {
      * @public
      */
     isSame(dateTime: DateTime): boolean {
-        return this.ts === dateTime.ts;
+        return this.ts == dateTime.ts;
     }
 
     /**
@@ -411,11 +405,9 @@ export class DateTime {
      * @public
      */
     isBetween(first: DateTime, second: DateTime): boolean {
-        return this.isAfter(first) && this.isBefore(second);
+        return this.ts > first.ts && this.ts < second.ts;
     }
     //#endregion
-
-    REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|f{1,3}|c{1,2}|C{1,3}|a|A|z{1,3}|Z{1,3}/g;
 
     //#region Display + Convert
     /** 
@@ -424,7 +416,7 @@ export class DateTime {
      */
     format(format: string): string {
         const zone = () => {
-            let o = this._z.getOffset(this.ts); // offset
+            let o = this.#z.getOffset(this.ts); // offset
             let s = o > 0 ? 1 : -1; // sign
             return {
                 s,
@@ -440,8 +432,8 @@ export class DateTime {
             YYYY: () => padNum(this.year, 4),
             M: () => this.month,
             MM: () => padNum(this.month, 2),
-            MMM: () => this._l.getMonthNames(this._c, 'short')[this.month - 1],
-            MMMM: () => this._l.getMonthNames(this._c, 'long')[this.month - 1],
+            MMM: () => this.#l.getMonthNames(this.#c, 'short')[this.month - 1],
+            MMMM: () => this.#l.getMonthNames(this.#c, 'long')[this.month - 1],
             d: () => this.day,
             dd: () => padNum(this.day, 2),
             H: () => this.hour,
@@ -456,9 +448,9 @@ export class DateTime {
             fff: () => padNum(this.ms, 3),
             c: () => this.weekDay,
             cc: () => this.weekDayLocale,
-            C: () => this._l.getWeekdayNames('narrow')[this.weekDayLocale],
-            CC: () => this._l.getWeekdayNames('short')[this.weekDayLocale],
-            CCC: () => this._l.getWeekdayNames('long')[this.weekDayLocale],
+            C: () => this.#l.getWeekdayNames('narrow')[this.weekDayLocale],
+            CC: () => this.#l.getWeekdayNames('short')[this.weekDayLocale],
+            CCC: () => this.#l.getWeekdayNames('long')[this.weekDayLocale],
             z: () => { // Zone offset: +5
                 let z = zone();
                 return z.s > 0 ? `+${z.o}` : z.o;
@@ -471,12 +463,12 @@ export class DateTime {
                 let z = zone();
                 return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
             },
-            Z: () => this._z.id, // Zone ID: America/New_York
-            ZZ: () => this._z.getName('short'), // Short zone name: EST
-            ZZZ: () => this._z.getName('long'), // Long zone name: Eastern Standard Time          
+            Z: () => this.#z.id, // Zone ID: America/New_York
+            ZZ: () => this.#l.getZoneName(this.#z, 'short'), // Short zone name: EST
+            ZZZ: () => this.#l.getZoneName(this.#z, 'long'), // Long zone name: Eastern Standard Time          
         };
 
-        return format.replace(this.REGEX_FORMAT, (match, $1) => {
+        return format.replace(REGEX_FORMAT, (match, $1) => {
             let r;
             if ($1) {
                 r = $1;
@@ -494,11 +486,10 @@ export class DateTime {
      * @public
      */
     toObject(): DateTimeUnits {
-        if (this._.units == null) {
-            const ts = this._.ts;
-            this._.units = this._c.getUnits(ts + this._z.getOffset(ts));
+        if (this.#_.units == null) {
+            this.#_.units = this.#c.getUnits(this.#_.ts + this.#z.getOffset(this.#_.ts));
         }
-        return this._.units;
+        return this.#_.units;
     }
 
     /** 
@@ -533,7 +524,7 @@ export class DateTime {
      * @public
      */
     get locale(): Locale {
-        return this._l;
+        return this.#l;
     }
 
     /**
@@ -541,7 +532,7 @@ export class DateTime {
      * @public
      */
     toLocale(locale: Locale | string): DateTime {
-        return new DateTime(this.ts, { locale, calendar: this._c, zone: this._z });
+        return new DateTime(this.ts, { locale, calendar: this.#c, zone: this.#z });
     }
     //#endregion
 
@@ -551,7 +542,7 @@ export class DateTime {
      * @public
      */
     get zone(): Zone {
-        return this._z;
+        return this.#z;
     }
 
     /**
@@ -575,7 +566,7 @@ export class DateTime {
      * @public
      */
     toZone(zone: Zone | string): DateTime {
-        return new DateTime(this.ts, { calendar: this._c, zone, locale: this._l });
+        return new DateTime(this.ts, { calendar: this.#c, zone, locale: this.#l });
     }
     //#endregion
 
@@ -594,7 +585,7 @@ export class DateTime {
      * @public
      */
     get calendar() {
-        return this._c;
+        return this.#c;
     }
     //#endregion
 
@@ -605,24 +596,18 @@ export class DateTime {
      * @public
      */
     clone(newUnits?: DateTimeUnits): DateTime {
-        const opts = this.config;
-
-        if (newUnits) {
-            return DateTime.fromObject({ ...this.toObject(), ...newUnits }, opts);
-        } else {
-            return this._.ts ? new DateTime(this._.ts, opts) : DateTime.fromObject(this._.units, opts);
-        }
+        return this.#_.ts ? new DateTime(this.#_.ts, this.config) : DateTime.fromObject({ ...this.#_.units, ...newUnits }, this.config);
     }
 
     /** Returns whether this DateTime is valid.
      * @public
      */
     get isValid(): boolean {
-        if (this._.isValid == null) {
+        if (this.#_.isValid == null) {
             const { year, month, day } = this.toObject();
-            this._.isValid = this._c.isValid(year, month, day);
+            this.#_.isValid = this.#c.isValid(year, month, day);
         }
-        return this._.isValid;
+        return this.#_.isValid;
     }
 
     /**

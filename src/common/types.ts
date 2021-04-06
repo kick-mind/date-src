@@ -22,6 +22,9 @@ export type WeekdayNameFormat = 'long' | 'short' | 'narrow';
 /** Month name format */
 export type MonthNameFormat = 'long' | 'short' | 'narrow';
 
+/** Zone name format */
+export type ZoneNameFormat = 'long' | 'short';
+
 // export class CalendarInfo {
 
 // }
