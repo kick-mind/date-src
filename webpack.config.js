@@ -4,22 +4,22 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 const config = {
   entry: {
-    core: "./src/index.ts",
+    jss: "./src/index.ts",
     gregorian: {
       import: "./src/calendar/gregorian/gregorian.ts",
-      dependOn: "core",
+      dependOn: "jss",
     },
     gregorian2: {
       import: "./src/calendar/gregorian/gregorian2.ts",
-      dependOn: "core",
+      dependOn: "jss",
     },
     persian: {
       import: "./src/calendar/persian/persian.ts",
-      dependOn: "core",
+      dependOn: "jss",
     },
     hijri: {
       import: "./src/calendar/hijri/hijri.ts",
-      dependOn: "core",
+      dependOn: "jss",
     },
   },
   plugins: [new CleanWebpackPlugin({ cleanStaleWebpackAssets: false })],
@@ -28,7 +28,7 @@ const config = {
     filename: "[name].min.js",
     path: path.resolve(__dirname, "dist"),
     publicPath: "/",
-    library: "Jss_[name]",
+    library: "[name]",
     libraryTarget: "umd",
   },
   optimization: {
@@ -65,7 +65,7 @@ const node = {
   ...config,
   output: {
     ...config.output,
-    libraryTarget: "commonjs2",
+    libraryTarget: "commonjs",
     path: path.resolve(__dirname, "dist/build/node"),
   },
 };
@@ -74,7 +74,7 @@ const browser = {
   output: {
     ...config.output,
     libraryTarget: "umd",
-    path: path.resolve(__dirname, "dist/build/brwser"),
+    path: path.resolve(__dirname, "dist/build/browser"),
   },
 };
 
