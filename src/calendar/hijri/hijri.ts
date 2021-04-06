@@ -204,5 +204,5 @@ export class HijriCalendar extends Calendar {
   }
 }
 declare var Jss_core: any;
-Jss_core.Hijri  = Hijri;
-Calendars.add(new Jss_core.Hijri());
+Jss_core.HijriCalendar  = HijriCalendar;
+Calendars.add(new Jss_core.HijriCalendar());

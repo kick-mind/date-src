@@ -1,8 +1,8 @@
 import { MonthNameFormat, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
-import { verifyLocale } from 'src/common/intl';
-import { Zone } from 'src/zone';
+import { verifyLocale } from '../common/intl';
+import { Zone } from '../zone';
 
 function isSupportedCalendar(calendarName: string) {
     return [
