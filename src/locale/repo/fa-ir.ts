@@ -2,7 +2,8 @@ import { Locales } from '../locales';
 import { StaticLocale } from '../static-locale';
 
 Locales.add(new StaticLocale({
-    id: 'fa-IR',
+    id: 'fa.s',
+    name: 'fa',
     weekStart: 6,
     weekdays: [
         'یک‌شنبه_دوشنبه_سه‌شنبه_چهارشنبه_پنج‌شنبه_جمعه_شنبه'.split('_'),

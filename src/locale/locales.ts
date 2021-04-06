@@ -3,9 +3,9 @@ import { Locale } from './locale';
 import { RuntimeLocale } from './runtime-locale';
 import { fallbackLocale } from './fallback';
 
-let repo: Locale[] = [fallbackLocale];
-let defLocale = hasIntl() ? new RuntimeLocale('system', null, { weekStart: 0 }) : fallbackLocale;
-let sysLocale = defLocale instanceof RuntimeLocale ? defLocale : undefined;
+let sysLocale: Locale = hasIntl() ? new RuntimeLocale('system', null, { weekStart: 0 }) : undefined;
+let defLocale: Locale = sysLocale || fallbackLocale;
+let repo = [defLocale];
 
 /** 
  * A class with some static methods for managing locales. 
