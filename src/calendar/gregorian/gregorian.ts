@@ -38,8 +38,8 @@ function getDateUnits(ts: number): DateTimeUnits {
 }
 /** Gregorian calendar */
 export class GregorianCalendar extends Calendar {
-  constructor() {
-    super('gregorian', 'gregory');
+  constructor(id: string) {
+    super(id, 'gregory');
   }
 
   addMonths(time: number, months: number): number {
@@ -47,6 +47,7 @@ export class GregorianCalendar extends Calendar {
     d.setMonth(d.getMonth() + months);
     return d.getTime();
   }
+
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
   }
@@ -57,13 +58,16 @@ export class GregorianCalendar extends Calendar {
     const diff = now.getTime() - start.getTime();
     return Math.floor(diff / MsPerDay);
   }
+
   daysInMonth(year: number, month: number): number {
     const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
     return days[month] - days[month - 1];
   }
+
   daysInYear(year: number): number {
     return this.isLeapYear(year) ? 366 : 365;
   }
+
   isLeapYear(year: number): boolean {
     return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
   }

@@ -3,7 +3,7 @@ import { DateTimeUnits } from '../../common';
 import { HijriCalendar } from './hijri';
 
 describe('HijriCalendar', () => {
-    const hc = new HijriCalendar(0);
+    const hc = new HijriCalendar('hijri', 0);
 
     it('can compute units from ts', function () {
         assert.strictEqual(hc.getUnits(100000), { year: 2, month: 1, day: 1, hour: 1, minute: 1, second: 1, ms: 1, } as DateTimeUnits);

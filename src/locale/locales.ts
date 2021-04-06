@@ -42,8 +42,12 @@ export abstract class Locales {
      * Finds a locale in the repository by ID.
      * @public
      */
-    static find(id: string): Locale {
-        return repo.find(x => x.id === id);
+    static find(id: string, opts?: { throwError: boolean }): Locale {
+        const l = repo.find(x => x.id === id);
+        if (!l && opts?.throwError) {
+            throw new Error('Locale not found.');
+        }
+        return l;
     }
 
     // TODO: Incomplete doc
@@ -70,5 +74,3 @@ export abstract class Locales {
         return [...repo];
     }
 }
-
-Locales.add(Locales.default);

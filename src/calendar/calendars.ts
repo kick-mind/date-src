@@ -3,11 +3,17 @@ import { Calendar } from './calendar';
 import { GregorianCalendar } from './gregorian/gregorian';
 
 const calendars = new Array<Calendar>();
-let defaultCalendar: Calendar;
+let defaultCalendar = new GregorianCalendar('gregorian');
 
+/** 
+ * A class with some static methods for managing calendars. 
+ * @public
+ * @abstract
+ */
 export abstract class Calendars {
     /** Fets or sets the default calendar. */
     static set default(value: Calendar) {
+        vObj(value, Calendar);
         defaultCalendar = value;
     }
 
@@ -26,7 +32,7 @@ export abstract class Calendars {
         }
     }
 
-    /** Finds a calendar by id in the calendars repository. */
+    /** Finds a calendar by id. */
     static findById(id: string, opts?: { throwError: boolean }): Calendar {
         const c = calendars.find(x => x.id === id);
         if (!c && opts?.throwError) {
@@ -40,13 +46,11 @@ export abstract class Calendars {
         return calendars.filter(x => x.type === type);
     }
 
-    /** Gets the number of calendars in the repository. */
-    static all(): Calendar[] {
+    /** Returns a cloned array of all calendars in the repository. */
+    static get all(): Calendar[] {
         return [...calendars];
     }
 }
 
 // Include [GregorianCalendar] by default
-const g = new GregorianCalendar();
-Calendars.add(g);
-Calendars.default = g;
+Calendars.add(defaultCalendar);

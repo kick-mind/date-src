@@ -5,9 +5,9 @@ import {
   MsPerDay,
   throwInvalidParam,
   timeToTicks,
-} from "../../common";
-import { Calendar, getTimeUnits, _maxYear } from "../calendar";
-import { Calendars } from "../calendars";
+} from '../../common';
+import { Calendar, getTimeUnits, _maxYear } from '../calendar';
+import { Calendars } from '../calendars';
 
 // tslint:disable: member-ordering
 // tslint:disable: variable-name
@@ -444,8 +444,8 @@ function getAbsoluteDatePersian(
     );
     let yearStart = PersianNewYearOnOrBefore(
       _persianEpoch +
-        approximateDaysFromEpochForYearStart +
-        _approximateHalfYear
+      approximateDaysFromEpochForYearStart +
+      _approximateHalfYear
     );
     yearStart += ordinalDay;
     return yearStart;
@@ -485,17 +485,17 @@ function getDateUnits(ticks: number): DateTimeUnits {
 
   const ordinalDay = Math.trunc(
     NumDays -
-      getNumberOfDays(
-        getTimestamp({
-          year: y,
-          month: 1,
-          day: 1,
-          hour: 0,
-          minute: 0,
-          second: 0,
-          ms: 0,
-        })
-      )
+    getNumberOfDays(
+      getTimestamp({
+        year: y,
+        month: 1,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0,
+        ms: 0,
+      })
+    )
   );
   du.year = y;
   du.month = monthFromOrdinalDay(ordinalDay);
@@ -503,8 +503,8 @@ function getDateUnits(ticks: number): DateTimeUnits {
   return du;
 }
 export class PersianCalendar extends Calendar {
-  constructor() {
-    super("persian", "persian");
+  constructor(id: string) {
+    super(id, 'persian');
   }
 
   addMonths(time: number, months: number): number {
@@ -543,17 +543,17 @@ export class PersianCalendar extends Calendar {
 
     const ordinalDay = Math.trunc(
       NumDays -
-        getNumberOfDays(
-          this.getTimestamp({
-            year: y,
-            month: 1,
-            day: 1,
-            hour: 0,
-            minute: 0,
-            second: 0,
-            ms: 0,
-          })
-        )
+      getNumberOfDays(
+        this.getTimestamp({
+          year: y,
+          month: 1,
+          day: 1,
+          hour: 0,
+          minute: 0,
+          second: 0,
+          ms: 0,
+        })
+      )
     );
     return ordinalDay;
   }
@@ -570,7 +570,7 @@ export class PersianCalendar extends Calendar {
   isLeapYear(year: number): boolean {
     return (
       getAbsoluteDatePersian(year + 1, 1, 1) -
-        getAbsoluteDatePersian(year, 1, 1) ==
+      getAbsoluteDatePersian(year, 1, 1) ==
       366
     );
   }
@@ -583,6 +583,9 @@ export class PersianCalendar extends Calendar {
     return { ...getDateUnits(ts), ...getTimeUnits(ts) };
   }
 }
-declare var Jss_core: any;
-Jss_core.PersianCalendar  = PersianCalendar;
-Calendars.add(new Jss_core.PersianCalendar());
+
+Calendars.add(new PersianCalendar('persian'));
+// declare var jss: any;
+// if (window && window['jss']) {
+//   jss.Calendars.PersianCalendar = PersianCalendar;
+// }

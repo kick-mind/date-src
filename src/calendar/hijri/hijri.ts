@@ -7,7 +7,7 @@ import {
   timeToTicks,
 } from '../../common';
 import { Calendar, getTimeUnits } from '../calendar';
-import { Calendars } from "../calendars";
+import { Calendars } from '../calendars';
 
 const _hijriMonthDays = [
   0,
@@ -107,10 +107,13 @@ function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
   du.day = day;
   return du;
 }
+
+/** Hijri(Islamic) Calendar */
 export class HijriCalendar extends Calendar {
-  constructor(private hijriAdjustment: number) {
-    super('hijri', 'hijri');
+  constructor(id: string, private hijriAdjustment: number) {
+    super(id, 'hijri');
   }
+
   addMonths(time: number, months: number): number {
     // Get the date in Hijri calendar.
     const ut = this.getUnits(time);
@@ -140,6 +143,7 @@ export class HijriCalendar extends Calendar {
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
   }
+
   dayOfYear(time: number): number {
     let year;
     let numDays;
@@ -168,18 +172,22 @@ export class HijriCalendar extends Calendar {
 
     return numDays;
   }
+
   daysInMonth(year: number, month: number): number {
     if (month == 12) {
       return this.isLeapYear(year) ? 30 : 29;
     }
     return month % 2 == 1 ? 30 : 29;
   }
+
   daysInYear(year: number): number {
     return daysInYear(year);
   }
+
   isLeapYear(year: number): boolean {
     return isLeapYear(year);
   }
+
   getTimestamp(units: DateTimeUnits): number {
     const daysInMonth = this.daysInMonth(units.year, units.month);
     const lDate = getAbsoluteDateHijri(
@@ -198,11 +206,18 @@ export class HijriCalendar extends Calendar {
       throwInvalidParam();
     }
   }
+
   getUnits(ts: number): DateTimeUnits {
     ts = getCalendarTimestamp(ts);
     return { ...getDateUnits(ts, this.hijriAdjustment), ...getTimeUnits(ts) };
   }
 }
-declare var Jss_core: any;
-Jss_core.HijriCalendar  = HijriCalendar;
-Calendars.add(new Jss_core.HijriCalendar());
+
+for (let i = 2; i < 3; i++) {
+  Calendars.add(new HijriCalendar(`hijri${i == 0 ? '' : i}`, 0));
+}
+
+// declare var jss: any;
+// if (jss) {
+//   jss.Calendars.HijriCalendar = HijriCalendar;
+// }

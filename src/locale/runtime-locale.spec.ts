@@ -3,7 +3,7 @@ import { Calendars } from '../calendar';
 import { PersianCalendar } from '../calendar/persian/persian';
 import { RuntimeLocale } from './runtime-locale';
 
-Calendars.add(new PersianCalendar());
+Calendars.add(new PersianCalendar('persian'));
 
 describe('Locale', () => {
   describe('RuntimeLocale', function () {

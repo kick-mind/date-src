@@ -1,4 +1,4 @@
-import { MonthNameFormat, WeekdayNameFormat } from '../common';
+import { deepFreeze, MonthNameFormat, WeekdayNameFormat, ZoneNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
 import { Zone } from '../zone';
@@ -27,33 +27,33 @@ export interface LocaleData {
 
 /** A locale with predefined(fixed) data. */
 export class StaticLocale extends Locale {
-    private _data: LocaleData;
+    #data: LocaleData;
 
     constructor(data: LocaleData) {
         super(data.id, data.name, { weekStart: data.weekStart });
-        this._data = data;
-        Object.freeze(data); // TODO: Do a deep data freezing!
+        this.#data = data;
+        deepFreeze(data);
     }
 
     getMonthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
         const idx = getFormatIndex(format);
         try {
-            const names = [...this._data.months[calendar.type][idx]];
+            const names = [...this.#data.months[calendar.type][idx]];
             if (Array.isArray(names)) {
                 return names;
             }
             throw Error();
         } catch {
-            throw Error('Month names for this calendar is missing');
+            throw Error('Missing month names');
         }
     }
 
-    getWeekdayNames(format?: WeekdayNameFormat): string[] {
+    getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
         const idx = getFormatIndex(format);
-        return [...this._data.weekdays[idx]];
+        return [...this.#data.weekdays[idx]];
     }
 
-    getZoneName(zone: Zone, format: 'long' | 'short'): string {
+    getZoneName(zone: Zone, format: ZoneNameFormat = 'long'): string {
         return zone.id;
     }
 }

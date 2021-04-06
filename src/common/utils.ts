@@ -82,3 +82,15 @@ export function timeToTicks(
   }
   throwInvalidParam();
 }
+
+/** Freezes an object deeply */
+export function deepFreeze(obj: any) {
+  for (const name of Object.getOwnPropertyNames(obj)) {
+    let v = obj[name];
+    if (v && typeof v === 'object') {
+      deepFreeze(v);
+    }
+  }
+
+  return Object.freeze(obj);
+}

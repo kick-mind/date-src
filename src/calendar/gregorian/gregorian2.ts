@@ -119,8 +119,8 @@ function dateToTicks(year: number, month: number, day: number): number {
 
 /** Gregorian2 calendar */
 export class GregorianCalendar2 extends Calendar {
-  constructor() {
-    super('gregorian2', 'gregory');
+  constructor(id: string) {
+    super(id, 'gregory');
   }
 
   addMonths(time: number, months: number): number {
@@ -186,6 +186,9 @@ export class GregorianCalendar2 extends Calendar {
   }
 }
 
-declare var Jss_core: any;
-Jss_core.GregorianCalendar2  = GregorianCalendar2;
-Calendars.add(new Jss_core.GregorianCalendar2());
+Calendars.add(new GregorianCalendar2('gregorian2'));
+
+// declare var jss: any;
+// if (jss) {
+//   jss.Calendars.GregorianCalendar2 = GregorianCalendar2;
+// }
