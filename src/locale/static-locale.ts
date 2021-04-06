@@ -1,7 +1,7 @@
 import { MonthNameFormat, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
-import { Zone } from 'src/zone';
+import { Zone } from '../zone';
 
 let getFormatIndex = (f: MonthNameFormat) => f == 'narrow' ? 2 : (f == 'short' ? 1 : 0);
 

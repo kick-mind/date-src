@@ -2,7 +2,7 @@ import { Locales } from '../locales';
 import { StaticLocale } from '../static-locale';
 
 Locales.add(new StaticLocale({
-    id: 'fa.s',
+    id: 'fa:s',
     name: 'fa',
     weekStart: 6,
     weekdays: [

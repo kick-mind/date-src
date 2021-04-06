@@ -1,10 +1,10 @@
 import { hasIntl, vObj } from '../common';
 import { Locale } from './locale';
 import { RuntimeLocale } from './runtime-locale';
-import { fallbackLocale } from './fallback';
+import { FALLBACK_LOCALE } from './fallback';
 
 let sysLocale: Locale = hasIntl() ? new RuntimeLocale('system', null, { weekStart: 0 }) : undefined;
-let defLocale: Locale = sysLocale || fallbackLocale;
+let defLocale: Locale = sysLocale || FALLBACK_LOCALE;
 let repo = [defLocale];
 
 /** 

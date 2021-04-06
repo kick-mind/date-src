@@ -9,7 +9,7 @@ const
     wn = w.map(x => m[0]);
 
 /** A fallback locale. */
-export const fallbackLocale = new StaticLocale({
+export const FALLBACK_LOCALE = new StaticLocale({
     id: 'fallback',
     name: 'fallback',
     weekStart: 0,
