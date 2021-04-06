@@ -1,14 +1,17 @@
 import { hasIntl, vObj } from '../common';
 import { Locale } from './locale';
 import { RuntimeLocale } from './runtime-locale';
-import { FallbackLocale } from './fallback';
-import { StaticLocale } from './static-locale';
+import { fallbackLocale } from './fallback';
 
-let repo: Locale[] = [];
-let defLocale = hasIntl() ? new RuntimeLocale('system', null, { weekStart: 0 }) : FallbackLocale;
+let repo: Locale[] = [fallbackLocale];
+let defLocale = hasIntl() ? new RuntimeLocale('system', null, { weekStart: 0 }) : fallbackLocale;
 let sysLocale = defLocale instanceof RuntimeLocale ? defLocale : undefined;
 
-/** A class with some static methods for managing locales. */
+/** 
+ * A class with some static methods for managing locales. 
+ * @public
+ * @abstract
+ */
 export abstract class Locales {
     /** Gets or sets the default locale. */
     static set default(l: Locale) {
@@ -60,11 +63,6 @@ export abstract class Locales {
             l = l || matchs[0];
         }
         return l;
-    }
-
-    /** Clears the locales repository. */
-    static clear() {
-        repo = [];
     }
 
     /** Returns a cloned array of all locales in the repository. */
