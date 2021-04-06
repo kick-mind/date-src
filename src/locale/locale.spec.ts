@@ -1,14 +1,14 @@
 import assert from 'assert';
-import { JsLocale, Locales } from '.';
 import { Calendars } from '../calendar';
 import { PersianCalendar } from '../calendar/persian/persian';
+import { RuntimeLocale } from './runtime-locale';
 
 Calendars.add(new PersianCalendar());
 
 describe('Locale', () => {
-  describe('JsLocale', function () {
+  describe('RuntimeLocale', function () {
     it('can get long month names of the gregorian calendar', () => {
-      const l1 = new JsLocale('fa', { weekStart: 6 });
+      const l1 = new RuntimeLocale('fa', { weekStart: 6 });
       assert.strictEqual(l1.getMonthNames(Calendars.findById('gregorian'), 'long'), [
         'ژانویه',
         'فوریه',
@@ -26,7 +26,7 @@ describe('Locale', () => {
     });
 
     it('can get long month names of the persian calendar', () => {
-      const l1 = new JsLocale('en', { weekStart: 6 });
+      const l1 = new RuntimeLocale('en', { weekStart: 6 });
       assert.strictEqual(l1.getMonthNames(Calendars.findById('persian'), 'long'), [
         'Farvardin',
         'Ordibehesht',
@@ -44,7 +44,7 @@ describe('Locale', () => {
     });
 
     it('can get short month names', () => {
-      const l1 = new JsLocale('en', { weekStart: 6 });
+      const l1 = new RuntimeLocale('en', { weekStart: 6 });
       assert.strictEqual(l1.getMonthNames(Calendars.findById('gregorian'), 'short'), [
         'Jan',
         'Feb',
@@ -62,7 +62,7 @@ describe('Locale', () => {
     });
 
     it('can get narrow month names', () => {
-      const l1 = new JsLocale('fa', { weekStart: 6 });
+      const l1 = new RuntimeLocale('fa', { weekStart: 6 });
       assert.strictEqual(l1.getMonthNames(Calendars.findById('gregorian'), 'narrow'), [
         'ژ',
         'ف',
@@ -80,7 +80,7 @@ describe('Locale', () => {
     });
 
     it('can get long weekday names', () => {
-      const l1 = new JsLocale('fa', { weekStart: 6 });
+      const l1 = new RuntimeLocale('fa', { weekStart: 6 });
       assert.strictEqual(l1.getWeekdayNames(), [
         'شنبه',
         'یکشنبه',
@@ -93,7 +93,7 @@ describe('Locale', () => {
     });
 
     it('can get narrow weekday names', () => {
-      const l1 = new JsLocale('fa', { weekStart: 6 });
+      const l1 = new RuntimeLocale('fa', { weekStart: 6 });
       assert.strictEqual(l1.getWeekdayNames('narrow'), [
         'ش',
         'ی',
