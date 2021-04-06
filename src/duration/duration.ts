@@ -1,4 +1,4 @@
-import { verifyObject, verifyType } from '../common';
+import { vObj, vType } from '../common';
 
 let F = Math.floor;
 
@@ -7,7 +7,7 @@ export class Duration {
     private _ms: number;
 
     constructor(ms: number) {
-        verifyType(ms, 'number');
+        vType(ms, 'number');
         this._ms = ms;
     }
 

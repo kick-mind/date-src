@@ -1,16 +1,17 @@
-import { verifyObject } from '../common/utils';
+import { hasIntl, vObj } from '../common';
 import { Locale } from './locale';
-import { JsLocale } from './js-locale';
+import { RuntimeLocale } from './runtime-locale';
+import { FallbackLocale } from './fallback-locale';
 
 let repo: Locale[] = [];
-let sysLocale: JsLocale; // System Locale
-let defLocale: Locale;
+let defLocale = hasIntl() ? new RuntimeLocale(null, { weekStart: 0 }) : new FallbackLocale();
+let sysLocale = defLocale instanceof RuntimeLocale ? defLocale : undefined;
 
 /** A class with some static methods for managing locales. */
 export abstract class Locales {
     /** Gets or sets the default locale. */
     static set default(l: Locale) {
-        verifyObject(l, Locale);
+        vObj(l, Locale);
         defLocale = l;
     }
 
@@ -19,19 +20,14 @@ export abstract class Locales {
         return defLocale;
     }
 
-    /** Gets the system locale. */
-    static get system(): Locale {
-        if (!sysLocale) {
-            let f = new Intl.DateTimeFormat([], { weekday: 'long' });
-            let id = f.resolvedOptions().locale; // system locale id
-            sysLocale = new JsLocale(id, { weekStart: 0 }); // We can not compute the weekstart by javascript.
-        }
+    /** Tries to return system locale. If Javascript Intl API is not supported, this method retuens undefined. */
+    static getSystemLocale(): Locale {
         return sysLocale;
     }
 
     /** Adds a [Locale] to the locales repository. */
     static add(l: Locale) {
-        verifyObject(l, Locale);
+        vObj(l, Locale);
         if (!repo.find(x => x === l)) {
             repo.push(l);
         }
@@ -42,21 +38,23 @@ export abstract class Locales {
      * @public
      */
     static find(id: string, opts?: { throwError: boolean }): Locale {
-        let l = repo.find(x => x.id === id);
+        let l = repo.find(x => x.resolvedId === id);
         if (!l && opts && opts.throwError) {
             throw new Error('Locale not found');
         }
         return l;
     }
 
+    // TODO: Incomplete doc
     /**
-     * Tries to find a locale in the repository. If fails, creates a JsLocale, adds it to the repository and return it.
+     * Tries to resolve a locale. It first tries to create a RuntimeLocale.
+     * If fails (you runtime environment doesn't support Intl API) ... .
      * @public
      */
     static resolve(id: string, opts?: { weekStart: number }): Locale {
         let l = this.find(id);
         if (!l) {
-            l = new JsLocale(id, { weekStart: opts?.weekStart ?? 0 });
+            l = new RuntimeLocale(id, { weekStart: opts?.weekStart ?? 0 });
         }
         return l;
     }
@@ -72,5 +70,4 @@ export abstract class Locales {
     }
 }
 
-Locales.add(Locales.system);
-Locales.default = Locales.system;
+Locales.add(Locales.default);

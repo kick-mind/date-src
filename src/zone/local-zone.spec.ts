@@ -2,17 +2,20 @@
  * Before write any tests for zones, read the following article:
  * https://moment.github.io/luxon/docs/manual/zones.html
  */
-import { LocalZone } from './local-zone';
+import assert from 'assert';
+import { Locales } from '../locale';
+import { Zones } from './zones';
 
-describe('Local Zone', () => {
-    it('Should display local name correctly', () => {
-        const z = LocalZone.instance;
-        
-        const longName = z.getName();
-        expect(longName).toBe('Asia/Tehran');
-        
-        const shortName = z.getName('short');
-        expect(shortName).toBeDefined('Asia/Tehran');
+describe('Zone', () => {
+    describe('LocalZone', () => {
+        it('can detect local zone (Iran/Tehran)', () => {
+            const z = Zones.local;
+            assert.strictEqual(z.id, 'Local');
+            assert.strictEqual(z.getOffset(new Date().valueOf()), 270);
+            // assert.strictEqual(z.getName('long'), 'Iran Daylight Time');
+            assert.strictEqual(z.getName('long', Locales.find('fa-IR', {throwError : true})), 'وقت تابستانی ایران');
+        });
     });
-
 });
+
+

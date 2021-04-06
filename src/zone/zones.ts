@@ -1,17 +1,18 @@
 import { FixedZone } from './fixed-zone';
 import { IANAZone } from './iana-zone';
 import { LocalZone } from './local-zone';
-import { JsIANAZone } from './js-iana-zone';
+import { RuntimeIANAZone } from './runtime-iana-zone';
 import { Zone } from './zone';
 
 const cache: { [key: string]: IANAZone } = {};
 const utc = new FixedZone('UTC', 'Coordinated Universal Time', 'UTC', 0);
+const local = LocalZone.instance;
 
 /** A class with some static methods for managing zones. */
 export abstract class Zones {
     /** Gets the zone of this computer. */
     static get local(): Zone {
-        return LocalZone.instance;
+        return local;
     }
 
     /** Returns UTC zone. */
@@ -26,8 +27,7 @@ export abstract class Zones {
         if (z) { return z; }
 
         try {
-            z = new JsIANAZone(id);
-            cache[key] = z;
+            z = cache[key] = new RuntimeIANAZone(id);
         } catch {
             if (opts && opts.throwError) { throw new Error('Zone not found.'); }
         }

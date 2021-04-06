@@ -107,7 +107,7 @@ function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
   du.day = day;
   return du;
 }
-export class Hijri extends Calendar {
+export class HijriCalendar extends Calendar {
   constructor(private hijriAdjustment: number) {
     super('hijri', 'hijri');
   }

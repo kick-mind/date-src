@@ -39,7 +39,7 @@ function getDateUnits(ts: number): DateTimeUnits {
 /** Gregorian calendar */
 export class GregorianCalendar extends Calendar {
   constructor() {
-    super('gregorian', 'gregorian');
+    super('gregorian', 'gregory');
   }
 
   addMonths(time: number, months: number): number {

@@ -120,7 +120,7 @@ function dateToTicks(year: number, month: number, day: number): number {
 /** Gregorian2 calendar */
 export class GregorianCalendar2 extends Calendar {
   constructor() {
-    super('gregorian2', 'gregorian');
+    super('gregorian2', 'gregory');
   }
 
   addMonths(time: number, months: number): number {

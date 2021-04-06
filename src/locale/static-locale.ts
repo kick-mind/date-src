@@ -1,6 +1,7 @@
 import { MonthNameFormat, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
+import { Zone } from 'src/zone';
 
 let computeFormatIndex = (f: MonthNameFormat) => f == 'narrow' ? 2 : (f == 'short' ? 1 : 0);
 
@@ -21,8 +22,8 @@ export interface LocaleData {
     };
 }
 
-/** A locale provided in the package (package-based locale). */
-export class PackageLocale extends Locale {
+/** A locale with predefined(fixed) data. */
+export class StaticLocale extends Locale {
     private _data: LocaleData;
 
     constructor(data: LocaleData) {
@@ -39,5 +40,9 @@ export class PackageLocale extends Locale {
     getWeekdayNames(format?: WeekdayNameFormat): string[] {
         const idx = computeFormatIndex(format);
         return [...this._data.weekdays[idx]];
+    }
+
+    getZoneName(zone: Zone, format: 'long' | 'short'): string {
+        return zone.id;
     }
 }

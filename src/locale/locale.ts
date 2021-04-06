@@ -1,5 +1,6 @@
-import { IsInt, MonthNameFormat, verifyClassCall, WeekdayNameFormat } from '../common';
+import { IsInt, MonthNameFormat, vClsCall, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
+import { Zone } from 'src/zone';
 
 
 /** An abstract base class for all locales (PackageLocale, SystemLocale) */
@@ -9,7 +10,7 @@ export abstract class Locale {
 
     constructor(id: string, data: { weekStart: number }) {
         this._id = id;
-        verifyClassCall(this, Locale);
+        vClsCall(this, Locale);
 
         let ws = data?.weekStart;
         if (!IsInt(ws) || ws < 0 || ws > 6) {
@@ -18,8 +19,8 @@ export abstract class Locale {
         this._ws = ws;
     }
 
-    /** Gets the locale ID */
-    get id(): string {
+    /** Gets the resolved locale ID */
+    get resolvedId(): string {
         return this._id;
     }
 
@@ -33,5 +34,9 @@ export abstract class Locale {
 
     /** Returns the weekday names */
     abstract getWeekdayNames(format?: WeekdayNameFormat): string[];
+
+    
+    /** Gets the name of a zone */
+    abstract getZoneName(zone: Zone, format: 'long' | 'short'): string;
 }
 

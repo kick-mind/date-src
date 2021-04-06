@@ -1,6 +1,7 @@
 {
     "extends": "tslint:recommended",
     "rules": {
+        "only-arrow-functions": false,
         "prefer-const": false,
         "one-variable-per-declaration": false,
         "triple-equals": false,
@@ -75,15 +76,7 @@
                 "always"
             ]
         },
-        "space-before-function-paren": {
-            "options": {
-                "anonymous": "never",
-                "asyncArrow": "always",
-                "constructor": "never",
-                "method": "never",
-                "named": "never"
-            }
-        },
+        "space-before-function-paren": false,
         "typedef": [
             false,
             "call-signature"
