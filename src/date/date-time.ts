@@ -7,7 +7,6 @@ const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,
 const II = IsInt;
 const IO = IsObj;
 const IIN = (x: any) => x == null || IsInt(x); /** Is integer or null or undefined */
-const C = (x: any) => ({ ...x }); // Clone object (shallow)
 
 /** DateTime create options. */
 export interface DateTimeCreateOptions {
@@ -58,22 +57,22 @@ export class DateTime {
         if (a.length == 0) {
             // 1'st overload
             ts = now();
-        } else if (IO(a0)) {
+        } else if (a.length == 1 && IO(a0)) {
             // 2'nd overload
             ts = now();
-            opts = C(a1);
+            opts = a0;
         } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) {
             // 3'nd overload
             year = a0; month = a1; day = a2; hour = a3; minute = a4; second = a5; ms = a6;
-            opts = C(a7);
-        } else if (IO(a0) && II(a1), II(a2), IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) {
+            opts = a7;
+        } else if (IO(a0) && II(a1) && II(a2) && IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) {
             // 4'rd overload
             opts = a0;
             year = a1; month = a2; day = a3; hour = a4; minute = a5; second = a6; ms = a7;
         } else if (II(a0) && (a1 == null || IO(a1))) {
             // 5'th overload (create by timestamp)
             ts = a0;
-            opts = C(a1);
+            opts = a1;
         } else {
             throwInvalidParam();
         }
@@ -100,7 +99,7 @@ export class DateTime {
         if (!z) {
             z = Zones.local;
         } else if (IsStr(z)) {
-            z = Zones.find(z, o);
+            z = Zones.resolve(z, o);
         } else {
             vObj(z, Zone, true, 'Invalid zone');
         }
@@ -111,7 +110,7 @@ export class DateTime {
         if (!l) {
             l = Locales.default;
         } else if (IsStr(l)) {
-            l = Locales.resolve(l, { weekStart: 0 });
+            l = Locales.resolve(l, { weekStart: 0, throwError: true });
         } else {
             vObj(l, Locale, true, 'Invalid locale');
         }
@@ -122,7 +121,7 @@ export class DateTime {
         if (!c) {
             c = Calendars.default;
         } else if (IsStr(c)) {
-            c = Calendars.findById(c, o);
+            c = Calendars.find(c, o);
         } else {
             vObj(c, Calendar, true, 'Invalid calendar');
         }
@@ -151,7 +150,7 @@ export class DateTime {
      * @public
      */
     static fromJsDate(date: Date, opts?: { zone?: Zone | string, locale?: Locale | string }) {
-        return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.findById('gregorian') });
+        return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.find('gregorian') });
     }
 
     //#endregion
@@ -463,7 +462,7 @@ export class DateTime {
                 let z = zone();
                 return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
             },
-            Z: () => this.#z.id, // Zone ID: America/New_York
+            Z: () => this.#z.name, // Zone ID: America/New_York
             ZZ: () => this.#l.getZoneName(this.#z, 'short'), // Short zone name: EST
             ZZZ: () => this.#l.getZoneName(this.#z, 'long'), // Long zone name: Eastern Standard Time          
         };
@@ -487,7 +486,8 @@ export class DateTime {
      */
     toObject(): DateTimeUnits {
         if (this.#_.units == null) {
-            this.#_.units = this.#c.getUnits(this.#_.ts + this.#z.getOffset(this.#_.ts));
+            let offset = this.#z.getOffset(this.#_.ts) * 60 * 1000;
+            this.#_.units = this.#c.getUnits(this.#_.ts + offset);
         }
         return this.#_.units;
     }

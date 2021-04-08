@@ -67,31 +67,35 @@ export function getTimeUnits(time: number): TimeUnits {
     ms: ms(time),
   };
 }
+
 /**
- * An base class for all calendars.
+ * A base class for all calendars.
  * @public
  */
 export abstract class Calendar {
-  private _id: string;
-  private _type: string;
+  #id: string;
+  #type: string;
+
   /**
    * Calendar's ID.
    */
   get id() {
-    return this._id;
+    return this.#id;
   }
+
   /**
    * Calendar's type (Gregorian, Chiness, Persian, Islamic, ...).
    * It is possible that you have multiple calendars with the same type and different ID's (multiple implementation for a specific calendar).
    */
   get type() {
-    return this._type;
+    return this.#type;
   }
 
   constructor(id: string, type: string) {
-    this._id = id;
-    this._type = type;
+    this.#id = id;
+    this.#type = type;
   }
+
   /** Get the week number of the week year (1 to 52). */
   weekNumber(time: number, firstDayOfWeek: number, offset: number = 1): number {
     let fn = (tm: number, firstDay: number, fullDays: number): number => {
@@ -192,18 +196,25 @@ export abstract class Calendar {
 
   /** Returns the number of days in this DateTime's month. */
   abstract addMonths(time: number, months: number): number;
+
   /** */
   abstract addYears(time: number, years: number): number;
+
   /** Gets the day of the year (1 to 366). */
   abstract dayOfYear(time: number): number;
+
   /** Returns the number of days in this DateTime's month. */
   abstract daysInMonth(year: number, month: number): number;
+
   /** Returns the number of days in this DateTime's year. */
   abstract daysInYear(year: number): number;
+
   /** Returns true if this DateTime is in a leap year, false otherwise. */
   abstract isLeapYear(year: number): boolean;
+
   /** */
   abstract getTimestamp(units: DateTimeUnits): number;
+
   /** */
   abstract getUnits(ts: number): DateTimeUnits;
 }

@@ -1,17 +1,26 @@
-import { Locale } from '../locale';
-
-/** An abstract base class for all zones */
+/** 
+ * An abstract base class for all zones 
+ * @public
+ * @abstract
+ */
 export abstract class Zone {
-    #id: string;
+    #name: string;
 
-    constructor(id: string) {
-        this.#id = id;
+    constructor(name: string) {
+        this.#name = name;
     }
 
-    get id() {
-        return this.#id;
+    /** 
+     * Gets the zone name
+     * @public
+     */
+    get name() {
+        return this.#name;
     }
 
-    /** Gets the offset of the zone (in minutes) */
+    /** 
+     * Returns the offset of the zone (in minutes)
+     * @public
+     */
     abstract getOffset(timestamp: number): number;
 }
