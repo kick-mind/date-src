@@ -68,8 +68,9 @@ export function getTimeUnits(time: number): TimeUnits {
     ms: ms(time),
   };
 }
+
 /**
- * An base class for all calendars.
+ * A base class for all calendars.
  * @public
  */
 export abstract class Calendar {

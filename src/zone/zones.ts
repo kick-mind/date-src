@@ -1,35 +1,35 @@
 import { FixedZone } from './fixed-zone';
-import { IANAZone } from './iana-zone';
 import { LocalZone } from './local-zone';
 import { RuntimeIANAZone } from './runtime-iana-zone';
 import { Zone } from './zone';
 
-const cache: { [key: string]: IANAZone } = {};
-const utc = new FixedZone('UTC', 'Coordinated Universal Time', 'UTC', 0);
-const local = LocalZone.instance;
+const cache: { [key: string]: Zone } = {
+    utc: new FixedZone('UTC', 0),
+    local: new LocalZone()
+};
 
 /** A class with some static methods for managing zones. */
 export abstract class Zones {
-    /** Gets the zone of this computer. */
+    /** Gets the system's local zone. */
     static get local(): Zone {
-        return local;
+        return cache.local;
     }
 
-    /** Returns UTC zone. */
+    /** Gets UTC zone. */
     static get utc(): Zone {
-        return utc;
+        return cache.utc;
     }
 
-    /** Finds an IANA time zone by id. */
-    static find(id: string, opts?: { throwError: boolean }): Zone {
-        let key = id.toLowerCase();
+    /** Tries to resolve a time zone by it's name. */
+    static resolve(name: string, opts?: { throwError: boolean }): Zone {
+        let key = name.toLowerCase();
         let z = cache[key];
-        if (z) { return z; }
-
-        try {
-            z = cache[key] = new RuntimeIANAZone(id);
-        } catch {
-            if (opts && opts.throwError) { throw new Error('Zone not found.'); }
+        if (!z) {
+            try {
+                z = cache[key] = new RuntimeIANAZone(name);
+            } catch (e) {
+                if (opts && opts.throwError) { throw e; }
+            }
         }
 
         return z;

@@ -100,7 +100,7 @@ export class DateTime {
         if (!z) {
             z = Zones.local;
         } else if (IsStr(z)) {
-            z = Zones.find(z, o);
+            z = Zones.resolve(z, o);
         } else {
             vObj(z, Zone, true, 'Invalid zone');
         }
@@ -111,7 +111,7 @@ export class DateTime {
         if (!l) {
             l = Locales.default;
         } else if (IsStr(l)) {
-            l = Locales.resolve(l, { weekStart: 0 });
+            l = Locales.resolve(l, { weekStart: 0, throwError: true });
         } else {
             vObj(l, Locale, true, 'Invalid locale');
         }
@@ -122,7 +122,7 @@ export class DateTime {
         if (!c) {
             c = Calendars.default;
         } else if (IsStr(c)) {
-            c = Calendars.findById(c, o);
+            c = Calendars.find(c, o);
         } else {
             vObj(c, Calendar, true, 'Invalid calendar');
         }
@@ -151,7 +151,7 @@ export class DateTime {
      * @public
      */
     static fromJsDate(date: Date, opts?: { zone?: Zone | string, locale?: Locale | string }) {
-        return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.findById('gregorian') });
+        return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.find('gregorian') });
     }
 
     //#endregion
@@ -463,7 +463,7 @@ export class DateTime {
                 let z = zone();
                 return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
             },
-            Z: () => this.#z.id, // Zone ID: America/New_York
+            Z: () => this.#z.name, // Zone ID: America/New_York
             ZZ: () => this.#l.getZoneName(this.#z, 'short'), // Short zone name: EST
             ZZZ: () => this.#l.getZoneName(this.#z, 'long'), // Long zone name: Eastern Standard Time          
         };

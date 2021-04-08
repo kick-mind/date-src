@@ -8,8 +8,8 @@ Calendars.add(new PersianCalendar('persian'));
 describe('Locale', () => {
   describe('RuntimeLocale', function () {
     it('can get long month names of the gregorian calendar', () => {
-      const l1 = new RuntimeLocale('fa-IR.r', 'fa', { weekStart: 6 });
-      assert.deepStrictEqual(l1.getMonthNames(Calendars.findById('gregorian'), 'long'), [
+      const l1 = new RuntimeLocale('fa', { weekStart: 6 });
+      assert.deepStrictEqual(l1.getMonthNames(Calendars.find('gregorian'), 'long'), [
         'ژانویه',
         'فوریه',
         'مارس',
@@ -26,8 +26,8 @@ describe('Locale', () => {
     });
 
     it('can get long month names of the persian calendar (en locale)', () => {
-      const l1 = new RuntimeLocale('fa-IR.r', 'en', { weekStart: 6 });
-      const c = Calendars.findById('persian');
+      const l1 = new RuntimeLocale('en', { weekStart: 6 });
+      const c = Calendars.find('persian');
       const months = l1.getMonthNames(c, 'long');
       assert.deepStrictEqual(months, [
         'Farvardin',
@@ -46,8 +46,8 @@ describe('Locale', () => {
     });
 
     it('can get short month names (en locale)', () => {
-      const l1 = new RuntimeLocale('en.r', 'en', { weekStart: 6 });
-      assert.deepStrictEqual(l1.getMonthNames(Calendars.findById('gregorian'), 'short'), [
+      const l1 = new RuntimeLocale('en', { weekStart: 6 });
+      assert.deepStrictEqual(l1.getMonthNames(Calendars.find('gregorian'), 'short'), [
         'Jan',
         'Feb',
         'Mar',
@@ -64,8 +64,8 @@ describe('Locale', () => {
     });
 
     it('can get narrow month names', () => {
-      const l1 = new RuntimeLocale('fa-IR.r', 'fa', { weekStart: 6 });
-      assert.deepStrictEqual(l1.getMonthNames(Calendars.findById('gregorian'), 'narrow'), [
+      const l1 = new RuntimeLocale('fa', { weekStart: 6 });
+      assert.deepStrictEqual(l1.getMonthNames(Calendars.find('gregorian'), 'narrow'), [
         'ژ',
         'ف',
         'م',
@@ -82,7 +82,7 @@ describe('Locale', () => {
     });
 
     it('can get long weekday names', () => {
-      const l1 = new RuntimeLocale('fa-IR.r', 'fa', { weekStart: 6 });
+      const l1 = new RuntimeLocale('fa', { weekStart: 6 });
       assert.deepStrictEqual(l1.getWeekdayNames(), [
         'شنبه',
         'یکشنبه',
@@ -95,7 +95,7 @@ describe('Locale', () => {
     });
 
     it('can get narrow weekday names', () => {
-      const l1 = new RuntimeLocale('fa-IR.r', 'fa', { weekStart: 6 });
+      const l1 = new RuntimeLocale('fa', { weekStart: 6 });
       assert.deepStrictEqual(l1.getWeekdayNames('narrow'), [
         'ش',
         'ی',

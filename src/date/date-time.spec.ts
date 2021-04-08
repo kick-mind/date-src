@@ -31,7 +31,7 @@ describe('DateTime', () => {
   });
 
   it('can format dates', () => {
-    const l = Locales.find('fa-IR');
+    const l = Locales.resolve('fa-IR');
     const z = Zones.utc;
     const d = new DateTime(2001, 9, 8, 18, 5, 4, 90, { locale: l, zone: z });
     assert.strictEqual(d.format('Y YY YYYY'), '2001 01 2001');

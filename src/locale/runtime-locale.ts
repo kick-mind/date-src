@@ -24,7 +24,7 @@ function isSupportedCalendar(calendarName: string) {
 
 // Cache
 let cache: {
-    [localeId: string]: {
+    [localeResolvedName: string]: {
         weekday?: {
             [format: string]: string[]
         },
@@ -43,15 +43,15 @@ let cache: {
 
 /** A locale created by using javascript Intl API. */
 export class RuntimeLocale extends Locale {
-    constructor(id: string, name: string | null, data: { weekStart: number }) {
-        let res = verifyLocale(name, true, true);
-        super(id, res.resolvedName, data);
-        cache[id] = cache[id] || { month: {}, weekday: {}, zone: {} };
+    constructor(name: string | null, data: { weekStart: number }) {
+        let { resolvedName } = verifyLocale(name, true, true);
+        super(resolvedName, data);
+        cache[resolvedName] = cache[resolvedName] || { month: {}, weekday: {}, zone: {} };
     }
 
     getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
         let name = this.resolvedName;
-        let res = cache[this.id].weekday[format];
+        let res = cache[name].weekday[format];
         if (!res) {
             // create/cache weekday names
             let f = new Intl.DateTimeFormat(name, { weekday: format });
@@ -98,8 +98,8 @@ export class RuntimeLocale extends Locale {
 
     getZoneName(zone: Zone, format: 'long' | 'short'): string {
         let name = this.resolvedName,
-            zId = zone.id,
-            cacheZone = cache[this.id].zone;
+            zId = zone.name,
+            cacheZone = cache[name].zone;
         cacheZone[zId] = cacheZone[zId] || {};
         let formatter = cacheZone[zId][format];
         if (!formatter) {

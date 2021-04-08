@@ -3,16 +3,19 @@ import { IANAZone } from './iana-zone';
 /** formatters cache */
 let cache: { [zoneId: string]: Intl.DateTimeFormat } = {};
 
-/** An IANA zone created by using Javascript Intl API */
+/** 
+ * An IANA zone created by using Javascript Intl API 
+ * @public
+ */
 export class RuntimeIANAZone extends IANAZone {
-    constructor(id: string) {
-        super(id);
-        let key = id.toLowerCase();
+    constructor(name: string) {
+        super(name);
+        let key = name.toLowerCase();
 
         if (!cache[key]) {
             try {
                 cache[key] = new Intl.DateTimeFormat([], {
-                    timeZone: id,
+                    timeZone: name,
                     hour12: false,
                     year: 'numeric',
                     month: 'numeric',
@@ -29,7 +32,7 @@ export class RuntimeIANAZone extends IANAZone {
     }
 
     getOffset(timestamp: number): number {
-        const parts = cache[this.id.toLowerCase()].formatToParts(new Date(timestamp));
+        const parts = cache[this.name.toLowerCase()].formatToParts(new Date(timestamp));
         const units = ['year', 'month', 'day', 'hour', 'minute', 'second'].map(key => parseInt(parts.find(x => x.type === key).value, 10));
 
         // Workaround for the same behavior in different node version
