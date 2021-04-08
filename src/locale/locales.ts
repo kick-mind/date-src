@@ -55,8 +55,8 @@ export abstract class Locales {
     }
 
     /**
-     * Tries to resolve a locale. It first tries to find the locale in the repository.
-     * If find operation fails, it tries to create a RuntimeLocale (a locale created by javascript Intl API).
+     * Tries to resolve a locale.  
+     * It first tries to find the locale in the repository. If find operation fails, it tries to create a RuntimeLocale (a locale created by using javascript Intl API).
      * If creating RuntimeLocale fails, this method returns undefined or throws an error (based on "opts.throwError" parameter)
      * @public
      * @static
@@ -64,11 +64,15 @@ export abstract class Locales {
     static resolve(name: string, opts?: { weekStart?: number, throwError?: boolean }): Locale {
         let l = repository.find(x => x.resolvedName.toLowerCase() === name.toLowerCase());
         if (!l) {
-            try {
-                l = new RuntimeLocale(name, { weekStart: opts?.weekStart || 0 });
-                repository.push(l);
-            } catch (e) {
-                if (opts && opts.throwError) { throw e; }
+            if (hasIntl()) {
+                try {
+                    l = new RuntimeLocale(name, { weekStart: opts?.weekStart || 0 });
+                    repository.push(l);
+                } catch (e) {
+                    if (opts && opts.throwError) { throw e; }
+                }
+            } else {
+                throw Error('Could not resolve locale');
             }
         }
 
