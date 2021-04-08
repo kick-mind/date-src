@@ -1,10 +1,11 @@
 import { hasIntl, vObj } from '../common';
+import { FALLBACK_LOCALE } from './fallback';
 import { Locale } from './locale';
 import { RuntimeLocale } from './runtime-locale';
 
 let sysLocale: Locale = hasIntl() ? new RuntimeLocale(null, { weekStart: 0 }) : undefined;
-let defLocale: Locale = sysLocale;
-let repository = defLocale ? [defLocale] : [];
+let defLocale: Locale = sysLocale || FALLBACK_LOCALE;
+let repository = [defLocale];
 
 /** 
  * A class with some static methods for managing locales. 
@@ -32,11 +33,11 @@ export abstract class Locales {
     }
 
     /**
-     * Tries to return system locale. If Javascript Intl API is not supported, this method retuens undefined.
+     * Gets the system locale. If Javascript Intl API is not supported, this method retuens undefined.
      * @public
      * @static
      */
-    static getSystemLocale(): Locale {
+    static get system(): Locale {
         return sysLocale;
     }
 
@@ -48,7 +49,7 @@ export abstract class Locales {
     static add(l: Locale) {
         vObj(l, Locale);
         if (repository.find(x => x.resolvedName === l.resolvedName)) {
-            throw Error('Locale with the same (resolved) name exist');
+            throw Error('Locale with the same name exist');
         }
         repository.push(l);
     }
