@@ -6,9 +6,17 @@ import { DateTime } from './date-time';
 function assertDateEquality(date: Date, dateTime: DateTime) {
   assert.deepStrictEqual(
     [dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.ms],
+    [date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()]
+  );
+}
+
+function assertUtcDateEquality(date: Date, dateTime: DateTime) {
+  assert.deepStrictEqual(
+    [dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.ms],
     [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds()]
   );
 }
+
 
 describe('DateTime', () => {
   it('create without parameter (local time zone, system locale, default calendar)', () => {
@@ -20,7 +28,7 @@ describe('DateTime', () => {
   it('create with UTC zone (system locale, default calendar)', () => {
     const d = new Date();
     const dt = new DateTime({ zone: Zones.utc });
-    assertDateEquality(d, dt);
+    assertUtcDateEquality(d, dt);
   });
 
   it('create from timestamp (local time zone, system locale, default calendar)', () => {
