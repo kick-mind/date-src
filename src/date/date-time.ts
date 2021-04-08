@@ -7,7 +7,6 @@ const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,
 const II = IsInt;
 const IO = IsObj;
 const IIN = (x: any) => x == null || IsInt(x); /** Is integer or null or undefined */
-const C = (x: any) => ({ ...x }); // Clone object (shallow)
 
 /** DateTime create options. */
 export interface DateTimeCreateOptions {
@@ -58,14 +57,14 @@ export class DateTime {
         if (a.length == 0) {
             // 1'st overload
             ts = now();
-        } else if (IO(a0)) {
+        } else if (a.length == 1 && IO(a0)) {
             // 2'nd overload
             ts = now();
-            opts = C(a1);
+            opts = a0;
         } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) {
             // 3'nd overload
             year = a0; month = a1; day = a2; hour = a3; minute = a4; second = a5; ms = a6;
-            opts = C(a7);
+            opts = a7;
         } else if (IO(a0) && II(a1), II(a2), IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) {
             // 4'rd overload
             opts = a0;
@@ -73,7 +72,7 @@ export class DateTime {
         } else if (II(a0) && (a1 == null || IO(a1))) {
             // 5'th overload (create by timestamp)
             ts = a0;
-            opts = C(a1);
+            opts = a1;
         } else {
             throwInvalidParam();
         }
@@ -487,7 +486,8 @@ export class DateTime {
      */
     toObject(): DateTimeUnits {
         if (this.#_.units == null) {
-            this.#_.units = this.#c.getUnits(this.#_.ts + this.#z.getOffset(this.#_.ts));
+            let offset = this.#z.getOffset(this.#_.ts) * 60 * 1000;
+            this.#_.units = this.#c.getUnits(this.#_.ts + offset);
         }
         return this.#_.units;
     }

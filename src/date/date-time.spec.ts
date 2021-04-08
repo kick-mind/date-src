@@ -3,31 +3,30 @@ import { Locales } from '../locale';
 import { Zones } from '../zone';
 import { DateTime } from './date-time';
 
+function assertDateEquality(date: Date, dateTime: DateTime) {
+  assert.deepStrictEqual(
+    [dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.ms],
+    [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds()]
+  );
+}
+
 describe('DateTime', () => {
-  it('create without parameter', () => {
-    const d = new DateTime();
-    const jd = new Date();
-    assert.strictEqual(d.year, jd.getFullYear());
-    assert.strictEqual(d.month, jd.getMonth());
-    assert.strictEqual(d.day, jd.getDate());
-    assert.strictEqual(d.minute, jd.getMinutes());
-    assert.strictEqual(d.second, jd.getSeconds());
+  it('create without parameter (local time zone, system locale, default calendar)', () => {
+    const d = new Date();
+    const dt = new DateTime();
+    assertDateEquality(d, dt);
   });
 
-  it('create from timestamp', () => {
-    const d1 = new DateTime(12345);
-    assert.strictEqual(d1.year, 1000);
-    assert.strictEqual(d1.month, 1);
-    assert.strictEqual(d1.day, 1);
-    // Do more validation on d1 here...
+  it('create with UTC zone (system locale, default calendar)', () => {
+    const d = new Date();
+    const dt = new DateTime({ zone: Zones.utc });
+    assertDateEquality(d, dt);
+  });
 
-
-    const d2 = new DateTime(12345, { calendar: 'persian' });
-    assert.strictEqual(d2.year, 1000);
-    assert.strictEqual(d2.month, 1);
-    assert.strictEqual(d2.day, 1);
-    // Do more validation on d2 here...
-
+  it('create from timestamp (local time zone, system locale, default calendar)', () => {
+    const d = new Date();
+    const dt = new DateTime(d.valueOf());
+    assertDateEquality(d, dt);
   });
 
   it('can format dates', () => {
