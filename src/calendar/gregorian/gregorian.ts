@@ -1,28 +1,14 @@
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 // tslint:disable: triple-equals
-import { DateTimeUnits, MsPerDay } from '../../common';
+import {
+  DateTimeUnits,
+  MS_PER_DAY,
+  DAYS_TO_MONTH_365,
+  DAYS_TO_MONTH_366,
+} from '../../common';
 import { Calendar, getTimeUnits } from '../calendar';
-import { Calendars } from "../calendars";
-
-const _monthsPerYear = 12;
-const _daysToMonth365 = [
-  0,
-  31,
-  59,
-  90,
-  120,
-  151,
-  181,
-  212,
-  243,
-  273,
-  304,
-  334,
-  365,
-];
-
-const _daysToMonth366 = [0, 31, 60, 91, 121, 152, 274, 305, 335, 366];
+import { Calendars } from '../calendars';
 
 function getDateUnits(ts: number): DateTimeUnits {
   const d = new Date(ts);
@@ -56,11 +42,11 @@ export class GregorianCalendar extends Calendar {
     const now = new Date(time);
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now.getTime() - start.getTime();
-    return Math.floor(diff / MsPerDay);
+    return Math.floor(diff / MS_PER_DAY);
   }
 
   daysInMonth(year: number, month: number): number {
-    const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
+    const days = this.isLeapYear(year) ? DAYS_TO_MONTH_366 : DAYS_TO_MONTH_365;
     return days[month] - days[month - 1];
   }
 
@@ -88,5 +74,4 @@ export class GregorianCalendar extends Calendar {
   getUnits(ts: number): DateTimeUnits {
     return { ...getDateUnits(ts), ...getTimeUnits(ts) };
   }
-
 }

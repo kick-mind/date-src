@@ -2,14 +2,14 @@ import {
   DateTimeUnits,
   getCalendarTimestamp,
   getJsTimestamp,
-  MsPerDay,
+  MS_PER_DAY,
   throwInvalidParam,
   timeToTicks,
 } from '../../common';
 import { Calendar, getTimeUnits } from '../calendar';
 import { Calendars } from '../calendars';
 
-const MonthDays = [
+const MONTH_DAYS = [
   0,
   30,
   59,
@@ -54,7 +54,7 @@ function getAbsoluteDateHijri(
   hijriAdjustment: number
 ) {
   return (
-    daysUpToHijriYear(y) + MonthDays[m - 1] + d - 1 - hijriAdjustment
+    daysUpToHijriYear(y) + MONTH_DAYS[m - 1] + d - 1 - hijriAdjustment
   );
 }
 
@@ -73,7 +73,7 @@ function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
   let day;
   let numDays;
 
-  numDays = Math.trunc(ticks / MsPerDay) + 1;
+  numDays = Math.trunc(ticks / MS_PER_DAY) + 1;
   numDays += hijriAdjustment;
   year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
@@ -97,13 +97,13 @@ function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
   month = 1;
   numDays -= daysToHijriYear;
 
-  while (month <= 12 && numDays > MonthDays[month - 1]) {
+  while (month <= 12 && numDays > MONTH_DAYS[month - 1]) {
     month++;
   }
   month--;
   du.month = month;
 
-  day = numDays - MonthDays[month - 1];
+  day = numDays - MONTH_DAYS[month - 1];
   du.day = day;
   return du;
 }
@@ -134,8 +134,8 @@ export class HijriCalendar extends Calendar {
       d = days;
     }
     const ticks =
-      getAbsoluteDateHijri(y, m, d, this.hijriAdjustment) * MsPerDay +
-      (getCalendarTimestamp(time) % MsPerDay);
+      getAbsoluteDateHijri(y, m, d, this.hijriAdjustment) * MS_PER_DAY +
+      (getCalendarTimestamp(time) % MS_PER_DAY);
 
     return getJsTimestamp(ticks);
   }
@@ -148,7 +148,7 @@ export class HijriCalendar extends Calendar {
     let year;
     let numDays;
 
-    numDays = Math.trunc(getCalendarTimestamp(time) / MsPerDay) + 1;
+    numDays = Math.trunc(getCalendarTimestamp(time) / MS_PER_DAY) + 1;
     numDays += this.hijriAdjustment;
     year = Math.trunc(((numDays - 227013) * 30) / 10631) + 1;
 
@@ -199,7 +199,7 @@ export class HijriCalendar extends Calendar {
 
     if (lDate >= 0) {
       const ticks =
-        lDate * MsPerDay +
+        lDate * MS_PER_DAY +
         timeToTicks(units.hour, units.minute, units.second, units.ms);
       return getJsTimestamp(ticks);
     } else {
