@@ -1,4 +1,4 @@
-import { hasIntl } from 'src/common';
+import { hasIntl } from '../common';
 import { FixedZone } from './fixed-zone';
 import { LocalZone } from './local-zone';
 import { RuntimeIANAZone } from './runtime-iana-zone';
