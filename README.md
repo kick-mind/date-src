@@ -1,13 +1,16 @@
 # JS-Sugar DateTime Library
 
-JS-Sugar Date (JSS Date) is a immutable, multi-calendar, extensible, tree-shakable and lightweight date-time library for javascript.
+JS-Sugar Date (JSS Date) is an immutable, multi-calendar, extensible, tree-shakable and lightweight date-time library for javascript. it supports localization and time-zones.
 
 ## Main Features
 
 - Immutable
 - Multi-Calendar
-- Widerange support
+  - Widerange support
+- localization support (JS Intl based and file-based)
+- Timezone support (JS Intl based and file-based)
 - Extensible
+  - Do not find your calendar in our calendars? easily implement your calendar and add it to the Calendars collection.
 - Treeshakable
 - Lightweight
 
@@ -15,12 +18,23 @@ JS-Sugar Date (JSS Date) is a immutable, multi-calendar, extensible, tree-shakab
 ## Installation
 ...
 
-## Basic Use
+## Basic Usage
 ...
 
 
-## Creating DateTime objects
+## Create
 ...
+
+## Manipulation
+
+### Add
+ Add description ...
+
+### Subtract
+subtract description ...
+
+### Compare
+compare description ...
 
 
 ## Calendars
@@ -33,6 +47,5 @@ JS-Sugar Date (JSS Date) is a immutable, multi-calendar, extensible, tree-shakab
 
 ## Time Zones
 ...
-
 
 
