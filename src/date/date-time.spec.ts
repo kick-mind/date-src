@@ -37,7 +37,6 @@ describe('DateTime', () => {
     assertDateEquality(d, dt);
   });
 
-
   it('can be created from years, month, day, ...', () => {
     const d = new Date();
     const dt = new DateTime(d.getFullYear(), d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
