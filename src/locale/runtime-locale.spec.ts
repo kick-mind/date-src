@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { Calendars } from '../calendar';
 import { PersianCalendar } from '../calendar/persian/persian';
+import { Zones } from '../zone';
 import { RuntimeLocale } from './runtime-locale';
 
 Calendars.add(new PersianCalendar('persian'));
@@ -105,6 +106,21 @@ describe('Locale', () => {
         'پ',
         'ج',
       ]);
+    });
+
+    it('can get UTC zone name', () => {
+      const l = new RuntimeLocale('fa', { weekStart: 6 });
+      assert.strictEqual(l.getZoneTitle(Zones.utc), 'زمان هماهنگ جهانی');
+    });
+
+    it('can get Local zone name', () => {
+      const l = new RuntimeLocale('fa', { weekStart: 6 });
+      assert.strictEqual(l.getZoneTitle(Zones.local), 'وقت تابستانی ایران');
+    });
+
+    it('can get [America/New_York] zone name', () => {
+      const l = new RuntimeLocale('fa', { weekStart: 6 });
+      assert.strictEqual(l.getZoneTitle(Zones.resolve('America/New_York')), 'وقت تابستانی شرق امریکا');
     });
   });
 });

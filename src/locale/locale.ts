@@ -37,6 +37,6 @@ export abstract class Locale {
     /** Returns the weekday names */
     abstract getWeekdayNames(format?: WeekdayNameFormat): string[];
 
-    /** Gets the name of a zone */
-    abstract getZoneName(zone: Zone, format: 'long' | 'short'): string;
+    /** Gets the (localized) title of a zone */
+    abstract getZoneTitle(zone: Zone, format: 'long' | 'short'): string;
 }

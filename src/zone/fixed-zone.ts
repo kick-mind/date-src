@@ -4,8 +4,8 @@ import { Zone } from './zone';
 export class FixedZone extends Zone {
     #o: number;
 
-    constructor(id: string, offset: number) {
-        super(id);
+    constructor(name: string, offset: number) {
+        super(name);
         vType(offset, 'number');
         this.#o = offset;
     }

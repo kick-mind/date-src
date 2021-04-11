@@ -50,7 +50,7 @@ export class StaticLocale extends Locale {
         return [...this.#data.weekdays[idx]];
     }
 
-    getZoneName(zone: Zone, format: ZoneNameFormat = 'long'): string {
+    getZoneTitle(zone: Zone, format: ZoneNameFormat = 'long'): string {
         return zone.name;
     }
 }

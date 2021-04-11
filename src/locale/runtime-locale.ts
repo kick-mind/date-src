@@ -2,7 +2,7 @@ import { MonthNameFormat, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
 import { verifyLocale } from '../common/intl';
-import { Zone } from '../zone';
+import { Zone, LocalZone } from '../zone';
 
 function isSupportedCalendar(calendarName: string) {
     return [
@@ -96,14 +96,14 @@ export class RuntimeLocale extends Locale {
         return res;
     }
 
-    getZoneName(zone: Zone, format: 'long' | 'short'): string {
-        let name = this.resolvedName,
-            zId = zone.name,
-            cacheZone = cache[name].zone;
-        cacheZone[zId] = cacheZone[zId] || {};
-        let formatter = cacheZone[zId][format];
+    getZoneTitle(zone: Zone, format: 'long' | 'short' = 'long'): string {
+        let lName = this.resolvedName,
+            zName = zone instanceof LocalZone ? undefined : zone.name,
+            cacheZone = cache[lName].zone;
+        cacheZone[zName] = cacheZone[zName] || {};
+        let formatter = cacheZone[zName][format];
         if (!formatter) {
-            cacheZone[zId][format] = formatter = new Intl.DateTimeFormat([name], { timeZone: zId, timeZoneName: format });
+            cacheZone[zName][format] = formatter = new Intl.DateTimeFormat([lName], { timeZone: zName, timeZoneName: format });
         }
 
         return formatter.formatToParts(new Date()).find(m => m.type.toLowerCase() === 'timezonename').value;

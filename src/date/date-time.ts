@@ -352,7 +352,7 @@ export class DateTime {
      * Clones this DateTime with time units (hour, minute, second, ms) set to zero. 
      * @public
      */
-    getDate(): DateTime {
+    get date(): DateTime {
         const o = this.toObject();
         return new DateTime(this.config, o.year, o.month, o.day);
     }
@@ -463,8 +463,8 @@ export class DateTime {
                 return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
             },
             Z: () => this.#z.name, // Zone ID: America/New_York
-            ZZ: () => this.#l.getZoneName(this.#z, 'short'), // Short zone name: EST
-            ZZZ: () => this.#l.getZoneName(this.#z, 'long'), // Long zone name: Eastern Standard Time          
+            ZZ: () => this.#l.getZoneTitle(this.#z, 'short'), // Short zone name: EST
+            ZZZ: () => this.#l.getZoneTitle(this.#z, 'long'), // Long zone name: Eastern Standard Time          
         };
 
         return format.replace(REGEX_FORMAT, (match, $1) => {
@@ -592,7 +592,7 @@ export class DateTime {
     //#region Misc
 
     /** 
-     * Clones this DateTime with overrided new unit values.
+     * Clones this DateTime with overwriten new unit values.
      * @public
      */
     clone(newUnits?: DateTimeUnits): DateTime {
