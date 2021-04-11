@@ -4,9 +4,17 @@ import { Locale, Locales } from '../locale';
 import { DateTimeUnits, IsInt, IsObj, IsStr, padNum, throwInvalidParam, vClsCall, vObj, WeekdayNameFormat } from '../common';
 const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|f{1,3}|c{1,2}|C{1,3}|a|A|z{1,3}|Z{1,3}/g;
 
-const II = IsInt;
+/** Is a non-negetive integer? */
+const II = (x: any) => IsInt(x) && x >= 0;
+
+ /** Is a non-negetive integer or null/undefined? */
+const IIN = (x: any) => x == null || II(x);
+
+ /** Is object? */
 const IO = IsObj;
-const IIN = (x: any) => x == null || IsInt(x); /** Is integer or null or undefined */
+
+ /** Is object or null ? */
+const ION = (x: any) => x == null || IO(x);
 
 /** DateTime create options. */
 export interface DateTimeCreateOptions {
@@ -37,7 +45,7 @@ export class DateTime {
 
     //#region Creations
     /**
-     * Creates a new DateTime.
+     * Creates a new DateTime object.
      * @constructor
      */
     constructor()
@@ -61,15 +69,15 @@ export class DateTime {
             // 2'nd overload
             ts = now();
             opts = a0;
-        } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6)) {
+        } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6) && ION(a7)) {
             // 3'nd overload
             year = a0; month = a1; day = a2; hour = a3; minute = a4; second = a5; ms = a6;
             opts = a7;
-        } else if (IO(a0) && II(a1) && II(a2) && IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6)) {
+        } else if (IO(a0) && II(a1) && II(a2) && IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6) && IIN(a7)) {
             // 4'rd overload
             opts = a0;
             year = a1; month = a2; day = a3; hour = a4; minute = a5; second = a6; ms = a7;
-        } else if (II(a0) && (a1 == null || IO(a1))) {
+        } else if (IsInt(a0) && ION(a1)) {
             // 5'th overload (create by timestamp)
             ts = a0;
             opts = a1;
@@ -84,11 +92,11 @@ export class DateTime {
             this.#_.units = {
                 year,
                 month,
-                day: day ? day : 1,
-                hour: hour ? hour : 0,
-                minute: minute ? minute : 0,
-                second: second ? second : 0,
-                ms: ms ? ms : 0,
+                day: day == null ? 1 : day,
+                hour: hour || 0,
+                minute: minute || 0,
+                second: second || 0,
+                ms: ms || 0,
             };
         }
 
@@ -463,8 +471,8 @@ export class DateTime {
                 return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
             },
             Z: () => this.#z.name, // Zone ID: America/New_York
-            ZZ: () => this.#l.getZoneTitle(this.#z, 'short'), // Short zone name: EST
-            ZZZ: () => this.#l.getZoneTitle(this.#z, 'long'), // Long zone name: Eastern Standard Time          
+            ZZ: () => this.#l.getZoneTitle(this.#z, 'short'), // Short zone title: EST
+            ZZZ: () => this.#l.getZoneTitle(this.#z, 'long'), // Long zone title: Eastern Standard Time          
         };
 
         return format.replace(REGEX_FORMAT, (match, $1) => {
