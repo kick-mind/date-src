@@ -7,13 +7,13 @@ const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,
 /** Is a non-negetive integer? */
 const II = (x: any) => IsInt(x) && x >= 0;
 
- /** Is a non-negetive integer or null/undefined? */
+/** Is a non-negetive integer or null/undefined? */
 const IIN = (x: any) => x == null || II(x);
 
- /** Is object? */
+/** Is object? */
 const IO = IsObj;
 
- /** Is object or null ? */
+/** Is object or null ? */
 const ION = (x: any) => x == null || IO(x);
 
 /** DateTime create options. */
@@ -31,17 +31,18 @@ export class DateTime {
     #c: Calendar;
     #z: Zone;
     #l: Locale;
-    #_: { // cache
-        units: DateTimeUnits;
-        ts: number; /** Timestamp (UTC) */
-        weekDay: number;
-        dayOfYear: number;
-        weekNumber: number;
-        daysInMonth: number;
-        daysInYear: number;
-        isLeapYear: boolean;
-        isValid: boolean;
-    } = {} as any;
+
+    //#region Cached values
+    #units: DateTimeUnits;
+    #ts: number; // Timestamp (UTC)
+    #weekDay: number;
+    #dayOfYear: number;
+    #weekNumber: number;
+    #daysInMonth: number;
+    #daysInYear: number;
+    #isLeapYear: boolean;
+    #isValid: boolean;
+    //#endregion
 
     //#region Creations
     /**
@@ -87,9 +88,9 @@ export class DateTime {
 
         // Set DateTime value
         if (ts) {
-            this.#_.ts = ts;
+            this.#ts = ts;
         } else {
-            this.#_.units = {
+            this.#units = {
                 year,
                 month,
                 day: day == null ? 1 : day,
@@ -158,7 +159,7 @@ export class DateTime {
      * @public
      */
     static fromJsDate(date: Date, opts?: { zone?: Zone | string, locale?: Locale | string }) {
-        return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.find('gregorian') });
+        return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.find('gregorian', { throwError: true }) });
     }
 
     //#endregion
@@ -232,11 +233,11 @@ export class DateTime {
      * @public
      */
     get ts(): number {
-        if (this.#_.ts == null) {
-            const zoneTs = this.#c.getTimestamp(this.#_.units);
-            this.#_.ts = zoneTs - this.#z.getOffset(zoneTs);
+        if (this.#ts == null) {
+            const zoneTs = this.#c.getTimestamp(this.#units);
+            this.#ts = zoneTs - this.#z.getOffset(zoneTs);
         }
-        return this.#_.ts;
+        return this.#ts;
     }
 
     /**
@@ -244,10 +245,10 @@ export class DateTime {
      * @public
      */
     get weekDay(): number {
-        if (this.#_.weekDay == null) {
-            this.#_.weekDay = this.#c.weekDay(this.ts);
+        if (this.#weekDay == null) {
+            this.#weekDay = this.#c.weekDay(this.ts);
         }
-        return this.#_.weekDay;
+        return this.#weekDay;
     }
 
     /** 
@@ -263,10 +264,10 @@ export class DateTime {
      * @public 
      */
     get dayOfYear(): number {
-        if (this.#_.dayOfYear == null) {
-            this.#_.dayOfYear = this.#c.dayOfYear(this.ts);
+        if (this.#dayOfYear == null) {
+            this.#dayOfYear = this.#c.dayOfYear(this.ts);
         }
-        return this.#_.dayOfYear;
+        return this.#dayOfYear;
     }
 
     /**
@@ -274,10 +275,10 @@ export class DateTime {
      * @public
      */
     get weekNumber(): number {
-        if (this.#_.weekNumber == null) {
-            this.#_.weekNumber = this.#c.weekNumber(this.ts, 1, 1);
+        if (this.#weekNumber == null) {
+            this.#weekNumber = this.#c.weekNumber(this.ts, 1, 1);
         }
-        return this.#_.weekNumber;
+        return this.#weekNumber;
     }
 
     /**
@@ -285,11 +286,11 @@ export class DateTime {
      * @public
      */
     get daysInMonth(): number {
-        if (this.#_.daysInMonth == null) {
+        if (this.#daysInMonth == null) {
             let u = this.toObject();
-            this.#_.daysInMonth = this.#c.daysInMonth(u.year, u.month);
+            this.#daysInMonth = this.#c.daysInMonth(u.year, u.month);
         }
-        return this.#_.daysInMonth;
+        return this.#daysInMonth;
     }
 
     /**
@@ -297,10 +298,10 @@ export class DateTime {
      * @public
      */
     get daysInYear(): number {
-        if (this.#_.daysInYear == null) {
-            this.#_.daysInYear = this.#c.daysInYear(this.year);
+        if (this.#daysInYear == null) {
+            this.#daysInYear = this.#c.daysInYear(this.year);
         }
-        return this.#_.daysInYear;
+        return this.#daysInYear;
     }
 
     /** Returns the number of weeks in this DateTime's year. */
@@ -316,10 +317,10 @@ export class DateTime {
      * @public
      */
     get isLeapYear(): boolean {
-        if (this.#_.isLeapYear == null) {
-            this.#_.isLeapYear = this.#c.isLeapYear(this.ts);
+        if (this.#isLeapYear == null) {
+            this.#isLeapYear = this.#c.isLeapYear(this.ts);
         }
-        return this.#_.isLeapYear;
+        return this.#isLeapYear;
     }
 
     /** 
@@ -493,11 +494,11 @@ export class DateTime {
      * @public
      */
     toObject(): DateTimeUnits {
-        if (this.#_.units == null) {
-            let offset = this.#z.getOffset(this.#_.ts) * 60 * 1000;
-            this.#_.units = this.#c.getUnits(this.#_.ts + offset);
+        if (this.#units == null) {
+            let offset = this.#z.getOffset(this.#ts) * 60 * 1000;
+            this.#units = this.#c.getUnits(this.#ts + offset);
         }
-        return this.#_.units;
+        return this.#units;
     }
 
     /** 
@@ -507,14 +508,6 @@ export class DateTime {
     toArray(): number[] {
         const d = this.toObject();
         return [d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms];
-    }
-
-    /** 
-     * Formats this DateTime to ISO8601 standard. 
-     * @public
-     */
-    toISO(keepTimeZone = false): string {
-        throw new Error('Method not implemented.');
     }
 
     /**
@@ -604,18 +597,18 @@ export class DateTime {
      * @public
      */
     clone(newUnits?: DateTimeUnits): DateTime {
-        return this.#_.ts ? new DateTime(this.#_.ts, this.config) : DateTime.fromObject({ ...this.#_.units, ...newUnits }, this.config);
+        return this.#ts ? new DateTime(this.#ts, this.config) : DateTime.fromObject({ ...this.#units, ...newUnits }, this.config);
     }
 
     /** Returns whether this DateTime is valid.
      * @public
      */
     get isValid(): boolean {
-        if (this.#_.isValid == null) {
+        if (this.#isValid == null) {
             const { year, month, day } = this.toObject();
-            this.#_.isValid = this.#c.isValid(year, month, day);
+            this.#isValid = this.#c.isValid(year, month, day);
         }
-        return this.#_.isValid;
+        return this.#isValid;
     }
 
     /**
