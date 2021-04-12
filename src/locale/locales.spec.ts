@@ -20,5 +20,7 @@ describe('Locale', () => {
     it('can resolve "fa" locale', () => {
       assert.ok(Locales.resolve('fa'));
     });
+
+    
   });
 });
