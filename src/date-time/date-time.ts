@@ -303,33 +303,6 @@ export class DateTime {
         return this.#daysInYear;
     }
 
-    /** Returns the number of weeks in this DateTime's year. */
-    // get weeksInYear(): number {
-    //     if (this._cache.weeksInYear == null) {
-    //         this._cache.weeksInYear = this._cal.(this.ts);
-    //     }
-    //     return this._cache.weeksInYear;
-    // }
-
-    /**
-     * Returns true if this DateTime is in a leap year, false otherwise. 
-     * @public
-     */
-    get isLeapYear(): boolean {
-        if (this.#isLeapYear == null) {
-            this.#isLeapYear = this.#c.isLeapYear(this.ts);
-        }
-        return this.#isLeapYear;
-    }
-
-    /** 
-     * Get the quarter. 
-     * @public
-     */
-    get quarter(): number {
-        return Math.floor(this.month / 4) + 1;
-    }
-
     /**
      * Returns the configurations of this object (calandar, zone and locale). 
      * @public
@@ -366,59 +339,7 @@ export class DateTime {
     }
     //#endregion
 
-    //#region Query
-    /**
-     * Returns whether this DateTime is same as another DateTime.
-     * @public
-     */
-    isSame(dateTime: DateTime): boolean {
-        return this.ts == dateTime.ts;
-    }
-
-    /**
-     * Returns whether this DateTime is after another DateTime.
-     * @public
-     */
-    isAfter(dateTime: DateTime): boolean {
-        return this.ts > dateTime.ts;
-    }
-
-    /** 
-     * Returns whether this DateTime is same or after another DateTime.
-     * @public
-     */
-    isSameOrAfter(dateTime: DateTime): boolean {
-        return this.ts >= dateTime.ts;
-    }
-
-    /** 
-     * Returns whether this DateTime is before another DateTime. 
-     * @public
-     */
-    isBefore(dateTime: DateTime): boolean {
-        return this.ts < dateTime.ts;
-    }
-
-    /** 
-     * Returns whether this DateTime is same or before another DateTime. 
-     * @public
-     */
-    isSameOrBefore(dateTime: DateTime): boolean {
-        return this.ts <= dateTime.ts;
-    }
-
-    /** 
-     * Returns whether this DateTime is between the specified DateTimes.
-     * @public
-     */
-    isBetween(first: DateTime, second: DateTime): boolean {
-        return this.ts > first.ts && this.ts < second.ts;
-    }
-    //#endregion
-
     //#region Display + Convert
-
-
     /**
      * Returns an object with the values of this DateTime. 
      * @public
@@ -429,23 +350,6 @@ export class DateTime {
             this.#units = this.#c.getUnits(this.#ts + offset);
         }
         return this.#units;
-    }
-
-    /** 
-     * Returns an Array with the values of this DateTime. 
-     * @public
-     */
-    toArray(): number[] {
-        const d = this.toObject();
-        return [d.year, d.month, d.day, d.hour, d.minute, d.second, d.ms];
-    }
-
-    /**
-     * Converts this object to a javascript Date
-     * @public
-     */
-    toJsDate(): Date {
-        return new Date(this.ts);
     }
     //#endregion
 
@@ -528,25 +432,6 @@ export class DateTime {
      */
     clone(newUnits?: DateTimeUnits): DateTime {
         return this.#ts ? new DateTime(this.#ts, this.config) : DateTime.fromObject({ ...this.#units, ...newUnits }, this.config);
-    }
-
-    /** Returns whether this DateTime is valid.
-     * @public
-     */
-    get isValid(): boolean {
-        if (this.#isValid == null) {
-            const { year, month, day } = this.toObject();
-            this.#isValid = this.#c.isValid(year, month, day);
-        }
-        return this.#isValid;
-    }
-
-    /**
-     * Returns whether a variable is a JS-Sugar DateTime or not.
-     * @public
-     */
-    static isJssDate(o: any) {
-        return o instanceof DateTime;
     }
     //#endregion
 }
