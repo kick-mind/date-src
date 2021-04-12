@@ -1,8 +1,7 @@
 import { Calendar, Calendars } from '../calendar';
 import { Zone, Zones } from '../zone';
 import { Locale, Locales } from '../locale';
-import { DateTimeUnits, IsInt, IsObj, IsStr, padNum, throwInvalidParam, vClsCall, vObj, WeekdayNameFormat } from '../common';
-const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|f{1,3}|c{1,2}|C{1,3}|a|A|z{1,3}|Z{1,3}/g;
+import { CalendarSpecifier, DateTimeUnits, IsInt, IsObj, IsStr, LocaleSpecifier, padNum, throwInvalidParam, vClsCall, vObj, WeekdayNameFormat, ZoneSpecifier } from '../common';
 
 /** Is a non-negetive integer? */
 const II = (x: any) => IsInt(x) && x >= 0;
@@ -18,9 +17,9 @@ const ION = (x: any) => x == null || IO(x);
 
 /** DateTime create options. */
 export interface DateTimeCreateOptions {
-    calendar?: Calendar | string; // A Calendar object or Calendar ID
-    zone?: Zone | string; // | number :: zone offset (for next versions)
-    locale?: Locale | string;
+    calendar?: CalendarSpecifier; // A Calendar object or Calendar ID
+    zone?: ZoneSpecifier; // | number :: zone offset (for next versions)
+    locale?: LocaleSpecifier;
 }
 
 /** 
@@ -158,7 +157,7 @@ export class DateTime {
      * Creates a DateTime from a Javascript Date object
      * @public
      */
-    static fromJsDate(date: Date, opts?: { zone?: Zone | string, locale?: Locale | string }) {
+    static fromJsDate(date: Date, opts?: { zone?: ZoneSpecifier, locale?: LocaleSpecifier }) {
         return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.find('gregorian', { throwError: true }) });
     }
 
@@ -418,76 +417,7 @@ export class DateTime {
     //#endregion
 
     //#region Display + Convert
-    /** 
-     * Returns a string representation of this DateTime formatted according to the specified format string. 
-     * @public
-     */
-    format(format: string): string {
-        const zone = () => {
-            let o = this.#z.getOffset(this.ts); // offset
-            let s = o > 0 ? 1 : -1; // sign
-            return {
-                s,
-                o,
-                hr: Math.floor(o / 60) * s,
-                min: Math.floor(o % 60) * s,
-            };
-        };
 
-        const matches: any = {
-            Y: () => this.year,
-            YY: () => padNum(this.year, 2),
-            YYYY: () => padNum(this.year, 4),
-            M: () => this.month,
-            MM: () => padNum(this.month, 2),
-            MMM: () => this.#l.getMonthNames(this.#c, 'short')[this.month - 1],
-            MMMM: () => this.#l.getMonthNames(this.#c, 'long')[this.month - 1],
-            d: () => this.day,
-            dd: () => padNum(this.day, 2),
-            H: () => this.hour,
-            HH: () => padNum(this.hour, 2),
-            h: () => this.hour % 12,
-            hh: () => padNum(this.hour % 12, 2),
-            m: () => this.minute,
-            mm: () => padNum(this.minute, 2),
-            s: () => this.second,
-            ss: () => padNum(this.second, 2),
-            f: () => this.ms,
-            fff: () => padNum(this.ms, 3),
-            c: () => this.weekDay,
-            cc: () => this.weekDayLocale,
-            C: () => this.#l.getWeekdayNames('narrow')[this.weekDayLocale],
-            CC: () => this.#l.getWeekdayNames('short')[this.weekDayLocale],
-            CCC: () => this.#l.getWeekdayNames('long')[this.weekDayLocale],
-            z: () => { // Zone offset: +5
-                let z = zone();
-                return z.s > 0 ? `+${z.o}` : z.o;
-            },
-            zz: () => { // Zone offset: +05:00
-                let z = zone();
-                return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}:${padNum(z.min, 2)}`;
-            },
-            zzz: () => { // Zone offset: +0500
-                let z = zone();
-                return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
-            },
-            Z: () => this.#z.name, // Zone ID: America/New_York
-            ZZ: () => this.#l.getZoneTitle(this.#z, 'short'), // Short zone title: EST
-            ZZZ: () => this.#l.getZoneTitle(this.#z, 'long'), // Long zone title: Eastern Standard Time          
-        };
-
-        return format.replace(REGEX_FORMAT, (match, $1) => {
-            let r;
-            if ($1) {
-                r = $1;
-            } else if (matches[match]) {
-                r = matches[match]();
-            } else {
-                r = match;
-            }
-            return r;
-        });
-    }
 
     /**
      * Returns an object with the values of this DateTime. 
@@ -532,7 +462,7 @@ export class DateTime {
      * Sets the DateTime's locale (returns a new DateTime)
      * @public
      */
-    toLocale(locale: Locale | string): DateTime {
+    toLocale(locale: LocaleSpecifier): DateTime {
         return new DateTime(this.ts, { locale, calendar: this.#c, zone: this.#z });
     }
     //#endregion
@@ -566,7 +496,7 @@ export class DateTime {
      * Set the DateTime's zone (returns a new DateTime) 
      * @public
      */
-    toZone(zone: Zone | string): DateTime {
+    toZone(zone: ZoneSpecifier): DateTime {
         return new DateTime(this.ts, { calendar: this.#c, zone, locale: this.#l });
     }
     //#endregion
@@ -577,7 +507,7 @@ export class DateTime {
      * Returns a new date time with the given calendar.
      * @public
      */
-    to(calendar: Calendar | string): DateTime {
+    to(calendar: CalendarSpecifier): DateTime {
         return new DateTime(this.ts, { ...this.config, calendar });
     }
 
