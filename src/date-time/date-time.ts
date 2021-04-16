@@ -30,20 +30,9 @@ export class DateTime {
     #c: Calendar;
     #z: Zone;
     #l: Locale;
-
-    //#region Cached values
     #units: DateTimeUnits;
     #ts: number; // Timestamp (UTC)
-    #weekDay: number;
-    #dayOfYear: number;
-    #weekNumber: number;
-    #daysInMonth: number;
-    #daysInYear: number;
-    #isLeapYear: boolean;
-    #isValid: boolean;
-    //#endregion
 
-    //#region Creations
     /**
      * Creates a new DateTime object.
      * @constructor
@@ -136,42 +125,7 @@ export class DateTime {
         this.#c = c;
     }
 
-    // /** 
-    //  * Creates a DateTime from a string
-    //  * @public
-    //  */
-    // static parse(date: string, format: string, opts?: DateTimeCreateOptions): DateTime {
-    //     throw new Error('Method not implemented.');
-    // }
-
-    /** 
-     * Creates a DateTime from an object
-     * @public
-     */
-    static fromObject(units: DateTimeUnits, opts?: DateTimeCreateOptions): DateTime {
-        const u = units;
-        return new DateTime(u.year, u.month, u.day, u.hour, u.minute, u.second, u.ms, opts);
-    }
-
-    /** 
-     * Creates a DateTime from a Javascript Date object
-     * @public
-     */
-    static fromJsDate(date: Date, opts?: { zone?: ZoneSpecifier, locale?: LocaleSpecifier }) {
-        return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.find('gregorian', { throwError: true }) });
-    }
-
-    //#endregion
-
     //#region Get
-    /**
-     * Gets a unit value of this DateTime.
-     * @public
-     */
-    get(unit: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'ms'): number {
-        return this.toObject()[unit];
-    }
-
     /** Get the year.
      * @public
      */
@@ -240,70 +194,6 @@ export class DateTime {
     }
 
     /**
-     * Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). 
-     * @public
-     */
-    get weekDay(): number {
-        if (this.#weekDay == null) {
-            this.#weekDay = this.#c.weekDay(this.ts);
-        }
-        return this.#weekDay;
-    }
-
-    /** 
-     * Get the day of the week with respect of this DateTime's locale (locale aware) 
-     * @public
-     */
-    get weekDayLocale(): number {
-        return (this.locale.weekStart + this.weekDay) % 7;
-    }
-
-    /**
-     * Gets the day of the year (1 to 366). 
-     * @public 
-     */
-    get dayOfYear(): number {
-        if (this.#dayOfYear == null) {
-            this.#dayOfYear = this.#c.dayOfYear(this.ts);
-        }
-        return this.#dayOfYear;
-    }
-
-    /**
-     * Get the week number of the week year (1 to 52). 
-     * @public
-     */
-    get weekNumber(): number {
-        if (this.#weekNumber == null) {
-            this.#weekNumber = this.#c.weekNumber(this.ts, 1, 1);
-        }
-        return this.#weekNumber;
-    }
-
-    /**
-     * Returns the number of days in this DateTime's month. 
-     * @public
-     */
-    get daysInMonth(): number {
-        if (this.#daysInMonth == null) {
-            let u = this.toObject();
-            this.#daysInMonth = this.#c.daysInMonth(u.year, u.month);
-        }
-        return this.#daysInMonth;
-    }
-
-    /**
-     * Returns the number of days in this DateTime's year. 
-     * @public
-     */
-    get daysInYear(): number {
-        if (this.#daysInYear == null) {
-            this.#daysInYear = this.#c.daysInYear(this.year);
-        }
-        return this.#daysInYear;
-    }
-
-    /**
      * Returns the configurations of this object (calandar, zone and locale). 
      * @public
      */
@@ -327,29 +217,6 @@ export class DateTime {
      */
     subtract(units: DateTimeUnits): DateTime {
         return new DateTime(this.#c.subtract(this.ts, units), this.config);
-    }
-
-    /**
-     * Clones this DateTime with time units (hour, minute, second, ms) set to zero. 
-     * @public
-     */
-    get date(): DateTime {
-        const o = this.toObject();
-        return new DateTime(this.config, o.year, o.month, o.day);
-    }
-    //#endregion
-
-    //#region Display + Convert
-    /**
-     * Returns an object with the values of this DateTime. 
-     * @public
-     */
-    toObject(): DateTimeUnits {
-        if (this.#units == null) {
-            let offset = this.#z.getOffset(this.#ts) * 60 * 1000;
-            this.#units = this.#c.getUnits(this.#ts + offset);
-        }
-        return this.#units;
     }
     //#endregion
 
@@ -406,7 +273,6 @@ export class DateTime {
     //#endregion
 
     //#region Calendar
-
     /**
      * Returns a new date time with the given calendar.
      * @public
@@ -425,13 +291,38 @@ export class DateTime {
     //#endregion
 
     //#region Misc
-
     /** 
      * Clones this DateTime with overwriten new unit values.
      * @public
      */
     clone(newUnits?: DateTimeUnits): DateTime {
-        return this.#ts ? new DateTime(this.#ts, this.config) : DateTime.fromObject({ ...this.#units, ...newUnits }, this.config);
+        if (this.#ts) {
+            return new DateTime(this.#ts, this.config);
+        } else {
+            const u = { ...this.#units, ...newUnits };
+            return new DateTime(u.year, u.month, u.day, u.hour, u.minute, u.second, u.ms, this.config);
+        }
+    }
+
+    /**
+     * Clones this DateTime with time units (hour, minute, second, ms) set to zero. 
+     * @public
+     */
+    get date(): DateTime {
+        const o = this.toObject();
+        return new DateTime(this.config, o.year, o.month, o.day);
+    }
+
+    /**
+     * Returns an object with the values of this DateTime. 
+     * @public
+     */
+    toObject(): DateTimeUnits {
+        if (this.#units == null) {
+            let offset = this.#z.getOffset(this.#ts) * 60 * 1000;
+            this.#units = this.#c.getUnits(this.#ts + offset);
+        }
+        return this.#units;
     }
     //#endregion
 }

@@ -1,7 +1,7 @@
 import { DateTime } from '../date-time';
 
 /**
- * Returns d1 is after d2.
+ * Returns true if d1 is after d2 otherwise returns false.
  * @public
  */
 export function isAfter(d1: DateTime, d2: DateTime): boolean {
