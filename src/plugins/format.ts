@@ -1,5 +1,7 @@
 import { padNum } from '../common';
 import { DateTime } from '../date-time';
+import { weekDay } from './week-day';
+import { weekDayLocale } from './week-day-locale';
 
 const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|f{1,3}|c{1,2}|C{1,3}|a|A|z{1,3}|Z{1,3}/g;
 
@@ -7,8 +9,10 @@ const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,
  * Returns a string representation of this DateTime formatted according to the specified format string. 
  * @public
  */
-export function format(date: DateTime, formatStr: string): string {
-    const { calendar, zone, locale, year, month, day, hour, minute, second, ms, ts, weekDay, weekDayLocale } = date;
+export function format(d: DateTime, formatStr: string): string {
+    const { calendar, zone, locale, year, month, day, hour, minute, second, ms, ts, } = d;
+    let wd = weekDay(d),
+        wdl = weekDayLocale(d);
 
     const zInfo = () => {
         let o = zone.getOffset(ts); // offset
@@ -41,11 +45,11 @@ export function format(date: DateTime, formatStr: string): string {
         ss: () => padNum(second, 2),
         f: () => ms,
         fff: () => padNum(ms, 3),
-        c: () => weekDay,
-        cc: () => weekDayLocale,
-        C: () => locale.getWeekdayNames('narrow')[weekDayLocale],
-        CC: () => locale.getWeekdayNames('short')[weekDayLocale],
-        CCC: () => locale.getWeekdayNames('long')[weekDayLocale],
+        c: () => wd,
+        cc: () => wdl,
+        C: () => locale.getWeekdayNames('narrow')[wdl],
+        CC: () => locale.getWeekdayNames('short')[wdl],
+        CCC: () => locale.getWeekdayNames('long')[wdl],
         z: () => { // Zone offset: +5
             let z = zInfo();
             return z.s > 0 ? `+${z.o}` : z.o;
