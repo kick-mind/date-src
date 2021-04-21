@@ -1,6 +1,6 @@
 # Install guide
 
-Luxon provides different builds for different JS environments. See below for a link to the right one and instructions on how to use it. Luxon supports all modern platforms, but see [the support matrix](matrix.html) for additional details.
+jss provides different builds for different JS environments. See below for a link to the right one and instructions on how to use it. jss supports all modern platforms, but see [the support matrix](matrix.html) for additional details.
 
 ## Basic browser setup
 

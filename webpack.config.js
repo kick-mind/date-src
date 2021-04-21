@@ -1,6 +1,8 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const fs = require("fs");
+const { library } = require("webpack");
 
 const config = {
   entry: {
@@ -22,14 +24,20 @@ const config = {
       dependOn: "jss",
     },
   },
-  plugins: [new CleanWebpackPlugin({ cleanStaleWebpackAssets: false })],
+  plugins: [
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
+  ],
 
   output: {
     filename: "[name].min.js",
     path: path.resolve(__dirname, "dist"),
     publicPath: "/",
-    library: "[name]",
+    library: {
+      name: "[name]",
+      type: "umd",
+    },
     libraryTarget: "umd",
+    globalObject: "this",
   },
   optimization: {
     minimize: true,
@@ -42,9 +50,9 @@ const config = {
     ],
   },
   mode: "production",
-  devtool: "source-map",
+  //devtool: "source-map",
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: [".ts"],
   },
   module: {
     rules: [
@@ -55,24 +63,48 @@ const config = {
       },
     ],
   },
+ 
   // optimization: {
   //   splitChunks: {
   //     chunks: 'all',
   //   },
   // },
 };
+const locales = [];
+
+// (function () {
+//   const arr = [];
+//   fs.readdirSync("./src/locale/locales").forEach((file) => {
+//     config.entry[file.substr(0, file.length - 3)] = {
+//       import: "./src/locale/locales/".concat(file),
+//       dependOn: "jss",
+//     };
+//     locales.push(file.substr(0, file.length - 3));
+//   });
+//   return arr;
+// })();
+
 const node = {
   ...config,
+  target: "node",
   output: {
     ...config.output,
-    libraryTarget: "commonjs",
-    path: path.resolve(__dirname, "dist/build/node"),
+    library: {
+      name: "[name]",
+      type: "var",
+    },
+    libraryTarget: "umd",
+    path: path.resolve(__dirname, `dist/build/node/`),
   },
 };
 const browser = {
   ...config,
   output: {
     ...config.output,
+    library: {
+      name: "[name]",
+      type: "var",
+    },
     libraryTarget: "umd",
     path: path.resolve(__dirname, "dist/build/browser"),
   },
@@ -82,6 +114,10 @@ const amd = {
   ...config,
   output: {
     ...config.output,
+    library: {
+      name: "[name]",
+      type: "var",
+    },
     libraryTarget: "amd",
     path: path.resolve(__dirname, "dist/build/amd"),
   },
