@@ -72,17 +72,17 @@ const config = {
 };
 const locales = [];
 
-// (function () {
-//   const arr = [];
-//   fs.readdirSync("./src/locale/locales").forEach((file) => {
-//     config.entry[file.substr(0, file.length - 3)] = {
-//       import: "./src/locale/locales/".concat(file),
-//       dependOn: "jss",
-//     };
-//     locales.push(file.substr(0, file.length - 3));
-//   });
-//   return arr;
-// })();
+(function () {
+  const arr = [];
+  fs.readdirSync("./src/locale/repo").forEach((file) => {
+    config.entry[file.substr(0, file.length - 3)] = {
+      import: "./src/locale/repo/".concat(file),
+      dependOn: "jss",
+    };
+    locales.push(file.substr(0, file.length - 3));
+  });
+  return arr;
+})();
 
 const node = {
   ...config,
