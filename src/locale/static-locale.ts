@@ -7,9 +7,6 @@ let getFormatIndex = (f: MonthNameFormat) => f == 'narrow' ? 2 : (f == 'short' ?
 
 /** Locale data */
 export interface LocaleData {
-    /** Locale identifier (should be unique) */
-    id: string;
-
     /** Locale name */
     name: string;
 
@@ -30,7 +27,7 @@ export class StaticLocale extends Locale {
     #data: LocaleData;
 
     constructor(data: LocaleData) {
-        super(data.id, data.name, { weekStart: data.weekStart });
+        super(data.name, { weekStart: data.weekStart });
         this.#data = data;
         deepFreeze(data);
     }
@@ -53,7 +50,7 @@ export class StaticLocale extends Locale {
         return [...this.#data.weekdays[idx]];
     }
 
-    getZoneName(zone: Zone, format: ZoneNameFormat = 'long'): string {
-        return zone.id;
+    getZoneTitle(zone: Zone, format: ZoneNameFormat = 'long'): string {
+        return zone.name;
     }
 }

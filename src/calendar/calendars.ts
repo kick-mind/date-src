@@ -24,16 +24,13 @@ export abstract class Calendars {
     /** Adds a [Calendar] to the calendars repository. */
     static add(c: Calendar): void {
         vObj(c, Calendar);
-        if (!this.findById(c.id)) {
+        if (!this.find(c.id)) {
             calendars.push(c);
-            if (calendars.length === 0) {
-                defaultCalendar = c;
-            }
         }
     }
 
     /** Finds a calendar by id. */
-    static findById(id: string, opts?: { throwError: boolean }): Calendar {
+    static find(id: string, opts?: { throwError: boolean }): Calendar {
         const c = calendars.find(x => x.id === id);
         if (!c && opts?.throwError) {
             throw new Error('Calendar not found.');

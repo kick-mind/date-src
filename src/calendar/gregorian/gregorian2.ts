@@ -5,54 +5,28 @@ import {
   DateTimeUnits,
   getCalendarTimestamp,
   getJsTimestamp,
-  MsPerDay,
-  throwInvalidParam
+  MS_PER_DAY,
+  DAYS_TO_MONTH_365,
+  DAYS_TO_MONTH_366,
+  throwInvalidParam,
+  MAX_YEAR,
 } from '../../common';
-import { Calendar, getTimeUnits, _maxYear } from '../calendar';
+import { Calendar, getTimeUnits } from '../calendar';
 import { Calendars } from '../calendars';
 
 // Number of days in a non-leap year
-const _daysPerYear = 365;
+const DAYS_PER_YEAR = 365;
 // Number of days in 4 years
-const _daysPer4Years = _daysPerYear * 4 + 1;
+const DAYS_PER_4YEARS = DAYS_PER_YEAR * 4 + 1;
 // Number of days in 100 years
-const _daysPer100Years = _daysPer4Years * 25 - 1;
+const DAYS_PER_100YEARS = DAYS_PER_4YEARS * 25 - 1;
 // Number of days in 400 years
-const _daysPer400Years = _daysPer100Years * 4 + 1;
-const _daysToMonth365 = [
-  0,
-  31,
-  59,
-  90,
-  120,
-  151,
-  181,
-  212,
-  243,
-  273,
-  304,
-  334,
-  365,
-];
+const DAYS_PER_400YEARS = DAYS_PER_100YEARS * 4 + 1;
 
-const _daysToMonth366 = [
-  0,
-  31,
-  60,
-  91,
-  121,
-  152,
-  182,
-  213,
-  244,
-  274,
-  305,
-  335,
-  366,
-];
 function isLeapYear(year: number): boolean {
   return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
 }
+
 function getDateUnits(ticks: number): DateTimeUnits {
   const du: DateTimeUnits = {
     year: 0,
@@ -64,24 +38,24 @@ function getDateUnits(ticks: number): DateTimeUnits {
     ms: 0,
   };
 
-  let n = Math.trunc(ticks / MsPerDay);
-  const y400 = Math.trunc(n / _daysPer400Years);
-  n -= y400 * _daysPer400Years;
-  let y100 = Math.trunc(n / _daysPer100Years);
+  let n = Math.trunc(ticks / MS_PER_DAY);
+  const y400 = Math.trunc(n / DAYS_PER_400YEARS);
+  n -= y400 * DAYS_PER_400YEARS;
+  let y100 = Math.trunc(n / DAYS_PER_100YEARS);
   if (y100 == 4) {
     y100 = 3;
   }
-  n -= y100 * _daysPer100Years;
-  const y4 = Math.trunc(n / _daysPer4Years);
-  n -= y4 * _daysPer4Years;
-  let y1 = Math.trunc(n / _daysPerYear);
+  n -= y100 * DAYS_PER_100YEARS;
+  const y4 = Math.trunc(n / DAYS_PER_4YEARS);
+  n -= y4 * DAYS_PER_4YEARS;
+  let y1 = Math.trunc(n / DAYS_PER_YEAR);
   if (y1 == 4) {
     y1 = 3;
   }
   du.year = y400 * 400 + y100 * 100 + y4 * 4 + y1 + 1;
-  n -= y1 * _daysPerYear;
+  n -= y1 * DAYS_PER_YEAR;
   const leapYear: boolean = y1 == 3 && (y4 != 24 || y100 == 3);
-  const days = leapYear ? _daysToMonth366 : _daysToMonth365;
+  const days = leapYear ? DAYS_TO_MONTH_366 : DAYS_TO_MONTH_365;
   // tslint:disable-next-line: no-bitwise
   let m = (n >> 5) + 1;
   // m = 1-based month number
@@ -95,8 +69,8 @@ function getDateUnits(ticks: number): DateTimeUnits {
 }
 
 function getAbsoluteDate(year: number, month: number, day: number): number {
-  if (year >= 1 && year <= _maxYear && month >= 1 && month <= 12) {
-    const days = isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
+  if (year >= 1 && year <= MAX_YEAR && month >= 1 && month <= 12) {
+    const days = isLeapYear(year) ? DAYS_TO_MONTH_366 : DAYS_TO_MONTH_365;
     if (day >= 1 && day <= days[month] - days[month - 1]) {
       const y = year - 1;
       const absoluteDate =
@@ -114,7 +88,7 @@ function getAbsoluteDate(year: number, month: number, day: number): number {
 }
 
 function dateToTicks(year: number, month: number, day: number): number {
-  return getAbsoluteDate(year, month, day) * MsPerDay;
+  return getAbsoluteDate(year, month, day) * MS_PER_DAY;
 }
 
 /** Gregorian2 calendar */
@@ -137,14 +111,14 @@ export class GregorianCalendar2 extends Calendar {
       m = 12 + ((i + 1) % 12);
       y = Math.trunc(y + (i - 11) / 12);
     }
-    const daysArray = this.isLeapYear(y) ? _daysToMonth366 : _daysToMonth365;
+    const daysArray = this.isLeapYear(y) ? DAYS_TO_MONTH_366 : DAYS_TO_MONTH_365;
     const days = daysArray[m] - daysArray[m - 1];
 
     if (d > days) {
       d = days;
     }
     const ticks =
-      dateToTicks(y, m, d) + (getCalendarTimestamp(time) % MsPerDay);
+      dateToTicks(y, m, d) + (getCalendarTimestamp(time) % MS_PER_DAY);
     return getJsTimestamp(ticks);
   }
   addYears(time: number, years: number): number {
@@ -155,10 +129,10 @@ export class GregorianCalendar2 extends Calendar {
     const now = new Date(time);
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now.getTime() - start.getTime();
-    return Math.floor(diff / MsPerDay);
+    return Math.floor(diff / MS_PER_DAY);
   }
   daysInMonth(year: number, month: number): number {
-    const days = this.isLeapYear(year) ? _daysToMonth366 : _daysToMonth365;
+    const days = this.isLeapYear(year) ? DAYS_TO_MONTH_366 : DAYS_TO_MONTH_365;
     return days[month] - days[month - 1];
   }
   daysInYear(year: number): number {

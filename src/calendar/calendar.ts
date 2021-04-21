@@ -4,15 +4,14 @@ import {
   DateTimeUnits,
   getCalendarTimestamp,
   TimeUnits,
-  MsPerDay,
-  MsPerHour,
-  MsPerMinute,
-  MsPerSecond,
-  throwInvalidParam
+  MS_PER_DAY,
+  MS_PER_HOUR,
+  MS_PER_MINUTE,
+  MS_PER_SECOND,
+  throwInvalidParam,
+  MAX_YEAR
 } from '../common';
 // tslint:disable: triple-equals
-export const _maxYear = 9000;
-const _maxMillis = 315537897600000;
 
 function add(time: number, value: number, scale: number): number {
   const millis: number = value * scale;
@@ -24,16 +23,16 @@ function addMs(time: number, milliseconds: number): number {
   return add(time, milliseconds, 1);
 }
 function addSeconds(time: number, seconds: number): number {
-  return add(time, seconds, MsPerSecond);
+  return add(time, seconds, MS_PER_SECOND);
 }
 function addMinutes(time: number, minutes: number): number {
-  return add(time, minutes, MsPerMinute);
+  return add(time, minutes, MS_PER_MINUTE);
 }
 function addHours(time: number, hours: number): number {
-  return add(time, hours, MsPerHour);
+  return add(time, hours, MS_PER_HOUR);
 }
 function addDays(time: number, days: number): number {
-  return add(time, days, MsPerDay);
+  return add(time, days, MS_PER_DAY);
 }
 
 function getFirstDayWeekOfYear(
@@ -51,13 +50,13 @@ function ms(time: number): number {
   return time % 1000;
 }
 function second(time: number): number {
-  return Math.trunc((time / MsPerSecond) % 60);
+  return Math.trunc((time / MS_PER_SECOND) % 60);
 }
 function minute(time: number): number {
-  return Math.trunc((time / MsPerMinute) % 60);
+  return Math.trunc((time / MS_PER_MINUTE) % 60);
 }
 function hour(time: number): number {
-  return Math.trunc((time / MsPerHour) % 24);
+  return Math.trunc((time / MS_PER_HOUR) % 24);
 }
 
 export function getTimeUnits(time: number): TimeUnits {
@@ -68,31 +67,35 @@ export function getTimeUnits(time: number): TimeUnits {
     ms: ms(time),
   };
 }
+
 /**
- * An base class for all calendars.
+ * A base class for all calendars.
  * @public
  */
 export abstract class Calendar {
-  private _id: string;
-  private _type: string;
+  #id: string;
+  #type: string;
+
   /**
    * Calendar's ID.
    */
   get id() {
-    return this._id;
+    return this.#id;
   }
+
   /**
    * Calendar's type (Gregorian, Chiness, Persian, Islamic, ...).
    * It is possible that you have multiple calendars with the same type and different ID's (multiple implementation for a specific calendar).
    */
   get type() {
-    return this._type;
+    return this.#type;
   }
 
   constructor(id: string, type: string) {
-    this._id = id;
-    this._type = type;
+    this.#id = id;
+    this.#type = type;
   }
+
   /** Get the week number of the week year (1 to 52). */
   weekNumber(time: number, firstDayOfWeek: number, offset: number = 1): number {
     let fn = (tm: number, firstDay: number, fullDays: number): number => {
@@ -178,7 +181,7 @@ export abstract class Calendar {
   isValid(year: number, month: number, day: number): boolean {
     return (
       year >= 1 &&
-      year <= _maxYear &&
+      year <= MAX_YEAR &&
       month >= 1 &&
       month <= 12 &&
       day >= 1 &&
@@ -188,23 +191,30 @@ export abstract class Calendar {
 
   /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
   weekDay(time: number): number {
-    return Math.trunc(getCalendarTimestamp(time) / MsPerDay + 1) % 7;
+    return Math.trunc(getCalendarTimestamp(time) / MS_PER_DAY + 1) % 7;
   }
 
   /** Returns the number of days in this DateTime's month. */
   abstract addMonths(time: number, months: number): number;
+
   /** */
   abstract addYears(time: number, years: number): number;
+
   /** Gets the day of the year (1 to 366). */
   abstract dayOfYear(time: number): number;
+
   /** Returns the number of days in this DateTime's month. */
   abstract daysInMonth(year: number, month: number): number;
+
   /** Returns the number of days in this DateTime's year. */
   abstract daysInYear(year: number): number;
+
   /** Returns true if this DateTime is in a leap year, false otherwise. */
   abstract isLeapYear(year: number): boolean;
+
   /** */
   abstract getTimestamp(units: DateTimeUnits): number;
+
   /** */
   abstract getUnits(ts: number): DateTimeUnits;
 }

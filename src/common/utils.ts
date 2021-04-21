@@ -1,4 +1,4 @@
-import { JsEpoch, MsPerHour, MsPerMinute, MsPerSecond } from './const';
+import { JS_EPOCH, MS_PER_HOUR, MS_PER_MINUTE, MS_PER_SECOND } from './const';
 
 export function IsStr(x: any) {
   return typeof x === 'string';
@@ -53,11 +53,11 @@ export function vClsCall(inst: any, cls: any) {
 }
 
 export function getCalendarTimestamp(ticks: number): number {
-  return ticks + JsEpoch;
+  return ticks + JS_EPOCH;
 }
 
 export function getJsTimestamp(ticks: number): number {
-  return ticks - JsEpoch;
+  return ticks - JS_EPOCH;
 }
 
 export function timeToTicks(
@@ -74,10 +74,10 @@ export function timeToTicks(
     second >= 0 &&
     second < 60 &&
     ms >= 0 &&
-    ms < MsPerSecond
+    ms < MS_PER_SECOND
   ) {
     return (
-      hour * MsPerHour + minute * MsPerMinute + second * MsPerSecond + ms
+      hour * MS_PER_HOUR + minute * MS_PER_MINUTE + second * MS_PER_SECOND + ms
     );
   }
   throwInvalidParam();

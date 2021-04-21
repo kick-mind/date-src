@@ -2,7 +2,7 @@ import { MonthNameFormat, WeekdayNameFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
 import { verifyLocale } from '../common/intl';
-import { Zone } from '../zone';
+import { Zone, LocalZone } from '../zone';
 
 function isSupportedCalendar(calendarName: string) {
     return [
@@ -24,7 +24,7 @@ function isSupportedCalendar(calendarName: string) {
 
 // Cache
 let cache: {
-    [localeId: string]: {
+    [localeResolvedName: string]: {
         weekday?: {
             [format: string]: string[]
         },
@@ -43,15 +43,15 @@ let cache: {
 
 /** A locale created by using javascript Intl API. */
 export class RuntimeLocale extends Locale {
-    constructor(id: string, name: string | null, data: { weekStart: number }) {
-        let res = verifyLocale(name, true, true);
-        super(id, res.resolvedName, data);
-        cache[id] = cache[id] || { month: {}, weekday: {}, zone: {} };
+    constructor(name: string | null, data: { weekStart: number }) {
+        let { resolvedName } = verifyLocale(name, true, true);
+        super(resolvedName, data);
+        cache[resolvedName] = cache[resolvedName] || { month: {}, weekday: {}, zone: {} };
     }
 
     getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
         let name = this.resolvedName;
-        let res = cache[this.id].weekday[format];
+        let res = cache[name].weekday[format];
         if (!res) {
             // create/cache weekday names
             let f = new Intl.DateTimeFormat(name, { weekday: format });
@@ -96,14 +96,14 @@ export class RuntimeLocale extends Locale {
         return res;
     }
 
-    getZoneName(zone: Zone, format: 'long' | 'short'): string {
-        let name = this.resolvedName,
-            zId = zone.id,
-            cacheZone = cache[this.id].zone;
-        cacheZone[zId] = cacheZone[zId] || {};
-        let formatter = cacheZone[zId][format];
+    getZoneTitle(zone: Zone, format: 'long' | 'short' = 'long'): string {
+        let lName = this.resolvedName,
+            zName = zone instanceof LocalZone ? undefined : zone.name,
+            cacheZone = cache[lName].zone;
+        cacheZone[zName] = cacheZone[zName] || {};
+        let formatter = cacheZone[zName][format];
         if (!formatter) {
-            cacheZone[zId][format] = formatter = new Intl.DateTimeFormat([name], { timeZone: zId, timeZoneName: format });
+            cacheZone[zName][format] = formatter = new Intl.DateTimeFormat([lName], { timeZone: zName, timeZoneName: format });
         }
 
         return formatter.formatToParts(new Date()).find(m => m.type.toLowerCase() === 'timezonename').value;

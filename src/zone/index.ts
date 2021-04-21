@@ -4,3 +4,4 @@ export * from './iana-zone';
 export * from './runtime-iana-zone';
 export * from './zone';
 export * from './zones';
+export * from './local-zone';

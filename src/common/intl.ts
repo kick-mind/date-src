@@ -10,12 +10,12 @@ export function hasIntl(): boolean {
 }
 
 /** Verifies a locale */
-export function verifyLocale(id: string | null, strict = true, throwErr = false): LocaleVerificationResult {
+export function verifyLocale(name: string | null, strict = true, throwErr = false): LocaleVerificationResult {
     let supported: boolean, resolvedName: string;
 
     try {
-        resolvedName = new Intl.DateTimeFormat(id || [], { weekday: 'long' }).resolvedOptions().locale;
-        if (strict && id && id.toLowerCase() !== resolvedName.toLowerCase()) {
+        resolvedName = new Intl.DateTimeFormat(name || [], { weekday: 'long' }).resolvedOptions().locale;
+        if (strict && name && name.toLowerCase() !== resolvedName.toLowerCase()) {
             throw Error();
         }
         supported = true;
