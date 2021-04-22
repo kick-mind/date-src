@@ -176,7 +176,7 @@ describe('PersianCalendar', () => {
     });
 
     assert.strictEqual(pc.weekNumber(time, 6), 1);
-    
+
     time = pc.getTimestamp({
       year: 1400,
       month: 1,
@@ -212,21 +212,142 @@ describe('PersianCalendar', () => {
     });
 
     assert.strictEqual(pc.weekNumber(time, 6), 3);
+  });
+
+  it('dayOfYear', function () {
+    let time = pc.getTimestamp({
+      year: 1399,
+      month: 12,
+      day: 30,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      ms: 0,
+    });
+
+    assert.strictEqual(pc.dayOfYear(time), 366);
+
+    time = pc.getTimestamp({
+      year: 1399,
+      month: 12,
+      day: 29,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      ms: 0,
+    });
+
+    assert.strictEqual(pc.dayOfYear(time), 365);
+
+    time = pc.getTimestamp({
+      year: 1400,
+      month: 1,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      ms: 0,
+    });
+
+    assert.strictEqual(pc.dayOfYear(time), 1);
+  });
+
+  it('daysInMonth', function () {
+    assert.strictEqual(pc.daysInMonth(1399, 1), 31);
+    assert.strictEqual(pc.daysInMonth(1399, 2), 31);
+    assert.strictEqual(pc.daysInMonth(1399, 3), 31);
+    assert.strictEqual(pc.daysInMonth(1399, 4), 31);
+    assert.strictEqual(pc.daysInMonth(1399, 5), 31);
+    assert.strictEqual(pc.daysInMonth(1399, 6), 31);
+    assert.strictEqual(pc.daysInMonth(1399, 7), 30);
+    assert.strictEqual(pc.daysInMonth(1399, 8), 30);
+    assert.strictEqual(pc.daysInMonth(1399, 9), 30);
+    assert.strictEqual(pc.daysInMonth(1399, 10), 30);
+    assert.strictEqual(pc.daysInMonth(1399, 11), 30);
+    assert.strictEqual(pc.daysInMonth(1399, 12), 30);
+    assert.strictEqual(pc.daysInMonth(1400, 1), 31);
+    assert.strictEqual(pc.daysInMonth(1400, 12), 29);
+    assert.strictEqual(pc.daysInMonth(1403, 12), 30);
 
   });
-  // it('can compute units from ts', function () {
-  //   assert.strictEqual(pc.getUnits(100000), {
-  //     year: 2,
-  //     month: 1,
-  //     day: 1,
-  //     hour: 1,
-  //     minute: 1,
-  //     second: 1,
-  //     ms: 1,
-  //   } as DateTimeUnits);
-  // });
 
-  it('can compute ts from units', function () {});
+  it('daysInYear', function () {
+    assert.strictEqual(pc.daysInYear(1390), 365);
+    assert.strictEqual(pc.daysInYear(1391), 366);
+    assert.strictEqual(pc.daysInYear(1392), 365);
+    assert.strictEqual(pc.daysInYear(1393), 365);
+    assert.strictEqual(pc.daysInYear(1394), 365);
+    assert.strictEqual(pc.daysInYear(1395), 366);
+    assert.strictEqual(pc.daysInYear(1396), 365);
+    assert.strictEqual(pc.daysInYear(1397), 365);
+    assert.strictEqual(pc.daysInYear(1398), 365);
+    assert.strictEqual(pc.daysInYear(1399), 366);
+    assert.strictEqual(pc.daysInYear(1400), 365);    
+    assert.strictEqual(pc.daysInYear(1401), 365);
+    assert.strictEqual(pc.daysInYear(1402), 365);
+    assert.strictEqual(pc.daysInYear(1403), 366);
+    assert.strictEqual(pc.daysInYear(1404), 365);
+    assert.strictEqual(pc.daysInYear(1405), 365);
+    assert.strictEqual(pc.daysInYear(1406), 365);
+    assert.strictEqual(pc.daysInYear(1407), 365);
+  });
 
-  it('can compute leap year', function () {});
+  it('isLeapYear', function () {
+    assert.strictEqual(pc.isLeapYear(1390), false);
+    assert.strictEqual(pc.isLeapYear(1391), true);
+    assert.strictEqual(pc.isLeapYear(1392), false);
+    assert.strictEqual(pc.isLeapYear(1393), false);
+    assert.strictEqual(pc.isLeapYear(1394), false);
+    assert.strictEqual(pc.isLeapYear(1395), true);
+    assert.strictEqual(pc.isLeapYear(1396), false);
+    assert.strictEqual(pc.isLeapYear(1397), false);
+    assert.strictEqual(pc.isLeapYear(1398), false);
+    assert.strictEqual(pc.isLeapYear(1399), true);
+    assert.strictEqual(pc.isLeapYear(1400), false);    
+    assert.strictEqual(pc.isLeapYear(1401), false);
+    assert.strictEqual(pc.isLeapYear(1402), false);
+    assert.strictEqual(pc.isLeapYear(1403), true);
+    assert.strictEqual(pc.isLeapYear(1404), false);
+    assert.strictEqual(pc.isLeapYear(1405), false);
+    assert.strictEqual(pc.isLeapYear(1406), false);
+    assert.strictEqual(pc.isLeapYear(1407), false);
+  });
+
+  it('getTimestamp', function () {
+    let time = pc.getTimestamp({
+      year: 1400,
+      month: 2,
+      day: 2,
+      hour: 17,
+      minute: 12,
+      second: 3,
+      ms: 3,
+    });
+    
+    let units = pc.getUnits(time);
+    assert.deepStrictEqual(units, {
+      year: 1400,
+      month: 2,
+      day: 2,
+      hour: 17,
+      minute: 12,
+      second: 3,
+      ms: 3,
+    } as DateTimeUnits);
+
+  });
+
+  it('getUnits', function () {
+    let units = pc.getUnits(1619111523003);
+    assert.deepStrictEqual(units, {
+      year: 1400,
+      month: 2,
+      day: 2,
+      hour: 17,
+      minute: 12,
+      second: 3,
+      ms: 3,
+    } as DateTimeUnits);
+    
+  });
 });
