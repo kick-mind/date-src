@@ -9,7 +9,7 @@ import {
   MS_PER_MINUTE,
   MS_PER_SECOND,
   throwInvalidParam,
-  MAX_YEAR
+  MAX_YEAR,
 } from '../common';
 // tslint:disable: triple-equals
 
@@ -96,40 +96,6 @@ export abstract class Calendar {
     this.#type = type;
   }
 
-  /** Get the week number of the week year (1 to 52). */
-  weekNumber(time: number, firstDayOfWeek: number, offset: number = 1): number {
-    let fn = (tm: number, firstDay: number, fullDays: number): number => {
-      let dayForJan1: number;
-      let offst: number;
-      let day: number;
-      const dayOfYear = this.dayOfYear(tm) - 1;
-      dayForJan1 = this.weekDay(tm) - (dayOfYear % 7);
-      offst = (firstDay - dayForJan1 + 14) % 7;
-      if (offst != 0 && offst >= fullDays) {
-        offst -= 7;
-      }
-      day = dayOfYear - offst;
-      if (day >= 0) {
-        return Math.trunc(day / 7) + 1;
-      }
-      return fn(addDays(tm, -(dayOfYear + 1)), firstDay, fullDays);
-    };
-
-    if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
-      throwInvalidParam('fisrtDayOfWeek');
-    }
-    offset = offset % 8;
-    if (offset == 1) {
-      return getFirstDayWeekOfYear(
-        firstDayOfWeek,
-        this.dayOfYear(time),
-        this.weekDay(time)
-      );
-    } else {
-      return fn(time, firstDayOfWeek, offset);
-    }
-  }
-
   /** Adds a period of time to this DateTime and returns the resulting DateTime. */
   add(ts: number, units: Partial<DateTimeUnits>): number {
     const isInt = Number.isInteger;
@@ -192,6 +158,40 @@ export abstract class Calendar {
   /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
   weekDay(time: number): number {
     return Math.trunc(getCalendarTimestamp(time) / MS_PER_DAY + 1) % 7;
+  }
+
+  /** Get the week number of the week year (1 to 52). */
+  weekNumber(time: number, firstDayOfWeek: number, offset: number = 1): number {
+    let fn = (tm: number, firstDay: number, fullDays: number): number => {
+      let dayForJan1: number;
+      let offst: number;
+      let day: number;
+      const dayOfYear = this.dayOfYear(tm) - 1;
+      dayForJan1 = this.weekDay(tm) - (dayOfYear % 7);
+      offst = (firstDay - dayForJan1 + 14) % 7;
+      if (offst != 0 && offst >= fullDays) {
+        offst -= 7;
+      }
+      day = dayOfYear - offst;
+      if (day >= 0) {
+        return Math.trunc(day / 7) + 1;
+      }
+      return fn(addDays(tm, -(dayOfYear + 1)), firstDay, fullDays);
+    };
+
+    if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
+      throwInvalidParam('fisrtDayOfWeek');
+    }
+    offset = offset % 8;
+    if (offset == 1) {
+      return getFirstDayWeekOfYear(
+        firstDayOfWeek,
+        this.dayOfYear(time),
+        this.weekDay(time)
+      );
+    } else {
+      return fn(time, firstDayOfWeek, offset);
+    }
   }
 
   /** Returns the number of days in this DateTime's month. */
