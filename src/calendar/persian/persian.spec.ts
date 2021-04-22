@@ -4,7 +4,7 @@ import { PersianCalendar } from './persian';
 
 describe('PersianCalendar', () => {
   const pc = new PersianCalendar('persian');
-  it('can add', function () {
+  it('add', function () {
     let time = pc.getTimestamp({
       year: 1190,
       month: 6,
@@ -48,7 +48,7 @@ describe('PersianCalendar', () => {
     } as DateTimeUnits);
   });
 
-  it('can subtract', function () {
+  it('subtract', function () {
     let time = pc.getTimestamp({
       year: 1393,
       month: 4,
