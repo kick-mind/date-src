@@ -109,7 +109,7 @@ export class GregorianCalendar2 extends Calendar {
       y = Math.trunc(y + i / 12);
     } else {
       m = 12 + ((i + 1) % 12);
-      y = Math.trunc(y + (i - 11) / 12);
+      y = y + Math.trunc((i - 11) / 12);
     }
     const daysArray = this.isLeapYear(y) ? DAYS_TO_MONTH_366 : DAYS_TO_MONTH_365;
     const days = daysArray[m] - daysArray[m - 1];
