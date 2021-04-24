@@ -13,17 +13,17 @@ export class Duration {
 
     /** Gets the days component of the time interval. */
     get days() {
-        return F(this.#ms / 1000 * 60 * 60 * 24);
+        return F(this.#ms / (1000 * 60 * 60 * 24));
     }
 
     /** Gets the hours component of the time interval. */
     get hours() {
-        return F(this.#ms / 1000 * 60 * 60) % 24;
+        return F(this.#ms / (1000 * 60 * 60)) % 24;
     }
 
     /** Gets the days minutes of the time interval. */
     get minutes() {
-        return F(this.#ms / 1000 * 60) % 60;
+        return F(this.#ms / (1000 * 60)) % 60;
     }
 
     /** Gets the seconds component of the time interval. */
@@ -38,17 +38,17 @@ export class Duration {
 
     /** Gets the value of the current Duration object expressed in whole and fractional days. */
     get totalDays() {
-        return (this.#ms / 1000 * 60 * 60 * 24);
+        return (this.#ms / (1000 * 60 * 60 * 24));
     }
 
     /** Gets the value of the current Duration object expressed in whole and fractional hours. */
     get totalHours() {
-        return (this.#ms / 1000 * 60 * 60);
+        return (this.#ms / (1000 * 60 * 60));
     }
 
     /** Gets the value of the current Duration object expressed in whole and fractional minutes. */
     get totalMinutes() {
-        return (this.#ms / 1000 * 60);
+        return (this.#ms / (1000 * 60));
     }
 
     /** Gets the value of the current Duration object expressed in whole and fractional seconds. */
