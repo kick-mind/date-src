@@ -1,6 +1,6 @@
 import assert from "assert";
 import { Locales } from "../locale";
-import { Zones } from "../zone";
+import { Zone, Zones } from "../zone";
 import { DateTime } from "./date-time";
 import moment from "moment";
 
@@ -150,9 +150,42 @@ describe("DateTime", () => {
     assert.strictEqual(ld, mlocal);
   });
 
-  it("toLocale: compare with moment equivalent method at javascript", () => {
+  it("toLocale", () => {
+    const ro = new DateTime().toLocale("ro");
+    const ianuarie = ro.locale.getMonthNames(ro.calendar)[0];
+
+    const de = new DateTime().toLocale("de");
+    const Januar = de.locale.getMonthNames(de.calendar)[0];
+
+    assert.strictEqual("ianuarie", ianuarie);
+    assert.strictEqual("Januar", Januar);
+  });
+
+  it("toZone", () => {
     const dt = new DateTime();
-    var local = dt.toLocale("IR-fa");
-    var a = 1;
+    var Tokyo = dt.toZone("Asia/Tokyo");
+    assert.strictEqual("Asia/Tokyo", Tokyo.zone.name);
+  });
+
+  it("toCalendar", () => {
+    const dt = new DateTime();
+    const persian = dt.to("persian");
+    assert.strictEqual("persian", persian.calendar.type);
+  });
+  it("clone", () => {
+    const dt = new DateTime();
+    const newDt = dt.clone();
+    assert.deepStrictEqual(dt, newDt);
+  });
+  it("toObject", () => {
+    const dt = new DateTime();
+    const newZone =dt.toZone('America/New_york');
+    const newDt = newZone.toObject();
+
+    assert.strictEqual(newZone.day, newDt.day);
+    assert.strictEqual(newZone.month, newDt.month);
+    assert.strictEqual(newZone.year, newDt.year);
+    assert.strictEqual(newZone.hour, newDt.hour);
+    
   });
 });
