@@ -14,7 +14,6 @@ describe("Plugins", () => {
         let rdate = new DateTime(index, 1, 1);
         let days = 0;
         dt.locale.getMonthNames(dt.calendar).map((e, i) => {
-          let today = new Date();
           let newTimeInMonth = new DateTime(rdate.year, i + 1, 1);
           days += moment(
             `${newTimeInMonth.year}-${newTimeInMonth.month}`
