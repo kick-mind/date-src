@@ -136,7 +136,7 @@ describe('HijriCalendar', () => {
       ms: 500,
     });
 
-    assert.strictEqual(hc.weekDay(time), 0);
+    assert.strictEqual(hc.weekDay(time), 6);
 
     time = hc.getTimestamp({
       year: 1442,
@@ -148,7 +148,7 @@ describe('HijriCalendar', () => {
       ms: 500,
     });
 
-    assert.strictEqual(hc.weekDay(time), 1);
+    assert.strictEqual(hc.weekDay(time), 0);
     time = hc.getTimestamp({
       year: 1442,
       month: 9,
@@ -159,12 +159,12 @@ describe('HijriCalendar', () => {
       ms: 500,
     });
 
-    assert.strictEqual(hc.weekDay(time), 6);
+    assert.strictEqual(hc.weekDay(time), 1);
   });
 
   it('weekNumber', function () {
     let time = hc.getTimestamp({
-      year: 1400,
+      year: 1442,
       month: 1,
       day: 1,
       hour: 0,
@@ -176,9 +176,9 @@ describe('HijriCalendar', () => {
     assert.strictEqual(hc.weekNumber(time, 6), 1);
 
     time = hc.getTimestamp({
-      year: 1400,
+      year: 1442,
       month: 1,
-      day: 6,
+      day: 2,
       hour: 0,
       minute: 0,
       second: 0,
@@ -188,9 +188,21 @@ describe('HijriCalendar', () => {
     assert.strictEqual(hc.weekNumber(time, 6), 1);
 
     time = hc.getTimestamp({
-      year: 1400,
+      year: 1442,
       month: 1,
-      day: 7,
+      day: 8,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      ms: 0,
+    });
+
+    assert.strictEqual(hc.weekNumber(time, 6), 2);
+
+    time = hc.getTimestamp({
+      year: 1442,
+      month: 1,
+      day: 9,
       hour: 0,
       minute: 0,
       second: 0,
@@ -202,19 +214,7 @@ describe('HijriCalendar', () => {
     time = hc.getTimestamp({
       year: 1400,
       month: 1,
-      day: 13,
-      hour: 0,
-      minute: 0,
-      second: 0,
-      ms: 0,
-    });
-
-    assert.strictEqual(hc.weekNumber(time, 6), 2);
-
-    time = hc.getTimestamp({
-      year: 1400,
-      month: 1,
-      day: 14,
+      day: 15,
       hour: 0,
       minute: 0,
       second: 0,
@@ -226,19 +226,7 @@ describe('HijriCalendar', () => {
 
   it('dayOfYear', function () {
     let time = hc.getTimestamp({
-      year: 1399,
-      month: 12,
-      day: 30,
-      hour: 0,
-      minute: 0,
-      second: 0,
-      ms: 0,
-    });
-
-    assert.strictEqual(hc.dayOfYear(time), 366);
-
-    time = hc.getTimestamp({
-      year: 1399,
+      year: 1441,
       month: 12,
       day: 29,
       hour: 0,
@@ -247,10 +235,10 @@ describe('HijriCalendar', () => {
       ms: 0,
     });
 
-    assert.strictEqual(hc.dayOfYear(time), 365);
+    assert.strictEqual(hc.dayOfYear(time), 354);
 
     time = hc.getTimestamp({
-      year: 1400,
+      year: 1442,
       month: 1,
       day: 1,
       hour: 0,
@@ -260,73 +248,72 @@ describe('HijriCalendar', () => {
     });
 
     assert.strictEqual(hc.dayOfYear(time), 1);
+
+    time = hc.getTimestamp({
+      year: 1442,
+      month: 1,
+      day: 2,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      ms: 0,
+    });
+
+    assert.strictEqual(hc.dayOfYear(time), 2);
   });
 
   it('daysInMonth', function () {
-    assert.strictEqual(hc.daysInMonth(1399, 1), 31);
-    assert.strictEqual(hc.daysInMonth(1399, 2), 31);
-    assert.strictEqual(hc.daysInMonth(1399, 3), 31);
-    assert.strictEqual(hc.daysInMonth(1399, 4), 31);
-    assert.strictEqual(hc.daysInMonth(1399, 5), 31);
-    assert.strictEqual(hc.daysInMonth(1399, 6), 31);
-    assert.strictEqual(hc.daysInMonth(1399, 7), 30);
-    assert.strictEqual(hc.daysInMonth(1399, 8), 30);
-    assert.strictEqual(hc.daysInMonth(1399, 9), 30);
-    assert.strictEqual(hc.daysInMonth(1399, 10), 30);
-    assert.strictEqual(hc.daysInMonth(1399, 11), 30);
-    assert.strictEqual(hc.daysInMonth(1399, 12), 30);
-    assert.strictEqual(hc.daysInMonth(1400, 1), 31);
-    assert.strictEqual(hc.daysInMonth(1400, 12), 29);
-    assert.strictEqual(hc.daysInMonth(1403, 12), 30);
+    assert.strictEqual(hc.daysInMonth(1442, 1), 30);
+    assert.strictEqual(hc.daysInMonth(1442, 2), 29);
+    assert.strictEqual(hc.daysInMonth(1442, 3), 30);
+    assert.strictEqual(hc.daysInMonth(1442, 4), 29);
+    assert.strictEqual(hc.daysInMonth(1442, 5), 30);
+    assert.strictEqual(hc.daysInMonth(1442, 6), 29);
+    assert.strictEqual(hc.daysInMonth(1442, 7), 30);
+    assert.strictEqual(hc.daysInMonth(1442, 8), 29);
+    assert.strictEqual(hc.daysInMonth(1442, 9), 30);
+    assert.strictEqual(hc.daysInMonth(1442, 10), 29);
+    assert.strictEqual(hc.daysInMonth(1442, 11), 30);
+    assert.strictEqual(hc.daysInMonth(1442, 12), 30);
+
   });
 
   it('daysInYear', function () {
-    assert.strictEqual(hc.daysInYear(1390), 365);
-    assert.strictEqual(hc.daysInYear(1391), 366);
-    assert.strictEqual(hc.daysInYear(1392), 365);
-    assert.strictEqual(hc.daysInYear(1393), 365);
-    assert.strictEqual(hc.daysInYear(1394), 365);
-    assert.strictEqual(hc.daysInYear(1395), 366);
-    assert.strictEqual(hc.daysInYear(1396), 365);
-    assert.strictEqual(hc.daysInYear(1397), 365);
-    assert.strictEqual(hc.daysInYear(1398), 365);
-    assert.strictEqual(hc.daysInYear(1399), 366);
-    assert.strictEqual(hc.daysInYear(1400), 365);
-    assert.strictEqual(hc.daysInYear(1401), 365);
-    assert.strictEqual(hc.daysInYear(1402), 365);
-    assert.strictEqual(hc.daysInYear(1403), 366);
-    assert.strictEqual(hc.daysInYear(1404), 365);
-    assert.strictEqual(hc.daysInYear(1405), 365);
-    assert.strictEqual(hc.daysInYear(1406), 365);
-    assert.strictEqual(hc.daysInYear(1407), 365);
+    assert.strictEqual(hc.daysInYear(1441), 354);
+    assert.strictEqual(hc.daysInYear(1442), 355);
+    assert.strictEqual(hc.daysInYear(1443), 354);
+    assert.strictEqual(hc.daysInYear(1444), 354);
+    assert.strictEqual(hc.daysInYear(1445), 355);
+    assert.strictEqual(hc.daysInYear(1446), 354);
+    assert.strictEqual(hc.daysInYear(1447), 355);
+    assert.strictEqual(hc.daysInYear(1448), 354);
+    assert.strictEqual(hc.daysInYear(1449), 354);
+    assert.strictEqual(hc.daysInYear(1450), 355);
+    assert.strictEqual(hc.daysInYear(1451), 354);
+    assert.strictEqual(hc.daysInYear(1452), 354);
   });
 
   it('isLeapYear', function () {
-    assert.strictEqual(hc.isLeapYear(1390), false);
-    assert.strictEqual(hc.isLeapYear(1391), true);
-    assert.strictEqual(hc.isLeapYear(1392), false);
-    assert.strictEqual(hc.isLeapYear(1393), false);
-    assert.strictEqual(hc.isLeapYear(1394), false);
-    assert.strictEqual(hc.isLeapYear(1395), true);
-    assert.strictEqual(hc.isLeapYear(1396), false);
-    assert.strictEqual(hc.isLeapYear(1397), false);
-    assert.strictEqual(hc.isLeapYear(1398), false);
-    assert.strictEqual(hc.isLeapYear(1399), true);
-    assert.strictEqual(hc.isLeapYear(1400), false);
-    assert.strictEqual(hc.isLeapYear(1401), false);
-    assert.strictEqual(hc.isLeapYear(1402), false);
-    assert.strictEqual(hc.isLeapYear(1403), true);
-    assert.strictEqual(hc.isLeapYear(1404), false);
-    assert.strictEqual(hc.isLeapYear(1405), false);
-    assert.strictEqual(hc.isLeapYear(1406), false);
-    assert.strictEqual(hc.isLeapYear(1407), false);
+    assert.strictEqual(hc.isLeapYear(1441), false);
+    assert.strictEqual(hc.isLeapYear(1442), true);
+    assert.strictEqual(hc.isLeapYear(1443), false);
+    assert.strictEqual(hc.isLeapYear(1444), false);
+    assert.strictEqual(hc.isLeapYear(1445), true);
+    assert.strictEqual(hc.isLeapYear(1446), false);
+    assert.strictEqual(hc.isLeapYear(1447), true);
+    assert.strictEqual(hc.isLeapYear(1448), false);
+    assert.strictEqual(hc.isLeapYear(1449), false);
+    assert.strictEqual(hc.isLeapYear(1450), true);
+    assert.strictEqual(hc.isLeapYear(1451), false);
+    assert.strictEqual(hc.isLeapYear(1452), false);
+
   });
 
   it('getTimestamp', function () {
     let time = hc.getTimestamp({
-      year: 1400,
-      month: 2,
-      day: 2,
+      year: 1442,
+      month: 9,
+      day: 9,
       hour: 17,
       minute: 12,
       second: 3,
@@ -335,9 +322,9 @@ describe('HijriCalendar', () => {
 
     let units = hc.getUnits(time);
     assert.deepStrictEqual(units, {
-      year: 1400,
-      month: 2,
-      day: 2,
+      year: 1442,
+      month: 9,
+      day: 9,
       hour: 17,
       minute: 12,
       second: 3,
@@ -346,11 +333,11 @@ describe('HijriCalendar', () => {
   });
 
   it('getUnits', function () {
-    let units = hc.getUnits(1619111523003);
+    let units = hc.getUnits(1618938723003);
     assert.deepStrictEqual(units, {
-      year: 1400,
-      month: 2,
-      day: 2,
+      year: 1442,
+      month: 9,
+      day: 9,
       hour: 17,
       minute: 12,
       second: 3,

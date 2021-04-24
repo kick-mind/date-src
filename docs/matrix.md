@@ -1,10 +1,10 @@
 # Support matrix
 
-This page covers what platforms are supported by jss and what caveats apply to them.
+This page covers what platforms are supported by Luxon and what caveats apply to them.
 
 ## Official support
 
-Jss officially supports the last two versions of the major browsers, with some caveats. The table below shows which of the not-universally-supported features are available in what environments.
+Luxon officially supports the last two versions of the major browsers, with some caveats. The table below shows which of the not-universally-supported features are available in what environments.
 
 | Browser                          | Versions | Zones | Intl basics | Intl tokens | Intl relative time formatting |
 | -------------------------------- | -------- | ----- | ----------- | ----------- | ----------------------------- |
