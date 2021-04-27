@@ -1,6 +1,8 @@
 import assert from 'assert';
 import { DateTimeUnits } from '../common';
 import { PersianCalendar } from './persian/persian';
+import {  } from './calendar';
+import { GregorianCalendar } from './gregorian/gregorian';
 
 describe('Calendar', () => {
     const pc = new PersianCalendar('persian');

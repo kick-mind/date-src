@@ -1,10 +1,10 @@
-import assert from 'assert';
-import { DateTimeUnits } from '../../common';
-import { GregorianCalendar2 } from './gregorian2';
+import assert from "assert";
+import { DateTimeUnits } from "../../common";
+import { GregorianCalendar2 } from "./gregorian2";
 
-describe('GregorianCalendar2', () => {
-  const gc = new GregorianCalendar2('gregorian2');
-  it('add', function () {
+describe("GregorianCalendar2", () => {
+  const gc = new GregorianCalendar2("gregorian2");
+  it("add", function () {
     let time = gc.getTimestamp({
       year: 1190,
       month: 6,
@@ -48,7 +48,7 @@ describe('GregorianCalendar2', () => {
     } as DateTimeUnits);
   });
 
-  it('subtract', function () {
+  it("subtract", function () {
     let time = gc.getTimestamp({
       year: 2021,
       month: 4,
@@ -92,7 +92,7 @@ describe('GregorianCalendar2', () => {
     } as DateTimeUnits);
   });
 
-  it('validate date', function () {
+  it("validate date", function () {
     assert.strictEqual(gc.isValid(2021, 1, 30), true);
     assert.strictEqual(gc.isValid(2021, 1, 31), true);
     assert.strictEqual(gc.isValid(2021, 2, 29), false);
@@ -122,7 +122,7 @@ describe('GregorianCalendar2', () => {
     assert.strictEqual(gc.isValid(2021, 12, 31), true);
   });
 
-  it('weekDay', function () {
+  it("weekDay", function () {
     let time = gc.getTimestamp({
       year: 2020,
       month: 12,
@@ -172,7 +172,7 @@ describe('GregorianCalendar2', () => {
     assert.strictEqual(gc.weekDay(time), 0);
   });
 
-  it('weekNumber', function () {
+  it("weekNumber", function () {
     let time = gc.getTimestamp({
       year: 2021,
       month: 1,
@@ -234,7 +234,7 @@ describe('GregorianCalendar2', () => {
     assert.strictEqual(gc.weekNumber(time, 0), 3);
   });
 
-  it('dayOfYear', function () {
+  it("dayOfYear", function () {
     let time = gc.getTimestamp({
       year: 2020,
       month: 12,
@@ -296,7 +296,7 @@ describe('GregorianCalendar2', () => {
     assert.strictEqual(gc.dayOfYear(time), 365);
   });
 
-  it('daysInMonth', function () {
+  it("daysInMonth", function () {
     assert.strictEqual(gc.daysInMonth(2021, 1), 31);
     assert.strictEqual(gc.daysInMonth(2021, 2), 28);
     assert.strictEqual(gc.daysInMonth(2021, 3), 31);
@@ -311,7 +311,7 @@ describe('GregorianCalendar2', () => {
     assert.strictEqual(gc.daysInMonth(2021, 12), 31);
   });
 
-  it('daysInYear', function () {
+  it("daysInYear", function () {
     assert.strictEqual(gc.daysInYear(2010), 365);
     assert.strictEqual(gc.daysInYear(2011), 365);
     assert.strictEqual(gc.daysInYear(2012), 366);
@@ -326,7 +326,7 @@ describe('GregorianCalendar2', () => {
     assert.strictEqual(gc.daysInYear(2021), 365);
   });
 
-  it('isLeapYear', function () {
+  it("isLeapYear", function () {
     assert.strictEqual(gc.isLeapYear(2010), false);
     assert.strictEqual(gc.isLeapYear(2011), false);
     assert.strictEqual(gc.isLeapYear(2012), true);
@@ -341,7 +341,7 @@ describe('GregorianCalendar2', () => {
     assert.strictEqual(gc.isLeapYear(2021), false);
   });
 
-  it('getTimestamp', function () {
+  it("getTimestamp", function () {
     let time = gc.getTimestamp({
       year: 2021,
       month: 4,
@@ -364,7 +364,7 @@ describe('GregorianCalendar2', () => {
     } as DateTimeUnits);
   });
 
-  it('getUnits', function () {
+  it("getUnits", function () {
     let units = gc.getUnits(1619197923003);
     assert.deepStrictEqual(units, {
       year: 2021,
@@ -376,4 +376,5 @@ describe('GregorianCalendar2', () => {
       ms: 3,
     } as DateTimeUnits);
   });
+
 });

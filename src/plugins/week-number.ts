@@ -5,5 +5,5 @@ import { DateTime } from '../date-time';
  * @public
  */
 export function weekNumber(d: DateTime): number {
-    return d.calendar.weekNumber(this.ts, 1, 1);
+    return d.calendar.weekNumber(d.ts, 1, 1);
 }

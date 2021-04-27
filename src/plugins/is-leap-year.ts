@@ -5,5 +5,5 @@ import { DateTime } from '../date-time';
  * @public
  */
 export function isLeapYear(d: DateTime): boolean {
-    return d.calendar.isLeapYear(this.ts);
+    return d.calendar.isLeapYear(d.year);
 }

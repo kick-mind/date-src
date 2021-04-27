@@ -152,6 +152,19 @@ describe('PersianCalendar', () => {
     assert.strictEqual(pc.weekDay(time), 0);
   });
 
+  it('weekNumber2', function () {
+    let time = pc.getTimestamp({
+      year: 1399,
+      month: 1,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      ms: 0,
+    });
+    const r = pc.weekNumber(time, 6);
+    assert.strictEqual(r, 1);
+  });
   it('weekNumber', function () {
     let time = pc.getTimestamp({
       year: 1400,
@@ -268,7 +281,6 @@ describe('PersianCalendar', () => {
     assert.strictEqual(pc.daysInMonth(1400, 1), 31);
     assert.strictEqual(pc.daysInMonth(1400, 12), 29);
     assert.strictEqual(pc.daysInMonth(1403, 12), 30);
-
   });
 
   it('daysInYear', function () {
@@ -282,7 +294,7 @@ describe('PersianCalendar', () => {
     assert.strictEqual(pc.daysInYear(1397), 365);
     assert.strictEqual(pc.daysInYear(1398), 365);
     assert.strictEqual(pc.daysInYear(1399), 366);
-    assert.strictEqual(pc.daysInYear(1400), 365);    
+    assert.strictEqual(pc.daysInYear(1400), 365);
     assert.strictEqual(pc.daysInYear(1401), 365);
     assert.strictEqual(pc.daysInYear(1402), 365);
     assert.strictEqual(pc.daysInYear(1403), 366);
@@ -303,7 +315,7 @@ describe('PersianCalendar', () => {
     assert.strictEqual(pc.isLeapYear(1397), false);
     assert.strictEqual(pc.isLeapYear(1398), false);
     assert.strictEqual(pc.isLeapYear(1399), true);
-    assert.strictEqual(pc.isLeapYear(1400), false);    
+    assert.strictEqual(pc.isLeapYear(1400), false);
     assert.strictEqual(pc.isLeapYear(1401), false);
     assert.strictEqual(pc.isLeapYear(1402), false);
     assert.strictEqual(pc.isLeapYear(1403), true);
@@ -323,7 +335,7 @@ describe('PersianCalendar', () => {
       second: 3,
       ms: 3,
     });
-    
+
     let units = pc.getUnits(time);
     assert.deepStrictEqual(units, {
       year: 1400,
@@ -334,7 +346,6 @@ describe('PersianCalendar', () => {
       second: 3,
       ms: 3,
     } as DateTimeUnits);
-
   });
 
   it('getUnits', function () {
@@ -348,6 +359,5 @@ describe('PersianCalendar', () => {
       second: 3,
       ms: 3,
     } as DateTimeUnits);
-    
   });
 });
