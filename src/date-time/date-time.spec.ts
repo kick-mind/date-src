@@ -6,15 +6,47 @@ import moment from 'moment';
 
 function assertDateEquality(date: Date, dateTime: DateTime) {
   assert.deepStrictEqual(
-    [dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.ms],
-    [date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()]
+    [
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+      dateTime.hour,
+      dateTime.minute,
+      dateTime.second,
+      dateTime.ms,
+    ],
+    [
+      date.getFullYear(),
+      date.getMonth() + 1,
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds(),
+      date.getMilliseconds(),
+    ]
   );
 }
 
 function assertUtcDateEquality(date: Date, dateTime: DateTime) {
   assert.deepStrictEqual(
-    [dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.ms],
-    [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds()]
+    [
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+      dateTime.hour,
+      dateTime.minute,
+      dateTime.second,
+      dateTime.ms,
+    ],
+    [
+      date.getUTCFullYear(),
+      date.getUTCMonth() + 1,
+      date.getUTCDate(),
+      date.getUTCHours(),
+      date.getUTCMinutes(),
+      date.getUTCSeconds(),
+      date.getUTCMilliseconds(),
+    ]
   );
 }
 
@@ -39,7 +71,15 @@ describe('DateTime', () => {
 
   it('can be created from years, month, day, ...', () => {
     const d = new Date();
-    const dt = new DateTime(d.getFullYear(), d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+    const dt = new DateTime(
+      d.getFullYear(),
+      d.getMonth() + 1,
+      d.getDate(),
+      d.getHours(),
+      d.getMinutes(),
+      d.getSeconds(),
+      d.getMilliseconds()
+    );
     assertDateEquality(d, dt);
   });
 
@@ -138,14 +178,22 @@ describe('DateTime', () => {
     assert.deepStrictEqual(dt, newDt);
   });
   it('toObject', () => {
-    const dt = new DateTime();
-    const newZone = dt.toZone('America/New_york');
+    const dt = new DateTime({zone: Zones.utc});
+    const newZone = dt.toZone('Asia/Tehran');
     const newDt = newZone.toObject();
 
     assert.strictEqual(newZone.day, newDt.day);
     assert.strictEqual(newZone.month, newDt.month);
     assert.strictEqual(newZone.year, newDt.year);
     assert.strictEqual(newZone.hour, newDt.hour);
-    
+  });
+
+  it('create new object', () => {
+    const dt = new DateTime(1609446600000 , {
+      zone: 'Asia/Tehran',
+    });
+    const d2 = dt.toZone(Zones.utc);
+    const d3  = d2.toObject();
+    // assert.strictEqual(newZone.day, newDt.day);
   });
 });
