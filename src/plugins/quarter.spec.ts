@@ -3,7 +3,7 @@ import { quarter } from './quarter';
 import moment from 'moment';
 import { fromJsDate } from './from-js-date';
 import { DateTime } from '../date-time';
-import { Calendar } from '../calendar';
+import { Calendar, Calendars } from '../calendar';
 
 describe('Plugins', () => {
   describe('quarter', () => {
@@ -30,14 +30,13 @@ describe('Plugins', () => {
       }
     });
 
-    it('subtract one ms', function () {
-      const dt = new DateTime(2013, 4, 1, 0, 0, 0, 0);
-      const dt2 = dt.subtract({
-        ms: 1,
-      });
-      const r = new Date(dt2.ts);
-      // const dt3 = dt2.calendar.getUnits(dt2.ts);
-      // const f = fromObject(dt3)
+    it('can compair two same datetime but with different calndar, if their quarter has different result based on their calendar.', function () {
+      const dt = new DateTime(1400, 2, 10, 0, 0, 0, 0, {calendar: 'persian'});
+      const q  = quarter(dt);
+      const dt2 =  new DateTime(2021, 4, 30, 0, 0, 0, 0, {calendar: 'gregorian'});
+      const q2 = quarter(dt2);
+      assert.strictEqual(q , 1);
+      assert.strictEqual(q2 , 2);
     });
   });
 });

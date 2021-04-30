@@ -83,6 +83,7 @@ describe('DateTime', () => {
     assertDateEquality(d, dt);
   });
 
+  
   it('add', () => {
     const dt = new DateTime();
 
@@ -103,7 +104,11 @@ describe('DateTime', () => {
     assert.strictEqual(d.getMonth() + 1, fdt.month);
     assert.strictEqual(d.getDate(), fdt.day);
   });
-
+  it('subtract 1 ms', function () {
+    const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, {calendar: 'persian'});
+    const dt2 = dt.subtract({ms: 1});
+    assert.strictEqual(dt2.year , 1399);
+  });
   it('subtract', () => {
     const dt = new DateTime();
 
