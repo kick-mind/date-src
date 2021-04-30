@@ -182,7 +182,7 @@ export abstract class Calendar {
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
       throwInvalidParam('fisrtDayOfWeek');
     }
-    offset = offset % 8;
+   // offset = offset % 8;
     if (offset == 1) {
       return getFirstDayWeekOfYear(
         firstDayOfWeek,
