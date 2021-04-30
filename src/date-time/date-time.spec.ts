@@ -1,20 +1,52 @@
-import assert from "assert";
-import { Locales } from "../locale";
-import { Zone, Zones } from "../zone";
-import { DateTime } from "./date-time";
-import moment from "moment";
+import assert from 'assert';
+import { Locales } from '../locale';
+import { Zone, Zones } from '../zone';
+import { DateTime } from './date-time';
+import moment from 'moment';
 
 function assertDateEquality(date: Date, dateTime: DateTime) {
   assert.deepStrictEqual(
-    [dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.ms],
-    [date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()]
+    [
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+      dateTime.hour,
+      dateTime.minute,
+      dateTime.second,
+      dateTime.ms,
+    ],
+    [
+      date.getFullYear(),
+      date.getMonth() + 1,
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds(),
+      date.getMilliseconds(),
+    ]
   );
 }
 
 function assertUtcDateEquality(date: Date, dateTime: DateTime) {
   assert.deepStrictEqual(
-    [dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute, dateTime.second, dateTime.ms],
-    [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds()]
+    [
+      dateTime.year,
+      dateTime.month,
+      dateTime.day,
+      dateTime.hour,
+      dateTime.minute,
+      dateTime.second,
+      dateTime.ms,
+    ],
+    [
+      date.getUTCFullYear(),
+      date.getUTCMonth() + 1,
+      date.getUTCDate(),
+      date.getUTCHours(),
+      date.getUTCMinutes(),
+      date.getUTCSeconds(),
+      date.getUTCMilliseconds(),
+    ]
   );
 }
 
@@ -39,11 +71,19 @@ describe('DateTime', () => {
 
   it('can be created from years, month, day, ...', () => {
     const d = new Date();
-    const dt = new DateTime(d.getFullYear(), d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+    const dt = new DateTime(
+      d.getFullYear(),
+      d.getMonth() + 1,
+      d.getDate(),
+      d.getHours(),
+      d.getMinutes(),
+      d.getSeconds(),
+      d.getMilliseconds()
+    );
     assertDateEquality(d, dt);
   });
 
-  it("add", () => {
+  it('add', () => {
     const dt = new DateTime();
 
     const yrand = Math.floor(Math.random() * 100);
@@ -51,9 +91,9 @@ describe('DateTime', () => {
     const drand = Math.floor(Math.random() * 1000);
 
     // add some randome numbers to datetime
-    var fdt = dt.add({ year: yrand, month: mrand, day: drand });
+    let fdt = dt.add({ year: yrand, month: mrand, day: drand });
 
-    var d = new Date();
+    let d = new Date();
     d.setDate(d.getDate() + drand);
     d.setMonth(d.getMonth() + mrand);
     d.setFullYear(d.getFullYear() + yrand);
@@ -64,7 +104,7 @@ describe('DateTime', () => {
     assert.strictEqual(d.getDate(), fdt.day);
   });
 
-  it("subtract", () => {
+  it('subtract', () => {
     const dt = new DateTime();
 
     const yrand = Math.floor(Math.random() * 100);
@@ -72,9 +112,9 @@ describe('DateTime', () => {
     const drand = Math.floor(Math.random() * 1000);
 
     // subtract some randome numbers to datetime
-    var fdt = dt.subtract({ year: yrand, month: mrand, day: drand });
+    let fdt = dt.subtract({ year: yrand, month: mrand, day: drand });
 
-    var d = new Date();
+    let d = new Date();
     d.setDate(d.getDate() - drand);
     d.setMonth(d.getMonth() - mrand);
     d.setFullYear(d.getFullYear() - yrand);
@@ -85,11 +125,11 @@ describe('DateTime', () => {
     assert.strictEqual(d.getDate(), fdt.day);
   });
 
-  it("toUTC: compare with moment equivalent method at moment", () => {
+  it('toUTC: compare with moment equivalent method at moment', () => {
     const dt = new DateTime();
-    var utc = dt.toUtc();
+    let utc = dt.toUtc();
 
-    var mUtc = moment.utc(new Date()).toDate();
+    let mUtc = moment.utc(new Date()).toDate();
 
     const md = `${utc.year}-${utc.month}-${utc.day}`;
     const dtd = `${mUtc.getFullYear()}-${
@@ -99,53 +139,61 @@ describe('DateTime', () => {
     assert.strictEqual(md, dtd);
   });
 
-  it("toLocal: compare with moment equivalent method at moment", () => {
+  it('toLocal: compare with moment equivalent method at moment', () => {
     const dt = new DateTime();
-    var local = dt.toLocal();
+    let local = dt.toLocal();
 
-    var stillUtc = moment.utc(new Date()).toDate();
-    var mlocal = moment(stillUtc).local().format("YYYY-M-D");
+    let stillUtc = moment.utc(new Date()).toDate();
+    let mlocal = moment(stillUtc).local().format('YYYY-M-D');
 
     const ld = `${local.year}-${local.month}-${local.day}`;
     assert.strictEqual(ld, mlocal);
   });
 
-  it("toLocale", () => {
-    const ro = new DateTime().toLocale("ro");
+  it('toLocale', () => {
+    const ro = new DateTime().toLocale('ro');
     const ianuarie = ro.locale.getMonthNames(ro.calendar)[0];
 
-    const de = new DateTime().toLocale("de");
+    const de = new DateTime().toLocale('de');
     const Januar = de.locale.getMonthNames(de.calendar)[0];
 
-    assert.strictEqual("ianuarie", ianuarie);
-    assert.strictEqual("Januar", Januar);
+    assert.strictEqual('ianuarie', ianuarie);
+    assert.strictEqual('Januar', Januar);
   });
 
-  it("toZone", () => {
+  it('toZone', () => {
     const dt = new DateTime();
-    var Tokyo = dt.toZone("Asia/Tokyo");
-    assert.strictEqual("Asia/Tokyo", Tokyo.zone.name);
+    let Tokyo = dt.toZone('Asia/Tokyo');
+    assert.strictEqual('Asia/Tokyo', Tokyo.zone.name);
   });
 
-  it("toCalendar", () => {
+  it('toCalendar', () => {
     const dt = new DateTime();
-    const persian = dt.to("persian");
-    assert.strictEqual("persian", persian.calendar.type);
+    const persian = dt.to('persian');
+    assert.strictEqual('persian', persian.calendar.type);
   });
-  it("clone", () => {
+  it('clone', () => {
     const dt = new DateTime();
     const newDt = dt.clone();
     assert.deepStrictEqual(dt, newDt);
   });
-  it("toObject", () => {
-    const dt = new DateTime();
-    const newZone =dt.toZone('America/New_york');
+  it('toObject', () => {
+    const dt = new DateTime({zone: Zones.utc});
+    const newZone = dt.toZone('Asia/Tehran');
     const newDt = newZone.toObject();
 
     assert.strictEqual(newZone.day, newDt.day);
     assert.strictEqual(newZone.month, newDt.month);
     assert.strictEqual(newZone.year, newDt.year);
     assert.strictEqual(newZone.hour, newDt.hour);
-    
+  });
+
+  it('create new object', () => {
+    const dt = new DateTime(1609446600000 , {
+      zone: 'Asia/Tehran',
+    });
+    const d2 = dt.toZone(Zones.utc);
+    const d3  = d2.toObject();
+    // assert.strictEqual(newZone.day, newDt.day);
   });
 });

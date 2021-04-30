@@ -1,12 +1,11 @@
-import assert from "assert";
-import { DateTime } from "../date-time";
-import { daysInYear } from "./days-in-year";
-import moment from "moment";
-import { daysInMonth } from "./days-in-month";
+import assert from 'assert';
+import { DateTime } from '../date-time';
+import { daysInYear } from './days-in-year';
+import moment from 'moment';
 
-describe("Plugins", () => {
-  describe("days-in-year", () => {
-    it("can compare with moment for some random years start from 1970 to 3941", () => {
+describe('Plugins', () => {
+  describe('days-in-year', () => {
+    it('can compare with moment for some random years start from 1970 to 3941', () => {
       const dt = new DateTime();
       const lyear = Math.floor(Math.random() * 1970) + 1971;
 

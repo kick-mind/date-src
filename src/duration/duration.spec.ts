@@ -1,9 +1,9 @@
-import assert from "assert";
-import { Duration } from "./duration";
-import moment from "moment";
+import assert from 'assert';
+import { Duration } from './duration';
+import moment from 'moment';
 
-describe("Duration", () => {
-  it("compare with moment", () => {
+describe('Duration', () => {
+  it('compare with moment', () => {
     const random = Math.floor(Math.random() * 1000000);
     const m = moment.duration(random);
     const d = new Duration(random);
@@ -13,7 +13,7 @@ describe("Duration", () => {
     assert.strictEqual(d.hours, m.hours());
   });
 
-  it("can compute interval components correctly", () => {
+  it('can compute interval components correctly', () => {
     const d = new Duration(1000000);
 
     assert.strictEqual(d.ms, 0);
