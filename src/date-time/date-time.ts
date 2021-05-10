@@ -29,6 +29,7 @@ const IO = IsObj;
 const ION = (x: any) => x == null || IO(x);
 
 /** DateTime create options. */
+
 export interface DateTimeCreateOptions {
   calendar?: CalendarSpecifier; // A Calendar object or Calendar ID
   zone?: ZoneSpecifier; // | number :: zone offset (for next versions)
@@ -39,7 +40,31 @@ export interface DateTimeCreateOptions {
  * JS-Sugar DateTime.
  * @public
  */
+
+/**
+ * A DateTime is an immutable data structure representing a specific date and time and accompanying methods. It contains class and instance methods for creating, parsing, interrogating, transforming, and formatting them.
+ *
+ * A DateTime comprises of:
+ * * A timestamp. Each DateTime instance refers to a specific millisecond of the Unix epoch.
+ * * A time zone. Each instance is considered in the context of a specific zone (by default the local system's zone).
+ * * Configuration properties that effect how output strings are formatted, such as `locale`, `numberingSystem`, and `outputCalendar`.
+ *
+ * Here is a brief overview of the most commonly used functionality it provides:
+ *
+ * * **Creation**: To create a DateTime from its components, use one of its factory class methods: {@link local}, {@link utc}, and (most flexibly) {@link fromObject}. To create one from a standard string format, use {@link fromISO}, {@link fromHTTP}, and {@link fromRFC2822}. To create one from a custom string format, use {@link fromFormat}. To create one from a native JS date, use {@link fromJSDate}.
+ * * **Gregorian calendar and time**: To examine the Gregorian properties of a DateTime individually (i.e as opposed to collectively through {@link toObject}), use the {@link year}, {@link month},
+ * {@link day}, {@link hour}, {@link minute}, {@link second}, {@link millisecond} accessors.
+ * * **Week calendar**: For ISO week calendar attributes, see the {@link weekYear}, {@link weekNumber}, and {@link weekday} accessors.
+ * * **Configuration** See the {@link locale} and {@link numberingSystem} accessors.
+ * * **Transformation**: To transform the DateTime into other DateTimes, use {@link set}, {@link reconfigure}, {@link setZone}, {@link setLocale}, {@link plus}, {@link minus}, {@link endOf}, {@link startOf}, {@link toUTC}, and {@link toLocal}.
+ * * **Output**: To convert the DateTime to other representations, use the {@link toRelative}, {@link toRelativeCalendar}, {@link toJSON}, {@link toISO}, {@link toHTTP}, {@link toObject}, {@link toRFC2822}, {@link toString}, {@link toLocaleString}, {@link toFormat}, {@link toMillis} and {@link toJSDate}.
+ *
+ * There's plenty others documented below. In addition, for more information on subtler topics like internationalization, time zones, alternative calendars, validity, and so on, see the external documentation.
+ */
 export class DateTime {
+  /**
+   * @access private
+   */
   #c: Calendar;
   #z: Zone;
   #l: Locale;
@@ -299,6 +324,25 @@ export class DateTime {
   /**
    * Get the locale of a DateTime, such 'en-GB'.
    * @public
+   */
+  /**
+   * Create a local DateTime
+   * @param {number} [year] - The calendar year. If omitted (as in, call `local()` with no arguments), the current time will be used
+   * @param {number} [month=1] - The month, 1-indexed
+   * @param {number} [day=1] - The day of the month, 1-indexed
+   * @param {number} [hour=0] - The hour of the day, in 24-hour time
+   * @param {number} [minute=0] - The minute of the hour, meaning a number between 0 and 59
+   * @param {number} [second=0] - The second of the minute, meaning a number between 0 and 59
+   * @param {number} [millisecond=0] - The millisecond of the second, meaning a number between 0 and 999
+   * @example DateTime.local()                            //~> now
+   * @example DateTime.local(2017)                        //~> 2017-01-01T00:00:00
+   * @example DateTime.local(2017, 3)                     //~> 2017-03-01T00:00:00
+   * @example DateTime.local(2017, 3, 12)                 //~> 2017-03-12T00:00:00
+   * @example DateTime.local(2017, 3, 12, 5)              //~> 2017-03-12T05:00:00
+   * @example DateTime.local(2017, 3, 12, 5, 45)          //~> 2017-03-12T05:45:00
+   * @example DateTime.local(2017, 3, 12, 5, 45, 10)      //~> 2017-03-12T05:45:10
+   * @example DateTime.local(2017, 3, 12, 5, 45, 10, 765) //~> 2017-03-12T05:45:10.765
+   * @return {DateTime}
    */
   get locale(): Locale {
     return this.#l;
