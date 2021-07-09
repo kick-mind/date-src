@@ -29,8 +29,7 @@ const IO = IsObj;
 const ION = (x: any) => x == null || IO(x);
 
 /** DateTime create options. */
-
-export interface DateTimeCreateOptions {
+export interface DateTimeCreationOptions {
   calendar?: CalendarSpecifier; // A Calendar object or Calendar ID
   zone?: ZoneSpecifier; // | number :: zone offset (for next versions)
   locale?: LocaleSpecifier;
@@ -40,75 +39,27 @@ export interface DateTimeCreateOptions {
  * JS-Sugar DateTime.
  * @public
  */
-
-/**
- * A DateTime is an immutable data structure representing a specific date and time and accompanying methods. It contains class and instance methods for creating, parsing, interrogating, transforming, and formatting them.
- *
- * A DateTime comprises of:
- * * A timestamp. Each DateTime instance refers to a specific millisecond of the Unix epoch.
- * * A time zone. Each instance is considered in the context of a specific zone (by default the local system's zone).
- * * Configuration properties that effect how output strings are formatted, such as `locale`, `numberingSystem`, and `outputCalendar`.
- *
- * Here is a brief overview of the most commonly used functionality it provides:
- *
- * * **Creation**: To create a DateTime from its components, use one of its factory class methods: {@link local}, {@link utc}, and (most flexibly) {@link fromObject}. To create one from a standard string format, use {@link fromISO}, {@link fromHTTP}, and {@link fromRFC2822}. To create one from a custom string format, use {@link fromFormat}. To create one from a native JS date, use {@link fromJSDate}.
- * * **Gregorian calendar and time**: To examine the Gregorian properties of a DateTime individually (i.e as opposed to collectively through {@link toObject}), use the {@link year}, {@link month},
- * {@link day}, {@link hour}, {@link minute}, {@link second}, {@link millisecond} accessors.
- * * **Week calendar**: For ISO week calendar attributes, see the {@link weekYear}, {@link weekNumber}, and {@link weekday} accessors.
- * * **Configuration** See the {@link locale} and {@link numberingSystem} accessors.
- * * **Transformation**: To transform the DateTime into other DateTimes, use {@link set}, {@link reconfigure}, {@link setZone}, {@link setLocale}, {@link plus}, {@link minus}, {@link endOf}, {@link startOf}, {@link toUTC}, and {@link toLocal}.
- * * **Output**: To convert the DateTime to other representations, use the {@link toRelative}, {@link toRelativeCalendar}, {@link toJSON}, {@link toISO}, {@link toHTTP}, {@link toObject}, {@link toRFC2822}, {@link toString}, {@link toLocaleString}, {@link toFormat}, {@link toMillis} and {@link toJSDate}.
- *
- * There's plenty others documented below. In addition, for more information on subtler topics like internationalization, time zones, alternative calendars, validity, and so on, see the external documentation.
- */
 export class DateTime {
-  /**
-   * @access private
-   */
   #c: Calendar;
   #z: Zone;
   #l: Locale;
-  #units: DateTimeUnits;
   #ts: number; // Timestamp (UTC)
+  #units: DateTimeUnits;
 
   /**
    * Creates a new DateTime object.
    * @constructor
    */
   constructor();
-  constructor(opts: DateTimeCreateOptions);
-  constructor(
-    year: number,
-    month: number,
-    day?: number,
-    hour?: number,
-    minute?: number,
-    second?: number,
-    ms?: number,
-    opts?: DateTimeCreateOptions
-  );
-  constructor(
-    opts: DateTimeCreateOptions,
-    year: number,
-    month: number,
-    day?: number,
-    hour?: number,
-    minute?: number,
-    second?: number,
-    ms?: number
-  );
-  constructor(timestamp: number, opts?: DateTimeCreateOptions);
+  constructor(opts: DateTimeCreationOptions);
+  constructor(year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number, opts?: DateTimeCreationOptions);
+  constructor(opts: DateTimeCreationOptions, year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number);
+  constructor(timestamp: number, opts?: DateTimeCreationOptions);
   constructor() {
     vClsCall(this, DateTime);
     let ts: number;
-    let year: number,
-      month: number,
-      day: number,
-      hour: number,
-      minute: number,
-      second: number,
-      ms: number;
-    let opts: DateTimeCreateOptions;
+    let year: number, month: number, day: number, hour: number, minute: number, second: number, ms: number;
+    let opts: DateTimeCreationOptions;
 
     // Resolve constructor parameters
     const a = arguments,
@@ -121,6 +72,7 @@ export class DateTime {
       a6 = a[6],
       a7 = a[7];
     let now = () => new Date().valueOf();
+
     if (a.length == 0) {
       // 1'st overload
       ts = now();
@@ -128,16 +80,7 @@ export class DateTime {
       // 2'nd overload
       ts = now();
       opts = a0;
-    } else if (
-      II(a0) &&
-      II(a1) &&
-      IIN(a2) &&
-      IIN(a3) &&
-      IIN(a4) &&
-      IIN(a4) &&
-      IIN(a6) &&
-      ION(a7)
-    ) {
+    } else if (II(a0) && II(a1) && IIN(a2) && IIN(a3) && IIN(a4) && IIN(a4) && IIN(a6) && ION(a7)) {
       // 3'nd overload
       year = a0;
       month = a1;
@@ -147,16 +90,7 @@ export class DateTime {
       second = a5;
       ms = a6;
       opts = a7;
-    } else if (
-      IO(a0) &&
-      II(a1) &&
-      II(a2) &&
-      IIN(a3) &&
-      IIN(a4) &&
-      IIN(a5) &&
-      IIN(a6) &&
-      IIN(a7)
-    ) {
+    } else if (IO(a0) && II(a1) && II(a2) && IIN(a3) && IIN(a4) && IIN(a5) && IIN(a6) && IIN(a7)) {
       // 4'rd overload
       opts = a0;
       year = a1;
@@ -325,25 +259,6 @@ export class DateTime {
    * Get the locale of a DateTime, such 'en-GB'.
    * @public
    */
-  /**
-   * Create a local DateTime
-   * @param {number} [year] - The calendar year. If omitted (as in, call `local()` with no arguments), the current time will be used
-   * @param {number} [month=1] - The month, 1-indexed
-   * @param {number} [day=1] - The day of the month, 1-indexed
-   * @param {number} [hour=0] - The hour of the day, in 24-hour time
-   * @param {number} [minute=0] - The minute of the hour, meaning a number between 0 and 59
-   * @param {number} [second=0] - The second of the minute, meaning a number between 0 and 59
-   * @param {number} [millisecond=0] - The millisecond of the second, meaning a number between 0 and 999
-   * @example DateTime.local()                            //~> now
-   * @example DateTime.local(2017)                        //~> 2017-01-01T00:00:00
-   * @example DateTime.local(2017, 3)                     //~> 2017-03-01T00:00:00
-   * @example DateTime.local(2017, 3, 12)                 //~> 2017-03-12T00:00:00
-   * @example DateTime.local(2017, 3, 12, 5)              //~> 2017-03-12T05:00:00
-   * @example DateTime.local(2017, 3, 12, 5, 45)          //~> 2017-03-12T05:45:00
-   * @example DateTime.local(2017, 3, 12, 5, 45, 10)      //~> 2017-03-12T05:45:10
-   * @example DateTime.local(2017, 3, 12, 5, 45, 10, 765) //~> 2017-03-12T05:45:10.765
-   * @return {DateTime}
-   */
   get locale(): Locale {
     return this.#l;
   }
@@ -393,7 +308,7 @@ export class DateTime {
 
   //#region Calendar
   /**
-   * Returns a new date time with the given calendar.
+   * Returns a new date time with the given Calendar.
    * @public
    */
   to(calendar: CalendarSpecifier): DateTime {

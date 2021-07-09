@@ -85,7 +85,7 @@ export abstract class Calendar {
 
   /**
    * Calendar's type (Gregorian, Chiness, Persian, Islamic, ...).
-   * It is possible that you have multiple calendars with the same type and different ID's (multiple implementation for a specific calendar).
+   * It is possible that you have multiple calendars with the same type and different ID's (multiple implementations for a specific calendar).
    */
   get type() {
     return this.#type;

@@ -1,5 +1,5 @@
 import { DateTimeUnits } from '../common';
-import { DateTime, DateTimeCreateOptions } from '../date-time';
+import { DateTime, DateTimeCreationOptions } from '../date-time';
 
 /**
  * Returns the number of days in this DateTime's year. 
