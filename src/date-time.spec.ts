@@ -1,6 +1,6 @@
 import assert from 'assert';
-import { Locales } from '../locale';
-import { Zone, Zones } from '../zone';
+import { Locales } from './locale';
+import { Zone, Zones } from './zone';
 import { DateTime } from './date-time';
 import moment from 'moment';
 

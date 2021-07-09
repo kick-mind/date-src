@@ -1,6 +1,6 @@
-import { Calendar, Calendars } from "../calendar";
-import { Zone, Zones } from "../zone";
-import { Locale, Locales } from "../locale";
+import { Calendar, Calendars } from './calendar';
+import { Zone, Zones } from './zone';
+import { Locale, Locales } from './locale';
 import {
   CalendarSpecifier,
   DateTimeUnits,
@@ -14,7 +14,7 @@ import {
   vObj,
   WeekdayNameFormat,
   ZoneSpecifier,
-} from "../common";
+} from './common';
 
 /** Is a non-negetive integer? */
 const II = (x: any) => IsInt(x) && x >= 0;
@@ -132,7 +132,7 @@ export class DateTime {
     } else if (IsStr(z)) {
       z = Zones.resolve(z, o);
     } else {
-      vObj(z, Zone, true, "Invalid zone");
+      vObj(z, Zone, true, 'Invalid zone');
     }
     this.#z = z;
 
@@ -143,7 +143,7 @@ export class DateTime {
     } else if (IsStr(l)) {
       l = Locales.resolve(l, { weekStart: 0, throwError: true });
     } else {
-      vObj(l, Locale, true, "Invalid locale");
+      vObj(l, Locale, true, 'Invalid locale');
     }
     this.#l = l;
 
@@ -154,7 +154,7 @@ export class DateTime {
     } else if (IsStr(c)) {
       c = Calendars.find(c, o);
     } else {
-      vObj(c, Calendar, true, "Invalid calendar");
+      vObj(c, Calendar, true, 'Invalid calendar');
     }
     this.#c = c;
   }
