@@ -9,7 +9,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "rootDir": "./src",
-    "outDir": "dist/",
+    "outDir": "./dist/",
     "noImplicitAny": true,
     "esModuleInterop": true,
     "target": "ES6",

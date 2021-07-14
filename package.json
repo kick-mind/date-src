@@ -30,8 +30,7 @@
   "scripts": {
     "test": "jasmine-ts --config=jasmine.json",
     "build-tsc": "tsc",
-    "build": "webpack",
-    "build_gulp": "gulp",
+    "build-webpack": "webpack",
     "docs": "typedoc --out docs src/index.ts"
   },
   "keywords": [],
