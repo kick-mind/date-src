@@ -13,7 +13,7 @@ module.exports = {
             name: "[name]",
             type: "umd",
         },
-        // libraryTarget: "umd",
+        libraryTarget: "umd",
         // globalObject: "this",
     },
     resolve: {

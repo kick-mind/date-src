@@ -10,11 +10,7 @@
   "devDependencies": {
     "@types/mocha": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",
-    "gulp": "^4.0.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-typescript": "^6.0.0-alpha.1",
-    "gulp-uglify": "^3.0.2",
-    "gulp-uglify-es": "^2.0.0",
+    "copy-webpack-plugin": "^9.0.1",
     "mocha": "^8.3.2",
     "moment": "^2.29.1",
     "terser-webpack-plugin": "^5.1.1",
@@ -29,8 +25,8 @@
   },
   "scripts": {
     "test": "jasmine-ts --config=jasmine.json",
-    "build-tsc": "tsc",
     "build-webpack": "webpack",
+    "build-tsc": "tsc",
     "docs": "typedoc --out docs src/index.ts"
   },
   "keywords": [],
