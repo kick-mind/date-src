@@ -10,11 +10,11 @@ module.exports = {
         filename: "main.js",
         // publicPath: "/",
         library: {
-            name: "[name]",
+            name: "jss",
             type: "umd",
         },
         libraryTarget: "umd",
-        // globalObject: "this",
+        globalObject: "this",
     },
     resolve: {
         extensions: [ '.tsx', '.ts', '.js' ],
