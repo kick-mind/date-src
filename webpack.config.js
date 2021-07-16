@@ -4,10 +4,29 @@ const path = require("path");
 /** @type {import('webpack').Configuration} */
 module.exports = {
     mode: 'production',
-    entry: './src/index.ts',
+    entry: {
+        jss: "./src/index.ts",
+        gregorian: {
+            import: "./src/calendar/gregorian/gregorian.ts",
+            
+            dependOn: "jss",
+        },
+        gregorian2: {
+            import: "./src/calendar/gregorian/gregorian2.ts",
+            dependOn: "jss",
+        },
+        persian: {
+            import: "./src/calendar/persian/persian.ts",
+            dependOn: "jss",
+        },
+        hijri: {
+            import: "./src/calendar/hijri/hijri.ts",
+            dependOn: "jss",
+        },
+    },
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "main.js",
+        filename: "[name].js",
         // publicPath: "/",
         library: {
             name: "jss",
@@ -17,7 +36,7 @@ module.exports = {
         globalObject: "this",
     },
     resolve: {
-        extensions: [ '.tsx', '.ts', '.js' ],
+        extensions: ['.tsx', '.ts', '.js'],
     },
     module: {
         rules: [

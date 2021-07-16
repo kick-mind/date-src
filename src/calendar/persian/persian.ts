@@ -602,7 +602,3 @@ export class PersianCalendar extends Calendar {
 }
 
 Calendars.add(new PersianCalendar('persian'));
-// declare var jss: any;
-// if (window && window['jss']) {
-//   jss.Calendars.PersianCalendar = PersianCalendar;
-// }

@@ -8,7 +8,6 @@ import {
   DAYS_TO_MONTH_366,
 } from '../../common';
 import { Calendar, getTimeUnits } from '../calendar';
-import { Calendars } from '../calendars';
 
 function getDateUnits(ts: number): DateTimeUnits {
   const d = new Date(ts);
@@ -28,7 +27,7 @@ export class GregorianCalendar extends Calendar {
     super(id, 'gregory');
   }
 
-  addMonths(time: number, months: number): number {
+  public addMonths(time: number, months: number): number {
     const d = new Date(time);
     d.setMonth(d.getMonth() + months);
     return d.getTime();

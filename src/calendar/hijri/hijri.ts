@@ -216,8 +216,3 @@ export class HijriCalendar extends Calendar {
 for (let i = 2; i < 3; i++) {
   Calendars.add(new HijriCalendar(`hijri${i == 0 ? '' : i}`, 0));
 }
-
-// declare var jss: any;
-// if (jss) {
-//   jss.Calendars.HijriCalendar = HijriCalendar;
-// }
