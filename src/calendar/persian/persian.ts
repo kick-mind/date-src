@@ -518,7 +518,7 @@ function getDateUnits(ticks: number): DateTimeUnits {
   du.day = ordinalDay - daysInPreviousMonths(du.month);
   return du;
 }
-export class PersianCalendar extends Calendar {
+export default class PersianCalendar extends Calendar {
   constructor(id: string) {
     super(id, 'persian');
   }

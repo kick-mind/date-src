@@ -1,38 +1,32 @@
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require("path");
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
     mode: 'production',
     entry: {
-        jss: "./src/index.ts",
-        gregorian: {
-            import: "./src/calendar/gregorian/gregorian.ts",
-            
-            dependOn: "jss",
-        },
-        gregorian2: {
-            import: "./src/calendar/gregorian/gregorian2.ts",
-            dependOn: "jss",
+        main: {
+            import: "./src/index.ts",
+            library: {
+                name: 'main',
+                type: 'umd'
+            },
         },
         persian: {
             import: "./src/calendar/persian/persian.ts",
-            dependOn: "jss",
-        },
-        hijri: {
-            import: "./src/calendar/hijri/hijri.ts",
-            dependOn: "jss",
+            dependOn: "main",
+            library: {
+                name: 'persian',
+                type: 'umd',
+                export: 'default'
+            }
         },
     },
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "[name].js",
-        // publicPath: "/",
-        library: {
-            name: "jss",
-            type: "umd",
-        },
-        libraryTarget: "umd",
+        publicPath: "/",
         globalObject: "this",
     },
     resolve: {
@@ -49,9 +43,14 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: "src/package.json" },
+            ],
+        }),
     ],
     optimization: {
-        minimize: true,
+        minimize: false,
     }
 }
 
