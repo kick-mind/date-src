@@ -1,5 +1,6 @@
-const jss = require('./dist/');
-const p = require('./dist/persian');
+
+const jss = require('./dist/main');
+const p = require('./dist/persian-calendar');
 
 
 const d = new jss.DateTime();

@@ -10,16 +10,17 @@ module.exports = {
             import: "./src/index.ts",
             library: {
                 name: 'main',
-                type: 'umd'
+                type: 'umd',
             },
         },
         persian: {
-            import: "./src/calendar/persian/persian.ts",
+            import: "./src/calendar/persian/index.ts",
             dependOn: "main",
+            filename: 'persian-calendar.js',
             library: {
                 name: 'persian',
                 type: 'umd',
-                export: 'default'
+
             }
         },
     },
@@ -28,6 +29,9 @@ module.exports = {
         filename: "[name].js",
         publicPath: "/",
         globalObject: "this",
+        library: {
+            type: 'umd'
+        }
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
@@ -50,7 +54,7 @@ module.exports = {
         }),
     ],
     optimization: {
-        minimize: false,
+        minimize: false
     }
 }
 
