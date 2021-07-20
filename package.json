@@ -25,6 +25,8 @@
   "scripts": {
     "test": "jasmine-ts --config=jasmine.json",
     "build": "webpack",
+    "publish": "npm publish dist --access=public",
+    "build-publish": "npm run build && npm run publish",
     "docs": "typedoc --out docs src/index.ts"
   },
   "keywords": [],
