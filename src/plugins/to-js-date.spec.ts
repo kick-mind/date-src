@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { toJsDate } from './to-js-date';
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 
 describe('Plugins', () => {
   describe('toJsDate', () => {

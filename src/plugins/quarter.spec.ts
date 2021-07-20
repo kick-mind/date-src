@@ -2,8 +2,8 @@ import assert from 'assert';
 import { quarter } from './quarter';
 import moment from 'moment';
 import { fromJsDate } from './from-js-date';
-import { DateTime } from '../date-time';
-import { Calendar, Calendars } from '../calendar';
+import { DateTime } from '../main';
+import { Calendar, Calendars } from '../main';
 
 describe('Plugins', () => {
   describe('quarter', () => {

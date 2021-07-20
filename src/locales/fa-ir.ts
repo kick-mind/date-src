@@ -1,5 +1,4 @@
-import { Locales } from '../main';
-import { StaticLocale } from '../main';
+import { Locales, StaticLocale } from '../main';
 
 Locales.add(new StaticLocale({
     name: 'fa',

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { toArray } from './to-array';
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 
 describe('Plugins', () => {
   describe('toArray', () => {

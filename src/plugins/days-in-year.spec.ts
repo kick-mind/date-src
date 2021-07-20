@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 import { daysInYear } from './days-in-year';
 import moment from 'moment';
 

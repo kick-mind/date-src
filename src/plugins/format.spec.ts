@@ -1,7 +1,5 @@
 import assert from 'assert';
-import { DateTime } from '../date-time';
-import { Locales } from '../locale';
-import { Zones } from '../zone';
+import { DateTime, Locales, Zones } from '../main';
 import { format } from './format';
 
 describe('Plugins', () => {

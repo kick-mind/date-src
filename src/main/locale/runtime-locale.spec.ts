@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { Calendars } from '../calendar';
-import { PersianCalendar } from '../calendar/persian/persian';
+import { PersianCalendar } from '../../calendars/persian';
 import { Zones } from '../zone';
 import { RuntimeLocale } from './runtime-locale';
 

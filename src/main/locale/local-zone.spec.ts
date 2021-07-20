@@ -3,7 +3,7 @@
  * https://moment.github.io/luxon/docs/manual/zones.html
  */
 import assert from 'assert';
-import { Zones } from './zones';
+import { Zones } from '../zone';
 
 describe('Zone', () => {
     describe('LocalZone', () => {

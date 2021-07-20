@@ -1,5 +1,5 @@
 import { weekNumber } from './week-number';
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 import assert from 'assert';
 import moment from 'moment';
 
