@@ -1,5 +1,5 @@
 import { DateTimeUnits } from '../common';
-import { DateTime, DateTimeCreationOptions } from '../date-time';
+import { DateTime, DateTimeCreationOptions } from '../main/date-time';
 
 /** 
  * Creates a DateTime from an object

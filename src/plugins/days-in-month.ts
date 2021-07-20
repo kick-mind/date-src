@@ -1,4 +1,4 @@
-import { DateTime } from '../date-time';
+import { DateTime } from '../main/date-time';
 
 /**
  * Returns the number of days in this DateTime's month. 

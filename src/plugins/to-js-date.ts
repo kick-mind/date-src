@@ -1,4 +1,4 @@
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 
 /**
  * Converts this object to a javascript Date

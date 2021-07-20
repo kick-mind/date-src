@@ -1,4 +1,4 @@
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 
 /**
  * Returns true if this DateTime is in a leap year, false otherwise. 

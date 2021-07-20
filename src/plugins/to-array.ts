@@ -1,4 +1,4 @@
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 
 /** 
  * Returns an Array with the values of this DateTime. 

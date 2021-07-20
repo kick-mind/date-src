@@ -1,4 +1,4 @@
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 
 /**
  * Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). 

@@ -7,16 +7,17 @@ module.exports = {
     mode: 'production',
     entry: {
         main: {
-            import: "./src/index.ts",
+            import: "./src/main/index.ts",
+            filename: 'main/main.js',
             library: {
                 name: 'main',
                 type: 'umd',
             },
         },
         persian: {
-            import: "./src/calendar/persian/index.ts",
+            import: "./src/calendars/persian.ts",
             dependOn: "main",
-            filename: 'persian-calendar.js',
+            filename: 'calendars/persian.js',
             library: {
                 name: 'persian',
                 type: 'umd',
@@ -29,9 +30,9 @@ module.exports = {
         filename: "[name].js",
         publicPath: "/",
         globalObject: "this",
-        library: {
-            type: 'umd'
-        }
+        // library: {
+        //     type: 'umd'
+        // }
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],

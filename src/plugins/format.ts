@@ -1,5 +1,5 @@
 import { padNum } from '../common';
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 import { weekDay } from './week-day';
 import { weekDayLocale } from './week-day-locale';
 

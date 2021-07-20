@@ -1,4 +1,4 @@
-import { DateTime } from '../date-time';
+import { DateTime } from '../main';
 
 /**
  * Returns whether this DateTime is same or after another DateTime.

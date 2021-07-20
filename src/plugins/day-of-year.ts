@@ -1,4 +1,4 @@
-import { DateTime } from '../date-time';
+import { DateTime } from '../main/date-time';
 
 /**
  * Gets the day of the year (1 to 366). 

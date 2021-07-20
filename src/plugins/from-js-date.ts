@@ -1,6 +1,4 @@
-import { Calendars } from '../calendar';
-import { LocaleSpecifier, ZoneSpecifier } from '../common';
-import { DateTime } from '../date-time';
+import { ZoneSpecifier, Calendars, LocaleSpecifier, DateTime } from '../main';
 
 /** 
  * Creates a DateTime from a Javascript Date object

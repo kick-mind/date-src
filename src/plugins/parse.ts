@@ -1,5 +1,4 @@
-import { CalendarSpecifier } from "../common";
-import { DateTime } from "../date-time";
+import { DateTime, CalendarSpecifier } from '../main';
 
 export function parse(
   date: string,
