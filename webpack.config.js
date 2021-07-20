@@ -10,18 +10,40 @@ module.exports = {
             import: "./src/main/index.ts",
             filename: 'main/main.js',
             library: {
-                name: 'main',
+                name: 'jss',
                 type: 'umd',
             },
         },
+        gregorian: {
+            import: "./src/calendars/gregorian.ts",
+            filename: 'calendars/gregorian.js',
+            dependOn: "main",
+            library: {
+                type: 'umd',
+            }
+        },
+        gregorian2: {
+            import: "./src/calendars/gregorian2.ts",
+            filename: 'calendars/gregorian2.js',
+            dependOn: "main",
+            library: {
+                type: 'umd',
+            }
+        },
         persian: {
             import: "./src/calendars/persian.ts",
-            dependOn: "main",
             filename: 'calendars/persian.js',
+            dependOn: "main",
             library: {
-                name: 'persian',
                 type: 'umd',
-
+            }
+        },        
+        hijri: {
+            import: "./src/calendars/hijri.ts",
+            filename: 'calendars/hijri.js',
+            dependOn: "main",
+            library: {
+                type: 'umd',
             }
         },
     },
@@ -55,7 +77,7 @@ module.exports = {
         }),
     ],
     optimization: {
-        minimize: false
+        minimize: true
     }
 }
 
