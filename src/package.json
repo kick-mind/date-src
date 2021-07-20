@@ -12,7 +12,7 @@
   ],
   "author": "JS-Sugar",
   "license": "ISC",
-  "main": "./main/jss-date.js",
   "homepage": "https://github.com/js-sugar/date",
+  "main": "./main/jss-date.js",
   "types": "./main/index.d.ts"
 }

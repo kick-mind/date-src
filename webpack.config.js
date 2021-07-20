@@ -3,64 +3,70 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const fs = require("fs");
 const path = require("path");
 
-// (function () {
-//   const arr = [];
-//   fs.readdirSync("./src/locale/repo").forEach((file) => {
-//     config.entry[file.substr(0, file.length - 3)] = {
-//       import: "./src/locale/repo/".concat(file),
-//       dependOn: "jss",
-//     };
-//     locales.push(file.substr(0, file.length - 3));
-//   });
-//   return arr;
-// })();
+function getPluginsEntries() {
+    const arr = [];
+    const files = fs.readdirSync("./src/plugins");
+    const plugins = files.filter(x => !x.toLocaleLowerCase().endsWith('spec.ts'));
+    const entries = {};
 
+    // files.forEach((file) => {
+    //     entries[file.substr(0, file.length - 3)] = {
+    //         import: "./src/locale/repo/".concat(file),
+    //         dependOn: "main",
+    //     };
+    // });
+
+    return entries;
+}
+
+const entries = {
+    main: {
+        import: "./src/main/index.ts",
+        filename: 'main/jss-date.js',
+        library: {
+            name: 'jss',
+            type: 'umd',
+        },
+    },
+    gregorian: {
+        import: "./src/calendars/gregorian.ts",
+        filename: 'calendars/gregorian.js',
+        dependOn: "main",
+        library: {
+            type: 'umd',
+        }
+    },
+    gregorian2: {
+        import: "./src/calendars/gregorian2.ts",
+        filename: 'calendars/gregorian2.js',
+        dependOn: "main",
+        library: {
+            type: 'umd',
+        }
+    },
+    persian: {
+        import: "./src/calendars/persian.ts",
+        filename: 'calendars/persian.js',
+        dependOn: "main",
+        library: {
+            type: 'umd',
+        }
+    },
+    hijri: {
+        import: "./src/calendars/hijri.ts",
+        filename: 'calendars/hijri.js',
+        dependOn: "main",
+        library: {
+            type: 'umd',
+        }
+    },
+    ...getPluginsEntries()
+};
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
     mode: 'production',
-    entry: {
-        main: {
-            import: "./src/main/index.ts",
-            filename: 'main/jss-date.js',
-            library: {
-                name: 'jss',
-                type: 'umd',
-            },
-        },
-        gregorian: {
-            import: "./src/calendars/gregorian.ts",
-            filename: 'calendars/gregorian.js',
-            dependOn: "main",
-            library: {
-                type: 'umd',
-            }
-        },
-        gregorian2: {
-            import: "./src/calendars/gregorian2.ts",
-            filename: 'calendars/gregorian2.js',
-            dependOn: "main",
-            library: {
-                type: 'umd',
-            }
-        },
-        persian: {
-            import: "./src/calendars/persian.ts",
-            filename: 'calendars/persian.js',
-            dependOn: "main",
-            library: {
-                type: 'umd',
-            }
-        },        
-        hijri: {
-            import: "./src/calendars/hijri.ts",
-            filename: 'calendars/hijri.js',
-            dependOn: "main",
-            library: {
-                type: 'umd',
-            }
-        },
-    },
+    entry: entries,
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "[name].js",
