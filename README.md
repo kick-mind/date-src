@@ -1,4 +1,4 @@
-# JS-Sugar DateTime Library
+# DateTime Library
 
 JS-Sugar Date (JSS Date) is a multi-calendar, extensible, immutable, tree-shakable and lightweight date-time library for javascript.
 

@@ -8,7 +8,7 @@ module.exports = {
     entry: {
         main: {
             import: "./src/main/index.ts",
-            filename: 'main/main.js',
+            filename: 'main/jss-date.js',
             library: {
                 name: 'jss',
                 type: 'umd',

@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { DateTimeUnits } from '../../common';
+import { DateTimeUnits } from '../common';
 import { HijriCalendar } from './hijri';
 
 describe('HijriCalendar', () => {
