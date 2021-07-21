@@ -48,13 +48,11 @@ const zoneExpressions = [
   },
 ];
 
-// remove
 const getLocalePart = (name: string) => {
   const part = locale[name];
   return part && (part.indexOf ? part : part.s.concat(part.f));
 };
 
-// remove
 const meridiemMatch = (input: string, isLowerCase: boolean) => {
   let isAfternoon;
   const { meridiem } = locale;
