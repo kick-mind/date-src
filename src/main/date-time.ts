@@ -368,7 +368,8 @@ export class DateTime {
   toObject(): DateTimeUnits {
     if (this.#units == null) {
       let offset = this.#z.getOffset(this.#ts) * 60 * 1000;
-      this.#units = this.#c.getUnits(this.#ts - offset);
+      let u = this.#c.getUnits(this.#ts + offset);
+      this.#units = u;
     }
     return this.#units;
   }

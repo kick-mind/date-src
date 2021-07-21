@@ -5,6 +5,7 @@ import { DateTime } from './date-time';
 import moment from 'moment';
 import { Calendars } from './calendar';
 import { GregorianCalendar } from '../calendars/gregorian';
+import { GregorianCalendar2 } from '../calendars/gregorian2';
 
 
 function assertDateEquality(date: Date, dateTime: DateTime) {
@@ -55,7 +56,7 @@ function assertUtcDateEquality(date: Date, dateTime: DateTime) {
 
 describe('DateTime', () => {
   before(function () {
-    Calendars.add(new GregorianCalendar('gregorian'));
+    Calendars.add(new GregorianCalendar2('gregorian'));
   });
 
   it('create without parameter (local time zone, system locale, default calendar)', () => {
@@ -116,6 +117,7 @@ describe('DateTime', () => {
     const dt2 = dt.subtract({ ms: 1 });
     assert.strictEqual(dt2.year, 1399);
   });
+
   it('subtract', () => {
     const dt = new DateTime();
 
@@ -183,6 +185,7 @@ describe('DateTime', () => {
     const persian = dt.to('persian');
     assert.strictEqual('persian', persian.calendar.type);
   });
+
   it('clone', () => {
     const dt = new DateTime();
     const newDt = dt.clone();

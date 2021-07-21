@@ -1,6 +1,6 @@
 {
   "name": "@js-sugar/date",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "A Multi-Calendar, Tree-shakable, Immutable and Lightweight Date Library for Javascript",
   "keywords": [
     "date",

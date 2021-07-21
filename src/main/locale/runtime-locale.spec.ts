@@ -4,10 +4,9 @@ import { PersianCalendar } from '../../calendars/persian';
 import { Zones } from '../zone';
 import { RuntimeLocale } from './runtime-locale';
 
+
 describe('Locale', () => {
-
   describe('RuntimeLocale', function () {
-
     before(function () {
       Calendars.add(new PersianCalendar('persian'));
     });
