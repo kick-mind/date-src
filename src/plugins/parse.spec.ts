@@ -12,7 +12,22 @@ describe('Plugins', () => {
     });
 
     it('can parse', () => {
-      const d = parse('2012/2/6', 'YY/M/D');
+      const d = parse('99/2/6', 'YY/M/D');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day,],
+        [99, 2, 6]
+      );
+    });
+  });
+
+  describe('Parse', () => {
+    before(function () {
+      Calendars.add(new GregorianCalendar('gregorian'));
+      Calendars.add(new PersianCalendar('persian'));
+    });
+
+    it('can parse2', () => {
+      const d = parse('2012/2/6', 'Y/M/D');
       assert.deepStrictEqual(
         [d.year, d.month, d.day,],
         [2012, 2, 6]
