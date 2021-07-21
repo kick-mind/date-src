@@ -33,5 +33,21 @@ describe('Plugins', () => {
         [2012, 2, 6]
       );
     });
+
+    it('can parse3', () => {
+      const d = parse('12/2/6', 'YY/M/D');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day,],
+        [2012, 2, 6]
+      );
+    });
+
+    it('can parse4', () => {
+      const d = parse('2012/2/6', 'Y/M/D');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day,],
+        [2012, 2, 6]
+      );
+    });
   });
 });
