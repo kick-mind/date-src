@@ -21,7 +21,7 @@ export abstract class Zones {
         return cache.utc;
     }
 
-    /** Tries to resolve a time zone by it's name. */
+    /** Tries to resolve a Zone by it's name. */
     static resolve(name: string, opts?: { throwError: boolean }): Zone {
         let key = name.toLowerCase();
         let z = cache[key];

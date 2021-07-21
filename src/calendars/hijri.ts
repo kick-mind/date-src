@@ -6,7 +6,7 @@ import {
   throwInvalidParam,
   timeToTicks,
 } from '../common';
-import { Calendar, getTimeUnits, Calendars } from '../main';
+import { Calendar, getTimeUnits } from '../main';
 
 const MONTH_DAYS = [
   0,
@@ -212,6 +212,6 @@ export class HijriCalendar extends Calendar {
   }
 }
 
-for (let i = 2; i < 3; i++) {
-  Calendars.add(new HijriCalendar(`hijri${i == 0 ? '' : i}`, 0));
-}
+// for (let i = 2; i < 3; i++) {
+//   Calendars.add(new HijriCalendar(`hijri${i == 0 ? '' : i}`, 0));
+// }

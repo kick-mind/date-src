@@ -7,7 +7,6 @@ function getCalendarsEntries() {
     const files = fs.readdirSync("./src/calendars");
     const calendars = files.filter(x => !x.toLocaleLowerCase().endsWith('spec.ts'));
     const entries = {};
-
     calendars.forEach((cal) => {
         const name = path.parse(cal).name;
         entries[name] = {
@@ -27,7 +26,6 @@ function getPluginsEntries() {
     const files = fs.readdirSync("./src/plugins");
     const plugins = files.filter(x => !x.toLocaleLowerCase().endsWith('spec.ts'));
     const entries = {};
-
     plugins.forEach((plugin) => {
         const name = path.parse(plugin).name;
         entries[name] = {

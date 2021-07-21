@@ -7,14 +7,7 @@ import {
   throwInvalidParam,
   timeToTicks,
 } from '../common';
-import { Calendar, getTimeUnits, Calendars } from '../main';
-
-// tslint:disable: member-ordering
-// tslint:disable: variable-name
-// tslint:disable: triple-equals
-// tslint:disable: prefer-const
-
-//#region
+import { Calendar, getTimeUnits } from '../main';
 
 class AlgoMap {
   constructor(year: number, algorithm: number) {
@@ -599,5 +592,3 @@ export class PersianCalendar extends Calendar {
     return { ...getDateUnits(ts), ...getTimeUnits(ts) };
   }
 }
-
-Calendars.add(new PersianCalendar('persian'));

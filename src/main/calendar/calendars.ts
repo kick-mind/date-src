@@ -25,7 +25,7 @@ export abstract class Calendars {
         vObj(c, Calendar);
         if (!this.find(c.id)) {
             calendars.push(c);
-            if (calendars.length === 0) {
+            if (calendars.length === 1) {
                 defaultCalendar = c;
             }
         }

@@ -3,6 +3,9 @@ import { Locales } from './locale';
 import { Zone, Zones } from './zone';
 import { DateTime } from './date-time';
 import moment from 'moment';
+import { Calendars } from './calendar';
+import { GregorianCalendar } from '../calendars/gregorian';
+
 
 function assertDateEquality(date: Date, dateTime: DateTime) {
   assert.deepStrictEqual(
@@ -51,6 +54,10 @@ function assertUtcDateEquality(date: Date, dateTime: DateTime) {
 }
 
 describe('DateTime', () => {
+  before(function () {
+    Calendars.add(new GregorianCalendar('gregorian'));
+  });
+
   it('create without parameter (local time zone, system locale, default calendar)', () => {
     const d = new Date();
     const dt = new DateTime();
@@ -83,7 +90,7 @@ describe('DateTime', () => {
     assertDateEquality(d, dt);
   });
 
-  
+
   it('add', () => {
     const dt = new DateTime();
 
@@ -105,9 +112,9 @@ describe('DateTime', () => {
     assert.strictEqual(d.getDate(), fdt.day);
   });
   it('subtract 1 ms', function () {
-    const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, {calendar: 'persian'});
-    const dt2 = dt.subtract({ms: 1});
-    assert.strictEqual(dt2.year , 1399);
+    const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, { calendar: 'persian' });
+    const dt2 = dt.subtract({ ms: 1 });
+    assert.strictEqual(dt2.year, 1399);
   });
   it('subtract', () => {
     const dt = new DateTime();
@@ -137,9 +144,8 @@ describe('DateTime', () => {
     let mUtc = moment.utc(new Date()).toDate();
 
     const md = `${utc.year}-${utc.month}-${utc.day}`;
-    const dtd = `${mUtc.getFullYear()}-${
-      mUtc.getMonth() + 1
-    }-${mUtc.getDate()}`;
+    const dtd = `${mUtc.getFullYear()}-${mUtc.getMonth() + 1
+      }-${mUtc.getDate()}`;
 
     assert.strictEqual(md, dtd);
   });
@@ -183,7 +189,7 @@ describe('DateTime', () => {
     assert.deepStrictEqual(dt, newDt);
   });
   it('toObject', () => {
-    const dt = new DateTime({zone: Zones.utc});
+    const dt = new DateTime({ zone: Zones.utc });
     const newZone = dt.toZone('Asia/Tehran');
     const newDt = newZone.toObject();
 
@@ -194,11 +200,11 @@ describe('DateTime', () => {
   });
 
   it('create new object', () => {
-    const dt = new DateTime(1609446600000 , {
+    const dt = new DateTime(1609446600000, {
       zone: 'Asia/Tehran',
     });
     const d2 = dt.toZone(Zones.utc);
-    const d3  = d2.toObject();
+    const d3 = d2.toObject();
     // assert.strictEqual(newZone.day, newDt.day);
   });
 });

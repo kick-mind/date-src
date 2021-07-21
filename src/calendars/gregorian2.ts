@@ -11,7 +11,7 @@ import {
   throwInvalidParam,
   MAX_YEAR,
 } from '../common';
-import { Calendar, Calendars, getTimeUnits } from '../main';
+import { Calendar, getTimeUnits } from '../main';
 
 // Number of days in a non-leap year
 const DAYS_PER_YEAR = 365;
@@ -159,7 +159,7 @@ export class GregorianCalendar2 extends Calendar {
   }
 }
 
-Calendars.add(new GregorianCalendar2('gregorian2'));
+// Calendars.add(new GregorianCalendar2('gregorian2'));
 
 // declare var jss: any;
 // if (jss) {

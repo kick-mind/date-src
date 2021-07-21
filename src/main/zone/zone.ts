@@ -23,4 +23,12 @@ export abstract class Zone {
      * @public
      */
     abstract getOffset(timestamp: number): number;
+
+    /** 
+     * Returns the current offset of the zone (in minutes)
+     * @public
+     */
+    getCurrentOffset(): number {
+        return this.getOffset(Date.now());
+    }
 }

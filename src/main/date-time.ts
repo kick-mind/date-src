@@ -152,7 +152,10 @@ export class DateTime {
     // Resolve calendar
     let c: any = opts?.calendar;
     if (!c) {
-      c = Calendars.default;
+      if (!Calendars.default) {
+        throw Error('No calendar found.');
+      }
+      c = Calendars.default;      
     } else if (IsStr(c)) {
       c = Calendars.find(c, o);
     } else {
