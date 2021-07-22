@@ -18,13 +18,6 @@ describe('Plugins', () => {
         [99, 2, 6]
       );
     });
-  });
-
-  describe('Parse', () => {
-    before(function () {
-      Calendars.add(new GregorianCalendar('gregorian'));
-      Calendars.add(new PersianCalendar('persian'));
-    });
 
     it('can parse2', () => {
       const d = parse('2012/2/6', 'Y/M/D');
