@@ -6,7 +6,8 @@ import moment from 'moment';
 import { Calendars } from './calendar';
 import { GregorianCalendar } from '../calendars/gregorian';
 import { GregorianCalendar2 } from '../calendars/gregorian2';
-
+import { PersianCalendar } from '../calendars/persian';
+import momentJalaali from 'moment-jalaali';
 
 function assertDateEquality(date: Date, dateTime: DateTime) {
   assert.deepStrictEqual(
@@ -56,12 +57,14 @@ function assertUtcDateEquality(date: Date, dateTime: DateTime) {
 
 describe('DateTime', () => {
   before(function () {
-    Calendars.add(new GregorianCalendar2('gregorian'));
+    Calendars.add(new GregorianCalendar('gregorian'));
+    Calendars.add(new GregorianCalendar2('gregorian2'));
+    Calendars.add(new PersianCalendar('persian'));
   });
 
-  it('create without parameter (local time zone, system locale, default calendar)', () => {
+  it('can create without parameter', () => {
     const d = new Date();
-    const dt = new DateTime();
+    const dt = new DateTime(); // (local time zone, system locale, default calendar)
     assertDateEquality(d, dt);
   });
 
@@ -75,6 +78,25 @@ describe('DateTime', () => {
     const d = new Date();
     const dt = new DateTime(d.valueOf());
     assertDateEquality(d, dt);
+  });
+
+  it('can be created from options', () => {
+    const calendar = Calendars.find('persian');
+    const dateTime = new DateTime({ zone: Zones.local, calendar, locale: 'fa-IR' });
+
+    const momentDate = momentJalaali();
+    assert.deepStrictEqual(
+      [
+        dateTime.year,
+        dateTime.month,
+        dateTime.day,
+      ],
+      [
+        momentDate.jYear(),
+        momentDate.jMonth() + 1,
+        momentDate.jDate(),
+      ]
+    );
   });
 
   it('can be created from years, month, day, ...', () => {
@@ -92,7 +114,7 @@ describe('DateTime', () => {
   });
 
 
-  it('add', () => {
+  it('can add', () => {
     const dt = new DateTime();
 
     const yrand = Math.floor(Math.random() * 100);
@@ -112,6 +134,7 @@ describe('DateTime', () => {
     assert.strictEqual(d.getMonth() + 1, fdt.month);
     assert.strictEqual(d.getDate(), fdt.day);
   });
+
   it('subtract 1 ms', function () {
     const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, { calendar: 'persian' });
     const dt2 = dt.subtract({ ms: 1 });

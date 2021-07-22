@@ -153,11 +153,11 @@ export class DateTime {
     let c: any = opts?.calendar;
     if (!c) {
       if (!Calendars.default) {
-        throw Error('No calendar found.');
+        throw Error('No calendar is added to the application.');
       }
       c = Calendars.default;      
     } else if (IsStr(c)) {
-      c = Calendars.find(c, o);
+      c = Calendars.find(c);
     } else {
       vObj(c, Calendar, true, 'Invalid calendar');
     }

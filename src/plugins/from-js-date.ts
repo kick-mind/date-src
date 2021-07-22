@@ -5,5 +5,5 @@ import { ZoneSpecifier, Calendars, LocaleSpecifier, DateTime } from '../main';
  * @public
  */
 export function fromJsDate(date: Date, opts?: { zone?: ZoneSpecifier, locale?: LocaleSpecifier }) {
-    return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.find('gregorian', { throwError: true }) });
+    return new DateTime(date.valueOf(), { ...opts, calendar: Calendars.find('gregorian') });
 }
