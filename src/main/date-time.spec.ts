@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { Locales } from './locale';
-import { Zone, Zones } from './zone';
+import { FixedZone, Zone, Zones } from './zone';
 import { DateTime } from './date-time';
 import moment from 'moment';
 import { Calendars } from './calendar';
@@ -60,6 +60,11 @@ describe('DateTime', () => {
     Calendars.add(new GregorianCalendar('gregorian'));
     Calendars.add(new GregorianCalendar2('gregorian2'));
     Calendars.add(new PersianCalendar('persian'));
+  });
+
+  it('Misc tests', () => {
+    const d = new DateTime({calendar: Calendars.find('persian')});
+    console.log(d.year);
   });
 
   it('can create without parameter', () => {

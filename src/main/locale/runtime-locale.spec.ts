@@ -3,30 +3,35 @@ import { Calendars } from '../calendar';
 import { PersianCalendar } from '../../calendars/persian';
 import { Zones } from '../zone';
 import { RuntimeLocale } from './runtime-locale';
+import { GregorianCalendar } from '../../calendars/gregorian';
 
 
 describe('Locale', () => {
   describe('RuntimeLocale', function () {
     before(function () {
       Calendars.add(new PersianCalendar('persian'));
+      Calendars.add(new GregorianCalendar('gregorian'));
     });
 
     it('can get long month names of the gregorian calendar', () => {
       const l1 = new RuntimeLocale('fa', { weekStart: 6 });
-      assert.deepStrictEqual(l1.getMonthNames(Calendars.find('gregorian'), 'long'), [
-        'ژانویه',
-        'فوریه',
-        'مارس',
-        'آوریل',
-        'مه',
-        'ژوئن',
-        'ژوئیه',
-        'اوت',
-        'سپتامبر',
-        'اکتبر',
-        'نوامبر',
-        'دسامبر',
-      ]);
+      const calendar = Calendars.find('gregorian');
+      const monthNames = l1.getMonthNames(calendar, 'long');
+      assert.deepStrictEqual(monthNames,
+        [
+          'ژانویه',
+          'فوریه',
+          'مارس',
+          'آوریل',
+          'مه',
+          'ژوئن',
+          'ژوئیه',
+          'اوت',
+          'سپتامبر',
+          'اکتبر',
+          'نوامبر',
+          'دسامبر',
+        ]);
     });
 
     it('can get long month names of the persian calendar (en locale)', () => {
