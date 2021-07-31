@@ -24,7 +24,7 @@
     "build": "webpack",
     "publish": "npm publish dist --access=public",
     "build-publish": "npm run build && npm run publish",
-    "docs": "typedoc --out docs src/index.ts"
+    "generate-docs": "typedoc --out docs src"
   },
   "keywords": [],
   "author": "JS-Sugar",
