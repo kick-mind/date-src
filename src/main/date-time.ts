@@ -165,14 +165,16 @@ export class DateTime {
   }
 
   //#region Get
-  /** Get the year.
+  /**
+   * Gets the year.
    * @public
    */
   get year(): number {
     return this.toObject().year;
   }
 
-  /** Get the month (1-12).
+  /** 
+   * Gets the month (1-12).
    * @public
    */
   get month(): number {
@@ -180,7 +182,7 @@ export class DateTime {
   }
 
   /**
-   * Get the day of the month (1 to 30).
+   * Gets the day of the month (1 to 31).
    * @public
    */
   get day(): number {
@@ -188,7 +190,7 @@ export class DateTime {
   }
 
   /**
-   * Get the hour of the day (0 to 23).
+   * Gets the hour of the day (0 to 23).
    * @public
    */
   get hour(): number {
@@ -196,7 +198,7 @@ export class DateTime {
   }
 
   /**
-   * Get the minute of the hour (0 to 59).
+   * Gets the minute of the hour (0 to 59).
    * @public
    */
   get minute(): number {
@@ -204,7 +206,7 @@ export class DateTime {
   }
 
   /**
-   * Get the second of the minute (0 to 59).
+   * Gets the second of the minute (0 to 59).
    * @public
    */
   get second(): number {
@@ -212,7 +214,7 @@ export class DateTime {
   }
 
   /**
-   * Get the millisecond of the second (0 to 999).
+   * Gets the millisecond of the second (0 to 999).
    * @public
    */
   get ms(): number {
@@ -220,7 +222,7 @@ export class DateTime {
   }
 
   /**
-   * Returns UTC timestamp of this object.
+   * Gets timestamp of this object.
    * This value can be positive or negetive (it depends on the implementation of the calendar).
    * @public
    */
@@ -233,7 +235,7 @@ export class DateTime {
   }
 
   /**
-   * Returns the configurations of this object (calandar, zone and locale).
+   * Returns a clone of the configurations of this object (calandar, zone and locale).
    * @public
    */
   get config(): { calendar: Calendar; zone?: Zone; locale?: Locale } {
@@ -261,7 +263,7 @@ export class DateTime {
 
   //#region Locale
   /**
-   * Get the locale of a DateTime, such 'en-GB'.
+   * Gets the locale of a DateTime.
    * @public
    */
   get locale(): Locale {
@@ -269,7 +271,7 @@ export class DateTime {
   }
 
   /**
-   * Sets the DateTime's locale (returns a new DateTime)
+   * Returns a new DateTime equivalent with this DateTime but with a different Locale
    * @public
    */
   toLocale(locale: LocaleSpecifier): DateTime {
@@ -287,7 +289,7 @@ export class DateTime {
   }
 
   /**
-   * Set the DateTime's zone to UTC (returns a new DateTime)
+   * Returns a new DateTime equivalent with this DateTime but with UTC as time-zone
    * @public
    */
   toUtc(): DateTime {
@@ -295,7 +297,7 @@ export class DateTime {
   }
 
   /**
-   * Set the DateTime's zone to the local zone of the system (returns a new DateTime)
+   * Returns a new DateTime equivalent with this DateTime but with local time-zone
    * @public
    */
   toLocal(): DateTime {
@@ -303,7 +305,7 @@ export class DateTime {
   }
 
   /**
-   * Set the DateTime's zone (returns a new DateTime)
+   * Returns a new DateTime equivalent with this DateTime but with a different Zone
    * @public
    */
   toZone(zone: ZoneSpecifier): DateTime {
@@ -313,7 +315,7 @@ export class DateTime {
 
   //#region Calendar
   /**
-   * Returns a new date time with the given Calendar.
+   * Returns a new DateTime equivalent with this DateTime but with a different Calendar
    * @public
    */
   to(calendar: CalendarSpecifier): DateTime {
@@ -321,7 +323,7 @@ export class DateTime {
   }
 
   /**
-   * Returns the calendar of this DateTime object
+   * Gets the calendar of this DateTime
    * @public
    */
   get calendar() {
@@ -353,7 +355,7 @@ export class DateTime {
   }
 
   /**
-   * Clones this DateTime with time units (hour, minute, second, ms) set to zero.
+   * Clones this DateTime with "time units" (hour, minute, second, ms) set to zero.
    * @public
    */
   get date(): DateTime {

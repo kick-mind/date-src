@@ -2,7 +2,9 @@ import { vObj, vType } from '../../common';
 
 let F = Math.floor;
 
-/** Represents a time interval. */
+/** 
+ * Represents a time interval.
+ */
 export class Duration {
     #ms: number;
 

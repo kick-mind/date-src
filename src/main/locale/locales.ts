@@ -8,7 +8,7 @@ let defLocale: Locale = sysLocale || FALLBACK_LOCALE;
 let repository = [defLocale];
 
 /** 
- * A class with some static methods for managing locales. 
+ * A class for managing locales. 
  * @public
  * @abstract
  */

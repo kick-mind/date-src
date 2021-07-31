@@ -9,7 +9,9 @@ const cache: { [key: string]: Zone } = {
     local: new LocalZone()
 };
 
-/** A class with some static methods for managing zones. */
+/** 
+ * A class for managing zones.
+ */
 export abstract class Zones {
     /** Gets the system's local zone. */
     static get local(): Zone {

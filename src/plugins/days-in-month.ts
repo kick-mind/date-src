@@ -1,7 +1,7 @@
 import { DateTime } from '../main/date-time';
 
 /**
- * Returns the number of days in this DateTime's month. 
+ * Gets the number of days in the given DateTime's month. 
  * @public
  */
 export function daysInMonth(d: DateTime): number {
