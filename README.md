@@ -90,5 +90,5 @@ console.log(d.year, d.month, d.day);
 ```
 
 > Note:  
-DateTime object is immutable. after creating a DateTime object, you can not change it.
+DateTime object is immutable. after creating a DateTime object, you cannot change it.
 
