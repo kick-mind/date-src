@@ -245,6 +245,7 @@ export function parse(
       return new DateTime(y, M, d, h, m, s, ms, { ...opts, ...{ zone } });
     }
   } catch (e) {
+    
     return new DateTime(null); // Invalid Date
   }
 }
