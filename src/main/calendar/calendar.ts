@@ -10,6 +10,7 @@ import {
   MS_PER_SECOND,
   throwInvalidParam,
   MAX_YEAR,
+  vType,
 } from '../../common';
 
 function add(time: number, value: number, scale: number): number {
@@ -98,11 +99,16 @@ export abstract class Calendar {
   }
 
   constructor(id: string, type: string) {
+    vType(id, 'string', true);
+    vType(type, 'string', true);
     this.#id = id;
     this.#type = type;
   }
 
-  /** Adds a period of time to this DateTime and returns the resulting DateTime. */
+  /** 
+   * Adds a period of time to a timestamp and returns the resulting timestamp.
+   * @public
+   */
   add(ts: number, units: Partial<DateTimeUnits>): number {
     const isInt = Number.isInteger;
     if (isInt(units.ms) && units.ms != 0) {
@@ -136,7 +142,10 @@ export abstract class Calendar {
     return ts;
   }
 
-  /** Subtracts a period of time from this DateTime and returns the resulting DateTime. */
+  /** 
+   * Subtracts a period of time to a timestamp and returns the resulting timestamp.
+   * @public
+   */
   subtract(ts: number, units: Partial<DateTimeUnits>): number {
     return this.add(ts, {
       year: -units.year,
@@ -149,7 +158,10 @@ export abstract class Calendar {
     });
   }
 
-  /** Returns whether this DateTime is valid. */
+  /** 
+   * Returns true if the given date is valid, otherwise returns false.
+   * @public
+   */
   isValid(year: number, month: number, day: number): boolean {
     return (
       year >= 1 &&
@@ -161,12 +173,18 @@ export abstract class Calendar {
     );
   }
 
-  /** Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). */
+  /**
+   * Gets the ISO day of the week (Monday = 1, ..., Sunday = 7). 
+   * @public
+   */
   weekDay(time: number): number {
     return Math.trunc(getCalendarTimestamp(time) / MS_PER_DAY + 1) % 7;
   }
 
-  /** Get the week number of the week year (1 to 52). */
+  /** 
+   * Gets the week number of the week year (1 to 52). 
+   * @public
+   */
   weekNumber(time: number, firstDayOfWeek: number, offset: number = 1): number {
     let fn = (tm: number, firstDay: number, fullDays: number): number => {
       let dayForJan1: number;
@@ -188,7 +206,7 @@ export abstract class Calendar {
     if (firstDayOfWeek < 0 || firstDayOfWeek > 6) {
       throwInvalidParam('fisrtDayOfWeek');
     }
-   // offset = offset % 8;
+    // offset = offset % 8;
     if (offset == 1) {
       return getFirstDayWeekOfYear(
         firstDayOfWeek,

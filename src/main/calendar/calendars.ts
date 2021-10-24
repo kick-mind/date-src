@@ -5,7 +5,7 @@ const calendars = new Array<Calendar>();
 let defaultCalendar: Calendar;
 
 /** 
- * A class with some static methods for managing calendars. 
+ * A collection of calendars.
  * @public
  * @abstract
  */
@@ -45,7 +45,7 @@ export abstract class Calendars {
         return calendars.filter(x => x.type === type);
     }
 
-    /** Returns a cloned array of all calendars in the repository. */
+    /** Returns a cloned array of all calendars in this collection. */
     static get all(): Calendar[] {
         return [...calendars];
     }
