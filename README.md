@@ -127,3 +127,9 @@ DateTime(timestamp, opts?);
 
 // Parameters with a question mark(?) are optional.
 ```
+
+options (opts parameter) is an object with three optional fields:
+
+- calendar: a Calendar object or the ID of a Calendar object,  
+- zone: a Zone object or the ID of a Zone object,  
+- locale: a Locale object or the ID of a Locale object,  
