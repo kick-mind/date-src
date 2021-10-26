@@ -24,7 +24,7 @@ function getDateUnits(ts: number): DateTimeUnits {
 /** Gregorian calendar */
 export class GregorianCalendar extends Calendar {
   constructor(id: string) {
-    super(id, 'gregorian');
+    super(id, 'gregory');
   }
 
   public addMonths(time: number, months: number): number {

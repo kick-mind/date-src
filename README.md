@@ -134,7 +134,7 @@ Calendars.add(new HijriCalendar('hijri', 1)); // calendar constructors can accep
 // find a Calendar by ID
 const hijriCalendar = Calendars.find('hijri'); 
 
-// Change the default calendar of the project
+// Change the default calendar of your project
 Calendars.default = hijriCalendar;
 ```
 
@@ -160,9 +160,8 @@ Changing the calendar of a date object is super easy. just use 'to()' method of 
 
 ```
 const d1 = new DateTime({calendar: 'gregorian'}, 2021, 10, 25);
-
 const d2 = d1.to('persian');
-console.log(`${d2.year}/${d2.month}/${d2.day}`) // 1400/8/3
+console.log(d2.year, d2.month, d2.day) // 1400, 8, 3
 ```
 
 ## Working with time zones
