@@ -13,6 +13,12 @@ describe('Locale', () => {
       Calendars.add(new GregorianCalendar('gregorian'));
     });
 
+
+    it('can create system locale', () => {
+      const l = new RuntimeLocale('system', { weekStart: 6 });
+      assert.ok(l.resolvedName);
+    });  
+
     it('can get long month names of the gregorian calendar', () => {
       const l1 = new RuntimeLocale('fa', { weekStart: 6 });
       const calendar = Calendars.find('gregorian');

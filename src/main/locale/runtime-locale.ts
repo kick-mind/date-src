@@ -48,10 +48,12 @@ let cache: {
  */
 export class RuntimeLocale extends Locale {
     #resolvedName: string;
+    #isSystemLocale: boolean;
 
-    constructor(name: string | 'system', data: { weekStart: number }) {
+    constructor(name: string, data: { weekStart: number }) {
         super(name, data);
-        let { resolvedName } = verifyLocale(name, true, true);
+        this.#isSystemLocale = name === 'system';
+        let { resolvedName } = verifyLocale(this.#isSystemLocale ? null : name, true, true);
         this.#resolvedName = this.#resolvedName;
         cache[resolvedName] = cache[resolvedName] || { month: {}, weekday: {}, zone: {} };
     }
@@ -68,7 +70,7 @@ export class RuntimeLocale extends Locale {
         let res = cache[name].weekday[format];
         if (!res) {
             // create/cache weekday names
-            let f = new Intl.DateTimeFormat(name === 'system' ? null : name, { weekday: format });
+            let f = new Intl.DateTimeFormat(this.#isSystemLocale ? null : name, { weekday: format });
             res = [];
             let day = new Date(2021, 4, 28); // Sunday
             for (let i = 0; i < 7; i++) {
