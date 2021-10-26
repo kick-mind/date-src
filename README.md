@@ -47,16 +47,13 @@ import { DateTime, Calendars } from '@js-sugar/date';
 import { GregorianCalendar } = from '@js-sugar/date/calendars/gregorian';
 import { PersianCalendar } = from '@js-sugar/date/calendars/persian';
 
-// Instantiate calendars you need in your project and add them to the Calendars collection.
-// Do it just once (application-wide).
+// Instantiate the calendars you need and add them to the Calendars collection. do it just once (application-wide).
 
-// 'gregorian' is the global ID of the calendar
+// 'gregorian' is the ID of the calendar
 Calendars.add(new GregorianCalendar('gregorian')); 
 
 // Add a PersianCalendar with id 'persian' to Calendars collection
 Calendars.add(new PersianCalendar('persian'));
-
-// Done!
 ```
 
 The first calendar that you add to your project, becomes 'default' calendar. you can change default calendar of your project later. when you create a DateTime object and don't sepecify the calendar of it, default calendar of your project is used as the calendar of that DateTime object.
@@ -104,17 +101,6 @@ const d2 = new DateTime({calendar: 'gregorian'} , 2021, 10);
 > Note:  
 DateTime object is immutable. after creating a DateTime object, you cannot change it.
 
-## Converting calendars 
-Changing the calendar of a date object is super easy. just use 'to()' method of DateTime object.
-
-```
-const d1 = new DateTime({calendar: 'gregorian'}, 2021, 10, 25);
-
-const d2 = d1.to('persian');
-console.log(`${d2.year}/${d2.month}/${d2.day}`) // 1400/8/3
-```
-
-
 ## DateTime constructor overloads
 DateTime constructor has several overloads:
 
@@ -128,8 +114,31 @@ DateTime(timestamp, opts?);
 // Parameters with a question mark(?) are optional.
 ```
 
-options (opts parameter) is an object with three optional fields:
-
+options ("opts" parameter) is an object with three optional fields:
 - calendar: a Calendar object or the ID of a Calendar object,  
 - zone: a Zone object or the ID of a Zone object,  
 - locale: a Locale object or the ID of a Locale object,  
+
+## Working with calendars
+When you create a DateTime object, you can explicitly ...
+
+Changing the calendar of a date object is super easy. just use 'to()' method of DateTime object.
+
+```
+const d1 = new DateTime({calendar: 'gregorian'}, 2021, 10, 25);
+
+const d2 = d1.to('persian');
+console.log(`${d2.year}/${d2.month}/${d2.day}`) // 1400/8/3
+```
+
+## Working with time zones
+To change the time zone of a DateTime object, use 'toZone()' method.
+
+```
+const d1 = new DateTime({calendar: 'gregorian', zone: Zones}, 2021, 10, 25);
+
+const d2 = d1.to('persian');
+console.log(`${d2.year}/${d2.month}/${d2.day}`) // 1400/8/3
+```
+
+## Working with locales
