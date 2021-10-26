@@ -42,20 +42,33 @@ let cache: {
     }
 } = {};
 
-/** A locale created by using javascript Intl API. */
+/** 
+ * A locale created by using javascript Intl API.
+ * @class
+ */
 export class RuntimeLocale extends Locale {
-    constructor(name: string | null, data: { weekStart: number }) {
+    #resolvedName: string;
+
+    constructor(name: string | 'system', data: { weekStart: number }) {
+        super(name, data);
         let { resolvedName } = verifyLocale(name, true, true);
-        super(resolvedName, data);
+        this.#resolvedName = this.#resolvedName;
         cache[resolvedName] = cache[resolvedName] || { month: {}, weekday: {}, zone: {} };
     }
 
+    /** 
+     * Gets the resolved name of this locale.
+     */
+    get resolvedName() {
+        return this.#resolvedName;
+    }
+
     getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
-        let name = this.resolvedName;
+        let name = this.name;
         let res = cache[name].weekday[format];
         if (!res) {
             // create/cache weekday names
-            let f = new Intl.DateTimeFormat(name, { weekday: format });
+            let f = new Intl.DateTimeFormat(name === 'system' ? null : name, { weekday: format });
             res = [];
             let day = new Date(2021, 4, 28); // Sunday
             for (let i = 0; i < 7; i++) {
@@ -69,7 +82,7 @@ export class RuntimeLocale extends Locale {
     }
 
     getMonthNames(calendar: Calendar, format: MonthNameFormat = 'long'): string[] {
-        let name = this.resolvedName,
+        let name = this.name,
             ct = calendar.type,
             m = cache[name].month;
 
@@ -98,7 +111,7 @@ export class RuntimeLocale extends Locale {
     }
 
     getZoneTitle(zone: Zone, format: 'long' | 'short' = 'long'): string {
-        let lName = this.resolvedName,
+        let lName = this.name,
             zName = zone instanceof LocalZone ? undefined : zone.name,
             cacheZone = cache[lName].zone;
         cacheZone[zName] = cacheZone[zName] || {};

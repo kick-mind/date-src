@@ -1,4 +1,4 @@
-import { IsInt, MonthNameFormat, vClsCall, WeekdayNameFormat } from '../../common';
+import { IsInt, MonthNameFormat, WeekdayNameFormat } from '../../common';
 import { Calendar } from '../calendar';
 import { Zone } from '../zone';
 
@@ -11,8 +11,8 @@ export abstract class Locale {
     #name: string;
     #ws: number;
 
-    constructor(resolvedName: string, data: { weekStart: number }) {
-        this.#name = resolvedName;
+    constructor(name: string, data: { weekStart: number }) {
+        this.#name = name;
 
         let ws = data?.weekStart;
         if (!IsInt(ws) || ws < 0 || ws > 6) {
@@ -21,8 +21,8 @@ export abstract class Locale {
         this.#ws = ws;
     }
 
-    /** Gets the resolved locale name */
-    get resolvedName(): string {
+    /** Gets the locale name */
+    get name(): string {
         return this.#name;
     }
     

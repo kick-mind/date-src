@@ -10,10 +10,14 @@ const cache: { [key: string]: Zone } = {
 };
 
 /** 
- * A class for managing zones.
+ * A class for managing time zones.
+ * @public
+ * @abstract
  */
 export abstract class Zones {
-    /** Gets the system's local zone. */
+    /** 
+     * Gets the system's local zone. 
+     */
     static get local(): Zone {
         return cache.local;
     }

@@ -143,7 +143,7 @@ export class DateTime {
     if (!l) {
       l = Locales.default;
     } else if (IsStr(l)) {
-      l = Locales.resolve(l, { weekStart: 0, throwError: true });
+      l = Locales.resolve(l, { weekStart: 0, strict: true });
     } else {
       vObj(l, Locale, true, 'Invalid locale');
     }
@@ -155,9 +155,9 @@ export class DateTime {
       if (!Calendars.default) {
         throw Error('No calendar is added to the application.');
       }
-      c = Calendars.default;      
+      c = Calendars.default;
     } else if (IsStr(c)) {
-      c = Calendars.find(c);
+      c = Calendars.find(c, { strict: true });
     } else {
       vObj(c, Calendar, true, 'Invalid calendar');
     }
