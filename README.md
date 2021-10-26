@@ -99,7 +99,7 @@ const d2 = new DateTime({calendar: 'gregorian'} , 2021, 10);
 
 
 > Note:  
-DateTime object is immutable. after creating a DateTime object, you cannot change it.
+DateTime object is immutable. after creating a DateTime object, you cannot change it(you can not change its date/time units, calendar, zone or locale).
 
 ## DateTime constructor overloads
 DateTime constructor has several overloads:
@@ -120,7 +120,41 @@ options ("opts" parameter) is an object with three optional fields:
 - locale: a Locale object or the ID of a Locale object,  
 
 ## Working with calendars
-When you create a DateTime object, you can explicitly ...
+You can add multiple calendars to your project. you create Calendar objects and add them to Calendars collection. you should do this in the start-up of your project. The first Calendar you add to Calendars collection becomes default Calendar of your project(you can change it).
+
+```
+// In start-up of your project
+Calendars.add(new GregorianCalendar('gregorian')); 
+Calendars.add(new PersianCalendar('persian'));
+Calendars.add(new HijriCalendar('hijri', 1)); // calendar constructors can accept some configuration parameters.
+
+// 
+// somewhere in your code ...
+
+// find a Calendar by ID
+const hijriCalendar = Calendars.find('hijri'); 
+
+// Change the default calendar of the project
+Calendars.default = hijriCalendar;
+```
+
+When you creat a DateTime object, if you don't specify the calendar, the default calendar of your project is used:
+
+```
+// From the previous example, default calendar is a HijriCalendar object.
+const d1 = new DateTime();
+console.log(d1.calendar.id); // hijri
+```
+
+If you want to create a DateTime object with a specific calendar, you should specify it:
+```
+
+// Specify calendar by ID
+const d1 = new DateTime({calendar: 'hijri'}); // 'hijri' is the ID of a calendar in the Calendars collection
+
+// Alternatively, you can pass a refrence to a Calendar object
+const d2 = new DateTime({calendar: hijriCalendar}); 
+```
 
 Changing the calendar of a date object is super easy. just use 'to()' method of DateTime object.
 
