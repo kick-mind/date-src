@@ -5,8 +5,8 @@
 import assert from 'assert';
 import { Zones } from '../zone';
 
-describe('Zone', () => {
-    describe('LocalZone', () => {
+describe('Main/Locale', () => {
+    describe('FallbackLocale', () => {
         it('can detect local zone (Iran/Tehran)', () => {
             const z = Zones.local;
             assert.strictEqual(z.name, 'Local');
