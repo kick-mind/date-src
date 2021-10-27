@@ -16,23 +16,38 @@ describe('Main/Locale', () => {
 
     it('can create system locale', () => {
       const l = new RuntimeLocale('system', { weekStart: 6 });
-      assert.strictEqual(l.name, 'system' );
+      assert.strictEqual(l.name, 'system');
       assert.ok(l.resolvedName);
-      assert.strictEqual(l.getMonthNames(Calendars.find('persian')).length, 12 );
-      assert.strictEqual(l.getWeekdayNames().length, 7 );
-      assert.strictEqual(l.weekStart, 6 );
+      assert.strictEqual(l.getMonthNames(Calendars.find('persian')).length, 12);
+      assert.strictEqual(l.getWeekdayNames().length, 7);
+      assert.strictEqual(l.weekStart, 6);
       assert.ok(l.getZoneTitle(Zones.utc));
     });
 
-    
+
     it('can create en-USA locale', () => {
       const l = new RuntimeLocale('en', { weekStart: 6 });
-      assert.strictEqual(l.name, 'system' );
+      const gregorianCalendar = Calendars.find('gregorian');
+      const persianCalendar = Calendars.find('persian');
+
+      assert.strictEqual(l.name, 'en');
       assert.ok(l.resolvedName);
-      assert.strictEqual(l.getMonthNames(Calendars.find('persian')).length, 12 );
-      assert.strictEqual(l.getWeekdayNames().length, 7 );
-      assert.strictEqual(l.weekStart, 6 );
-      assert.ok(l.getZoneTitle(Zones.utc));
+      assert.deepStrictEqual(
+        l.getMonthNames(gregorianCalendar),
+        ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      );
+      assert.deepStrictEqual(
+        l.getMonthNames(persianCalendar),
+        ['Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar', 'Mehr', 'Aban', 'Azar', 'Dey', 'Bahman', 'Esfand']
+      );
+      assert.deepStrictEqual(
+        l.getWeekdayNames(),
+        ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+      );
+
+      assert.strictEqual(l.weekStart, 6);
+      assert.strictEqual(l.getZoneTitle(Zones.utc), 'Coordinated Universal Time');
+      assert.strictEqual(l.getZoneTitle(Zones.resolve('fa-IR')), 'Coordinated Universal Time');
     });
 
     it('can create fa-IR locale', () => {
