@@ -6,7 +6,7 @@ import { RuntimeLocale } from './runtime-locale';
 import { GregorianCalendar } from '../../calendars/gregorian';
 
 
-describe('Locale', () => {
+describe('Main/Locale', () => {
   describe('RuntimeLocale', function () {
     before(function () {
       Calendars.add(new PersianCalendar('persian'));
@@ -16,8 +16,29 @@ describe('Locale', () => {
 
     it('can create system locale', () => {
       const l = new RuntimeLocale('system', { weekStart: 6 });
+      assert.strictEqual(l.name, 'system' );
       assert.ok(l.resolvedName);
-    });  
+      assert.strictEqual(l.getMonthNames(Calendars.find('persian')).length, 12 );
+      assert.strictEqual(l.getWeekdayNames().length, 7 );
+      assert.strictEqual(l.weekStart, 6 );
+      assert.ok(l.getZoneTitle(Zones.utc));
+    });
+
+    
+    it('can create en-USA locale', () => {
+      const l = new RuntimeLocale('en', { weekStart: 6 });
+      assert.strictEqual(l.name, 'system' );
+      assert.ok(l.resolvedName);
+      assert.strictEqual(l.getMonthNames(Calendars.find('persian')).length, 12 );
+      assert.strictEqual(l.getWeekdayNames().length, 7 );
+      assert.strictEqual(l.weekStart, 6 );
+      assert.ok(l.getZoneTitle(Zones.utc));
+    });
+
+    it('can create fa-IR locale', () => {
+      const l = new RuntimeLocale('system', { weekStart: 6 });
+      assert.ok(l.resolvedName);
+    });
 
     it('can get long month names of the gregorian calendar', () => {
       const l1 = new RuntimeLocale('fa', { weekStart: 6 });
