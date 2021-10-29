@@ -1,7 +1,6 @@
 import assert from 'assert';
 import { Calendars } from '../calendar';
 import { PersianCalendar } from '../../calendars/persian';
-import { Zones } from '../zone';
 import { RuntimeLocale } from './runtime-locale';
 import { GregorianCalendar } from '../../calendars/gregorian';
 
@@ -21,7 +20,7 @@ describe('Main/Locale', () => {
       assert.strictEqual(l.getMonthNames(Calendars.find('persian')).length, 12);
       assert.strictEqual(l.getWeekdayNames().length, 7);
       assert.strictEqual(l.weekStart, 6);
-      assert.ok(l.getZoneTitle(Zones.utc));
+      // assert.ok(l.getIANAZoneTitle(Zones.utc));
     });
 
 
@@ -46,8 +45,8 @@ describe('Main/Locale', () => {
       );
 
       assert.strictEqual(l.weekStart, 6);
-      assert.strictEqual(l.getZoneTitle(Zones.utc), 'Coordinated Universal Time');
-      assert.strictEqual(l.getZoneTitle(Zones.resolve('fa-IR')), 'Coordinated Universal Time');
+      assert.strictEqual(l.getZoneTitle('UTC'), 'Coordinated Universal Time');
+      assert.strictEqual(l.getZoneTitle('Asia/Tehran'), 'Iran Standard Time');
     });
 
     it('can create fa-IR locale', () => {
@@ -160,17 +159,17 @@ describe('Main/Locale', () => {
 
     it('can get UTC zone name', () => {
       const l = new RuntimeLocale('fa', { weekStart: 6 });
-      assert.strictEqual(l.getZoneTitle(Zones.utc), 'زمان هماهنگ جهانی');
+      assert.strictEqual(l.getZoneTitle('UTC'), 'زمان هماهنگ جهانی');
     });
 
-    it('can get Local zone name', () => {
-      const l = new RuntimeLocale('fa', { weekStart: 6 });
-      assert.strictEqual(l.getZoneTitle(Zones.local), 'وقت تابستانی ایران');
-    });
+    // it('can get Local zone name', () => {
+    //   const l = new RuntimeLocale('fa', { weekStart: 6 });
+    //   assert.strictEqual(l.getIANAZoneTitle(Zones.local), 'وقت تابستانی ایران');
+    // });
 
     it('can get [America/New_York] zone name', () => {
       const l = new RuntimeLocale('fa', { weekStart: 6 });
-      assert.strictEqual(l.getZoneTitle(Zones.resolve('America/New_York')), 'وقت تابستانی شرق امریکا');
+      assert.strictEqual(l.getZoneTitle('America/New_York'), 'وقت تابستانی شرق امریکا');
     });
   });
 });

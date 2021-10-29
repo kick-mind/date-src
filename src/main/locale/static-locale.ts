@@ -1,7 +1,6 @@
-import { deepFreeze, MonthNameFormat, WeekdayNameFormat, ZoneNameFormat } from '../../common';
+import { deepFreeze, MonthNameFormat, WeekdayNameFormat, ZoneTitleFormat } from '../../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
-import { Zone } from '../zone';
 
 let getFormatIndex = (f: MonthNameFormat) => f == 'narrow' ? 2 : (f == 'short' ? 1 : 0);
 
@@ -13,12 +12,17 @@ export interface LocaleData {
     /** The first day of the week */
     weekStart: number;
 
-    /** weekday names */
+    /** Weekday names */
     weekdays: Array<Array<string>>;
 
-    /** month names */
+    /** Month names */
     months: {
         [calendarType: string]: Array<Array<string>>;
+    };
+
+    /** Zone titles */
+    zones?: {
+        [zoneName: string]: Array<string>; // zoneName: ['short title', 'long title']
     };
 }
 
@@ -50,7 +54,9 @@ export class StaticLocale extends Locale {
         return [...this.#data.weekdays[idx]];
     }
 
-    getZoneTitle(zone: Zone, format: ZoneNameFormat = 'long'): string {
-        return zone.name;
+    getZoneTitle(zoneName: string, format: ZoneTitleFormat = 'long'): string {
+        if (this.#data?.zones?.hasOwnProperty(zoneName)) {
+            return this.#data?.zones[zoneName][format === 'short' ? 0 : 1];
+        }
     }
 }

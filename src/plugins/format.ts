@@ -63,8 +63,8 @@ export function format(d: DateTime, formatStr: string): string {
             return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
         },
         Z: () => zone.name, // Zone ID: America/New_York
-        ZZ: () => locale.getZoneTitle(zone, 'short'), // Short zone title: EST
-        ZZZ: () => locale.getZoneTitle(zone, 'long'), // Long zone title: Eastern Standard Time          
+        ZZ: () => locale.getZoneTitle(zone.name, 'short'), // Short zone title: EST
+        ZZZ: () => locale.getZoneTitle(zone.name, 'long'), // Long zone title: Eastern Standard Time          
     };
 
     return formatStr.replace(REGEX_FORMAT, (match, $1) => {

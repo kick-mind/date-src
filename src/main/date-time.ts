@@ -132,7 +132,7 @@ export class DateTime {
     if (!z) {
       z = Zones.local;
     } else if (IsStr(z)) {
-      z = Zones.resolve(z, o);
+      z = Zones.iana(z, o);
     } else {
       vObj(z, Zone, true, 'Invalid zone');
     }

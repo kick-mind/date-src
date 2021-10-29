@@ -1,9 +1,7 @@
-import { MonthNameFormat, WeekdayNameFormat } from '../../common';
+import { MonthNameFormat, WeekdayNameFormat, ZoneTitleFormat } from '../../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
 import { verifyLocale } from '../../common';
-import { Zone } from '../zone';
-import { LocalZone } from '../zone/local-zone';
 
 function isSupportedCalendar(calendarName: string) {
     return [
@@ -50,8 +48,8 @@ export class RuntimeLocale extends Locale {
     #resolvedName: string;
     #isSystemLocale: boolean;
 
-    constructor(name: string, data: { weekStart: number }) {
-        super(name, data);
+    constructor(name: string, options: { weekStart: number }) {
+        super(name, options );
         this.#isSystemLocale = name === 'system';
         let { resolvedName } = verifyLocale(this.#isSystemLocale ? null : name, true, true);
         this.#resolvedName = resolvedName;
@@ -112,14 +110,17 @@ export class RuntimeLocale extends Locale {
         return res;
     }
 
-    getZoneTitle(zone: Zone, format: 'long' | 'short' = 'long'): string {
-        let lName = this.#resolvedName,
-            zName = zone instanceof LocalZone ? undefined : zone.name,
-            cacheZone = cache[lName].zone;
-        cacheZone[zName] = cacheZone[zName] || {};
-        let formatter = cacheZone[zName][format];
+    getZoneTitle(zoneName: string, format: ZoneTitleFormat = 'long'): string {
+        let rName = this.#resolvedName,
+            cacheZone = cache[rName].zone;
+        cacheZone[zoneName] = cacheZone[zoneName] || {};
+        let formatter = cacheZone[zoneName][format];
         if (!formatter) {
-            cacheZone[zName][format] = formatter = new Intl.DateTimeFormat([lName], { timeZone: zName, timeZoneName: format });
+            try {
+                cacheZone[zoneName][format] = formatter = new Intl.DateTimeFormat([rName], { timeZone: zoneName, timeZoneName: format });
+            } catch {
+                throw Error('"zoneName" is not a valid IANA zone or is not supported.');
+            }
         }
 
         return formatter.formatToParts(new Date()).find(m => m.type.toLowerCase() === 'timezonename').value;
