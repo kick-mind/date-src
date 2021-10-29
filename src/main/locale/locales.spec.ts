@@ -6,7 +6,7 @@ import { Locales } from './locales';
 
 // Calendars.add(new PersianCalendar('persian'));
 
-describe('Locale', () => {
+describe('Main', () => {
   describe('Locales', function () {
 
     it('can get system locale', () => {

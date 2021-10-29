@@ -5,12 +5,12 @@
 import assert from 'assert';
 import { Zones } from '../zone';
 
-describe('Main/Locale', () => {
+describe('Main', () => {
     describe('FallbackLocale', () => {
         it('can detect local zone (Iran/Tehran)', () => {
             const z = Zones.local;
             assert.strictEqual(z.name, 'Local');
-            assert.strictEqual(z.getOffset(new Date().valueOf()), 270);
+            assert.strictEqual(z.getOffset(new Date().valueOf()), 210);
             // assert.strictEqual(z.getName('long'), 'Iran Daylight Time');
             // assert.strictEqual(z.getName('long', Locales.find('fa-IR', {throwError : true})), 'وقت تابستانی ایران');
         });

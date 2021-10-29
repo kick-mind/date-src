@@ -68,15 +68,13 @@ export abstract class Locales {
     static resolve(name: string, opts?: { weekStart?: number, strict?: boolean }): Locale {
         let l = locales.find(x => x.name.toLowerCase() === name.toLowerCase());
         if (!l) {
-            if (hasIntl()) {
-                try {
-                    l = new RuntimeLocale(name, { weekStart: opts?.weekStart || 0 });
-                    locales.push(l);
-                } catch (e) {
-                    if (opts && opts.strict) { throw e; }
+            try {
+                l = new RuntimeLocale(name, { weekStart: opts?.weekStart || 0 });
+                locales.push(l);
+            } catch {
+                if (opts && opts.strict) {
+                    throw Error('Could not resolve locale');
                 }
-            } else {
-                throw Error('Could not resolve locale');
             }
         }
 

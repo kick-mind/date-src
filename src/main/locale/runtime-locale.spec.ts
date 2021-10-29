@@ -5,7 +5,7 @@ import { RuntimeLocale } from './runtime-locale';
 import { GregorianCalendar } from '../../calendars/gregorian';
 
 
-describe('Main/Locale', () => {
+describe('Main', () => {
   describe('RuntimeLocale', function () {
     before(function () {
       Calendars.add(new PersianCalendar('persian'));
