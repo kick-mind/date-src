@@ -4,6 +4,7 @@ import {
   CalendarSpecifier,
   ZoneSpecifier,
   LocaleSpecifier,
+  FixedZone,
 } from '../main';
 
 const formattingTokens =
@@ -241,11 +242,13 @@ export function parse(
     const ms = milliseconds || 0;
     if (opts?.zone || !zone) {
       return new DateTime(y, M, d, h, m, s, ms, opts);
-    } else { 
-      return new DateTime(y, M, d, h, m, s, ms, { ...opts, ...{ zone } });
+    } else {
+      return new DateTime(y, M, d, h, m, s, ms, {
+        ...opts,
+        ...{ zone: new FixedZone(zone.offset, zone.offset) },
+      });
     }
   } catch (e) {
-    
     return new DateTime(null); // Invalid Date
   }
 }
