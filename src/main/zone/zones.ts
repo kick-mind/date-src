@@ -1,4 +1,4 @@
-import { hasIntl } from '../../common';
+import { hasIntl, IsInt } from '../../common';
 import { FixedZone } from './fixed-zone';
 import { IANAZone } from './iana-zone';
 import { LocalZone } from './local-zone';
@@ -26,6 +26,11 @@ export abstract class Zones {
     /** Gets UTC time zone. */
     static get utc(): Zone {
         return cache.utc;
+    }
+
+        /** Gets UTC time zone. */
+    static fixed(name: string, hour: number, minute = 0, second = 0): FixedZone {
+        return new FixedZone(name, second * 1000 + minute * 60 * 1000 + hour * 60 * 60 * 1000);
     }
 
     /** Creates an IANAZone by it's IANA name. */

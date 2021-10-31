@@ -52,9 +52,9 @@ export abstract class Locales {
      */
     static add(l: Locale) {
         vObj(l, Locale);
-        if (locales.find(x => x.name === l.name)) {
-            throw Error('Locale with the same name exist');
-        }
+        // if (locales.find(x => x.name === l.name)) {
+        //     throw Error('Locale with the same name exist');
+        // }
         locales.push(l);
     }
 
@@ -72,7 +72,7 @@ export abstract class Locales {
                 l = new RuntimeLocale(name, { weekStart: opts?.weekStart || 0 });
                 locales.push(l);
             } catch {
-                if (opts && opts.strict) {
+                if (opts?.strict) {
                     throw Error('Could not resolve locale');
                 }
             }

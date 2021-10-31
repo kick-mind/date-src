@@ -1,6 +1,10 @@
 import { vType } from '../../common';
 import { Zone } from './zone';
 
+/** 
+ * A fixed time zone
+ * @public
+ */
 export class FixedZone extends Zone {
     #o: number;
 

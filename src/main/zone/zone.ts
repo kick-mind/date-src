@@ -1,5 +1,5 @@
 /** 
- * An abstract base class for all zones 
+ * An abstract base class for all time zones 
  * @public
  * @abstract
  */
