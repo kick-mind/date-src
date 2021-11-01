@@ -1,7 +1,7 @@
 import { Zone } from './zone';
 
 /** 
- * The local zone of this computer
+ * The local time zone of this computer.
  */
 export class LocalZone extends Zone {
     /**

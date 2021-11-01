@@ -1,38 +1,33 @@
 import { IANAZone } from './iana-zone';
 
-/** formatters cache */
-let cache: { [zoneId: string]: Intl.DateTimeFormat } = {};
-
 /** 
  * An IANA zone created by using Javascript Intl API 
  * @public
  */
 export class RuntimeIANAZone extends IANAZone {
-    constructor(name: string) {
-        super(name);
-        let key = name.toLowerCase();
+    #f: Intl.DateTimeFormat;
 
-        if (!cache[key]) {
-            try {
-                cache[key] = new Intl.DateTimeFormat([], {
-                    timeZone: name,
-                    hour12: false,
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    second: 'numeric',
-                    timeZoneName: 'long',
-                });
-            } catch (e) {
-                throw new Error('Invalid zone id');
-            }
+    constructor(zoneName: string) {
+        super(zoneName);
+        try {
+            this.#f = new Intl.DateTimeFormat(['en'], {
+                timeZone: zoneName,
+                hour12: false,
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timeZoneName: 'long',
+            });
+        } catch (e) {
+            throw new Error('IANA zone name is invalid or not supported');
         }
     }
 
     getOffset(timestamp: number): number {
-        const parts = cache[this.name.toLowerCase()].formatToParts(new Date(timestamp));
+        const parts = this.#f.formatToParts(new Date(timestamp));
         const units = ['year', 'month', 'day', 'hour', 'minute', 'second'].map(key => parseInt(parts.find(x => x.type === key).value, 10));
 
         // Workaround for the same behavior in different node version

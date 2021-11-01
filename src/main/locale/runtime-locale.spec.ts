@@ -63,7 +63,7 @@ describe('Main', () => {
 
 
     it('can create fa-IR locale', () => {
-      const l = new RuntimeLocale('fa', { weekStart: 6 });
+      const l = new RuntimeLocale('fa-IR', { weekStart: 6 });
 
       assert.deepStrictEqual(
         l.getMonthNames(Calendars.find('gregorian'), 'long'),

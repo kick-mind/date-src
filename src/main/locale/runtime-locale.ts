@@ -119,7 +119,7 @@ export class RuntimeLocale extends Locale {
             try {
                 cacheZone[zoneName][format] = formatter = new Intl.DateTimeFormat([rName], { timeZone: zoneName, timeZoneName: format });
             } catch {
-                throw Error('"zoneName" is not a valid IANA zone or is not supported.');
+                throw Error('IANA zone name is invalid or not supported.');
             }
         }
 
