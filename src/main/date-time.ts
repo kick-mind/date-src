@@ -125,7 +125,7 @@ export class DateTime {
       };
     }
 
-    const o = { throwError: true };
+    const o = { strict: true };
 
     // Resolve zone
     let z: any = opts?.zone;
@@ -157,7 +157,7 @@ export class DateTime {
       }
       c = Calendars.default;
     } else if (IsStr(c)) {
-      c = Calendars.find(c, { strict: true });
+      c = Calendars.find(c, o);
     } else {
       vObj(c, Calendar, true, 'Invalid calendar');
     }

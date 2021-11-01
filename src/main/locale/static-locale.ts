@@ -4,8 +4,8 @@ import { Locale } from './locale';
 
 let getFormatIndex = (f: MonthNameFormat) => f == 'narrow' ? 2 : (f == 'short' ? 1 : 0);
 
-/** Locale data */
-export interface LocaleData {
+/** Static Locale data */
+export interface StaticLocaleData {
     /** Locale name */
     name: string;
 
@@ -26,11 +26,11 @@ export interface LocaleData {
     };
 }
 
-/** A locale with predefined(fixed) data. */
+/** A file-based Locale. */
 export class StaticLocale extends Locale {
-    #data: LocaleData;
+    #data: StaticLocaleData;
 
-    constructor(data: LocaleData) {
+    constructor(data: StaticLocaleData) {
         super(data.name, { weekStart: data.weekStart });
         this.#data = data;
         deepFreeze(data);
