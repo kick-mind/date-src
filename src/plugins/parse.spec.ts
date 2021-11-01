@@ -67,6 +67,48 @@ describe('Plugins', () => {
       );
     });
 
+    it('sample_1', () => {
+      const d = parse('12-25-1995', 'MM-DD-YYYY');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day],
+        [1995, 12, 25]
+      );
+    });
+
+    it('sample_2', () => {
+      const d = parse('12/25/1995', 'MM-DD-YYYY');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day],
+        [1995, 12, 25]
+      );
+    });
+
+
+    
+    it('sample_3', () => {
+      const d = parse('24/12/2019 09:15:00', 'DD MM YYYY hh:mm:ss');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day, d.hour, d.minute, d.second],
+        [2019, 12, 24, 9, 15, 0]
+      );
+    });
+
+    it('sample_4', () => {
+      const d = parse('2010-10-20 4:30', 'YYYY-MM-DD HH:mm');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day, d.hour, d.minute, d.second],
+        [2010, 10, 20, 4, 30, 0]
+      );
+    });
+
+    it('sample_5', () => {
+      const d = parse('2010-10-20 4:30 +0000', 'YYYY-MM-DD HH:mm Z');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day, d.hour, d.minute, d.second, d.zone.getCurrentOffset()],
+        [2010, 10, 20, 4, 30, 0,0]
+      );
+    });
+
     // it('can parse monthname', () => {
     //   const d = parse('2018 January 15', 'YYYY MMMM DD');
     //   assert.deepStrictEqual(
