@@ -163,15 +163,3 @@ const d1 = new DateTime({calendar: 'gregorian'}, 2021, 10, 25);
 const d2 = d1.to('persian');
 console.log(d2.year, d2.month, d2.day) // 1400, 8, 3
 ```
-
-## Working with time zones
-To change the time zone of a DateTime object, use 'toZone()' method.
-
-```
-const d1 = new DateTime({calendar: 'gregorian', zone: Zones}, 2021, 10, 25);
-
-const d2 = d1.to('persian');
-console.log(`${d2.year}/${d2.month}/${d2.day}`) // 1400/8/3
-```
-
-## Working with locales

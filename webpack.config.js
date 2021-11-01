@@ -79,7 +79,8 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [
                 { from: "src/package.json" },
-                { from: "README.md" }
+                { from: "src/README.md" },
+                { from: "src/CHANGELOG.md" },
             ],
         }),
     ],
