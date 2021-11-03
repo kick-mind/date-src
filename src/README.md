@@ -44,8 +44,8 @@ Using JS-Sugar Date is easy, just import calendars you need in your project, ins
 
 ```
 import { DateTime, Calendars } from '@js-sugar/date';
-import { GregorianCalendar } = from '@js-sugar/date/calendars/gregorian';
-import { PersianCalendar } = from '@js-sugar/date/calendars/persian';
+import { GregorianCalendar }  from '@js-sugar/date/calendars/gregorian';
+import { PersianCalendar }  from '@js-sugar/date/calendars/persian';
 
 // Instantiate the calendars you need and add them to the Calendars collection. do it just once (application-wide).
 
