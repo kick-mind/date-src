@@ -1,6 +1,6 @@
-# JS-Sugar Date Library
+# JSS-Date Date Library
 
-JS-Sugar Date is a multi-calendar (calendar independent), extensible, immutable, tree-shakable and lightweight date-time library for javascript. It supports all Javascript environments (Node.js, browser, ...)
+Jss-date is a multi-calendar (calendar independent), extensible, immutable, tree-shakable and lightweight javascript date-time library for parsing, validating, manipulating, formatting, and displaying dates and times. It supports all Javascript environments (Node.js, browser, ...).
 
 ## Main Features
 
@@ -10,11 +10,12 @@ JS-Sugar Date is a multi-calendar (calendar independent), extensible, immutable,
   - Extensible
     - Easily add your own calendar by inheriting from a base class and implementing a few abstract methods.
   - Pre-implemented calendars
-    - Gregorian (2 implementations)
-    - Islamic
+    - Gregorian (It wraps javascript date. [date range support: since January 01, 1970, 00:00:00 UTC]. )
+    - Gregorian2 (Independent of javascript date with wide date range support from 1/1/1 to 12/30/9999)
+    - Islamic (Hijri)
     - Persian
     - (More calendars will be added in the future)
-  - Widerange date support
+  - Wide-range date support
   - Accurate
     - See our tests at github (soon)
 - Localization support
@@ -34,38 +35,69 @@ JS-Sugar Date is a multi-calendar (calendar independent), extensible, immutable,
 - Node.js and browser support
 
 
-## Add JS-Sugar to your project
-Use npm to instal js-sugar package in your project:
+## Installation
+Jss-Date is installed through npm: https://www.npmjs.com/package/@js-sugar/date
 ```node
 npm install @js-sugar/date
 ```
 
-Using JS-Sugar Date is easy, just import calendars you need in your project, instantiate them and add them to Calendars collection. you are done! now you can create DateTime objects.
+## How Jss-date works
+Import the calendars you need in your project, instantiate and add them to the Calendars pool. You have to add atleast one calendar to the Caendars pool.
 
 ```
 import { DateTime, Calendars } from '@js-sugar/date';
 import { GregorianCalendar }  from '@js-sugar/date/calendars/gregorian';
+import { GregorianCalendar2 } from '@js-sugar/date/calendars/gregorian2';
 import { PersianCalendar }  from '@js-sugar/date/calendars/persian';
+import { HijriCalendar } from '@js-sugar/date/calendars/hijri';
 
-// Instantiate the calendars you need and add them to the Calendars collection. do it just once (application-wide).
+// You can add multiple instances of a calendar with unique id to the Calendars pool.
+// add only the calenders you want to use in your project.
 
-// 'gregorian' is the ID of the calendar
-Calendars.add(new GregorianCalendar('gregorian')); 
+Calendars.add(new GregorianCalendar('gregorian'));   // add a Gregorian calendar with a unique ID:[ 'grigorian' ]
+Calendars.add(new GregorianCalendar2('gregorian2')); // add a Gregorian2 calendar with a unique ID:[ 'grigorian2' ]
+Calendars.add(new PersianCalendar('persian')); // add a Persian calendar with a unique ID:[ 'persian' ]
+Calendars.add(new HijriCalendar('hijri', -1)); // add a Hijri calendar with a unique ID:[ 'hijri' ]
+```
+## Default calendar
+The first calendar that you add to the Calendars pool will set as default calendar. You can change default calendar of the Calendars pool. if you create a DateTime object and don't provide a value for the Calendar argument, default calendar of Calendars pool is used as the calendar of that DateTime object.
 
-// Add a PersianCalendar with id 'persian' to Calendars collection
-Calendars.add(new PersianCalendar('persian'));
+```Default calendar code examples:
+// the first calendar that you add to calendars pool is default calendar
+const gregorianNow = new DateTime(); // now
+console.log(gregorianNow.year, gregorianNow.month, gregorianNow.day); //-> 2021, 11, 2
+
+const gregorianDate = new DateTime(2021, 10, 26); 
+console.log(gregorianDate.year, gregorianDate.month, gregorianDate.day); //-> 2021, 10, 26
+
+// Set persian calendar as default calendar
+Calendars.default = Calendars.find('persian');
+
+const persianNow = new DateTime(); //now
+console.log(persianNow.year, persianNow.month, persianNow.day); //-> 1400, 8, 11
+
+const persianDate = new DateTime(1400, 8, 4); 
+console.log(persianDate.year, persianDate.month, persianDate.day); //-> 1400, 8, 4
+
+// Set persian calendar as default calendar
+Calendars.default = Calendars.find('hijri');
+
+const hijriNow = new DateTime(); //now
+console.log(hijriNow.year, hijriNow.month, hijriNow.day); //-> 1443, 3, 26
+
+const hijriDate = new DateTime(1443,3,19); 
+console.log(hijriDate.year, hijriDate.month, hijriDate.day); //-> 1443, 3, 19
 ```
 
-The first calendar that you add to your project, becomes 'default' calendar. you can change default calendar of your project later. when you create a DateTime object and don't sepecify the calendar of it, default calendar of your project is used as the calendar of that DateTime object.
 
-## Basic Usage
-Creating a DateTime object is easy. every DateTime object has three "required" parts:
+## DateTime structure
+DateTime object has three "required" parts:
 
 - Calendar: like Gregorian, Hijri, Persian, ...
 - Zone: An time-zone like UTC, America/New_York, ...
 - Locale: like ar-AE, en-US, de-DE
 
-if you don't specify these values, default values will be used.
+If you don't provide DateTime constructor arguments, default values will be used. 
 
 
 #### Example: Create a DateTime with default Calendar, Zone and Locale:
