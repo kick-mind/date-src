@@ -81,7 +81,7 @@ console.log(gregorianNow.year, gregorianNow.month, gregorianNow.day); //-> 2021,
 const gregorianDate = new DateTime(2021, 10, 26); 
 console.log(gregorianDate.year, gregorianDate.month, gregorianDate.day); //-> 2021, 10, 26
 
-// Set persian calendar as default calendar
+// Set Persian calendar as default calendar
 Calendars.default = Calendars.find('persian');
 
 const persianNow = new DateTime(); //now
@@ -90,7 +90,7 @@ console.log(persianNow.year, persianNow.month, persianNow.day); //-> 1400, 8, 11
 const persianDate = new DateTime(1400, 8, 4); 
 console.log(persianDate.year, persianDate.month, persianDate.day); //-> 1400, 8, 4
 
-// Set persian calendar as default calendar
+// Set Hijri calendar as default calendar
 Calendars.default = Calendars.find('hijri');
 
 const hijriNow = new DateTime(); //now
@@ -197,6 +197,42 @@ options ("opts" parameter) is an object with three optional fields:
 - calendar: a Calendar object or the unique ID of a Calendar object,  
 - zone: a Zone object or the ID of a Zone object,  
 - locale: a Locale object or the ID of a Locale object,  
+
+## Add and subtract
+```
+const dt = new DateTime( { calendar: 'gregorian' }, 2020,1,1);
+const dt2 = dt.add({ day: 1 });
+console.log(dt2.year, dt2.month, dt2.day); //-> 2020, 1, 2
+
+const dt = new DateTime({ calendar: 'persian'}, 1400,1,1 );
+const dt2 = dt.subtract({ day: 1 });
+console.log(dt2.year, dt2.month, dt2.day); //-> 1399, 12, 30
+```
+
+## Convert datetimes between calendars and time zones
+```
+const gregorianDate = new DateTime({calendar: 'gregorian'}, 2021, 10, 26);
+console.log(gregorianDate.year, gregorianDate.month, gregorianDate.day) //-> 2021, 10, 26
+
+// convert gregorian to persian date
+const persianDate = gregorianDate.to('persian');
+console.log(persianDate.year, persianDate.month, persianDate.day) //-> 1400, 8, 4
+    
+// convert persian to hijri date
+const hijriDate = persianDate.to('hijri');
+console.log(hijriDate.year, hijriDate.month, hijriDate.day) //-> 1443, 3, 19 
+
+// convert hijri to gregorian2 date
+const gregorian2Date = hijriDate.to('gregorian2')
+console.log(gregorian2Date.year, gregorian2Date.month, gregorian2Date.day) //-> 2021, 10, 26 
+
+
+// output:
+2021 10 26
+1400 8 4
+1443 3 19
+2021 10 26
+```
 
 ## Find calendars 
 You can add multiple calendars to your project. you create Calendar objects and add them to Calendars pool. you should do this at the starting point of your project. The first Calendar you add to Calendars pool becomes default Calendar of your project (you can change it).
