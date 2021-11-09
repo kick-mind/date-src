@@ -109,6 +109,21 @@ describe('Main', () => {
       console.log(dt2.year, dt2.month, dt2.day); //-> 1399, 12, 30
     });
 
+   
+    it('Locale', () => {
+   
+    });
 
+    it('Zone', () => {
+   
+    });
+
+    it('Plugins: parse', () => {
+   
+    });
+
+    it('format', () => {
+   
+    });
   });
 });
