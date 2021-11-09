@@ -233,25 +233,3 @@ console.log(gregorian2Date.year, gregorian2Date.month, gregorian2Date.day) //-> 
 1443 3 19
 2021 10 26
 ```
-
-## Find calendars 
-You can add multiple calendars to your project. you create Calendar objects and add them to Calendars pool. you should do this at the starting point of your project. The first Calendar you add to Calendars pool becomes default Calendar of your project (you can change it).
-
-
-If you want to create a DateTime object with a specific calendar, you should specify it:
-```
-
-// Specify calendar by ID
-const d1 = new DateTime({calendar: 'hijri'}); // 'hijri' is the ID of a calendar in the Calendars collection
-
-// Alternatively, you can pass a refrence to a Calendar object
-const d2 = new DateTime({calendar: hijriCalendar}); 
-```
-
-Changing the calendar of a date object is super easy. just use 'to()' method of DateTime object.
-
-```
-const d1 = new DateTime({calendar: 'gregorian'}, 2021, 10, 25);
-const d2 = d1.to('persian');
-console.log(d2.year, d2.month, d2.day) // 1400, 8, 3
-```
