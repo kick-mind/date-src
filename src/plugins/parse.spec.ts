@@ -43,6 +43,14 @@ describe('Plugins', () => {
       );
     });
 
+    it('can parse non-alphanumeric characters', () => {
+      const d = parse('10/15/2020', 'MM-DD-YYYY');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day,],
+        [2020, 10, 15]
+      );
+    });
+
     it('can parse time with positive zone', () => {
       const d = parse('05/02/69 1:02:03 PM -05:00', 'MM/DD/YY H:mm:ss A Z');
       assert.deepStrictEqual(

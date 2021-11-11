@@ -6,6 +6,7 @@ import { HijriCalendar } from '../calendars/hijri';
 import { PersianCalendar } from '../calendars/persian';
 import { Calendars } from './calendar/calendars';
 import { DateTime } from './date-time';
+import { format } from '../plugins/format';
 
 describe('Main', () => {
   describe('DateTime2', () => {
@@ -123,7 +124,9 @@ describe('Main', () => {
     });
 
     it('format', () => {
-   
+      const dt = new DateTime(2001, 9, 8);
+      const str = format(dt, 'dd/MM/YYYY');
+      console.log(str); //-> '08/09/2001'
     });
   });
 });
