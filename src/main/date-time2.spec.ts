@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Locales } from '.';
+import { Locale, Locales, Zones } from '.';
 import { GregorianCalendar } from '../calendars/gregorian';
 import { GregorianCalendar2 } from '../calendars/gregorian2';
 import { HijriCalendar } from '../calendars/hijri';
@@ -7,6 +7,7 @@ import { PersianCalendar } from '../calendars/persian';
 import { Calendars } from './calendar/calendars';
 import { DateTime } from './date-time';
 import { format } from '../plugins/format';
+import { locale, locales } from 'moment';
 
 describe('Main', () => {
   describe('DateTime2', () => {
@@ -127,6 +128,40 @@ describe('Main', () => {
       const dt = new DateTime(2001, 9, 8);
       const str = format(dt, 'dd/MM/YYYY');
       console.log(str); //-> '08/09/2001'
+    });    
+    
+    
+    it('change zone', () => {
+      const UTC = new DateTime({ zone: Zones.utc});
+      console.log("UTC-Time -> hh:" + UTC.hour + " mm:" + UTC.minute + " ss:"+ UTC.second);
+
+      let Tehran = UTC.toZone('Asia/Tehran');
+      console.log("Tehran-Time -> hh:" + Tehran.hour + " mm:" + Tehran.minute + " ss:"+ Tehran.second);
+
+      const Toronto = Tehran.toZone('America/Toronto');
+      console.log("Toronto-Time -> hh:" + Toronto.hour + " mm:" + Toronto.minute + " ss:"+ Toronto.second);
+
+      let London = Toronto.toZone('Europe/London');
+      console.log("London-Time -> hh:" + London.hour + " mm:" + London.minute + " ss:"+ London.second);
+    });
+
+    it('change locale', () => {
+      const ro = new DateTime().toLocale('ro');
+      console.log(""+ ro.locale.getMonthNames(ro.calendar)[0]);
+
+      const de = new DateTime().toLocale('de');
+      console.log(""+ de.locale.getMonthNames(de.calendar)[0]);
+      
+      const fa = new DateTime().toLocale('fa-IR');
+      console.log(""+ fa.locale.getMonthNames(fa.calendar)[0]);
+
+      const fa_IR = fa.to('persian');
+      console.log(""+ fa_IR.locale.getMonthNames(fa_IR.calendar)[0]);
+
+      Calendars.add(new HijriCalendar('islamic', -1));
+      const ar_ue = fa_IR.to('islamic');
+      console.log(""+ ar_ue.locale.getMonthNames(ar_ue.calendar)[0]);
+      
     });
   });
 });
