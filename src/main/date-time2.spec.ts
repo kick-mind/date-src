@@ -146,21 +146,23 @@ describe('Main', () => {
     });
 
     it('change locale', () => {
-      const ro = new DateTime().toLocale('ro');
-      console.log(""+ ro.locale.getMonthNames(ro.calendar)[0]);
+      // in this example default calendar is gregorian
+      const roLocale = new DateTime().toLocale('ro');
+      console.log(roLocale.locale.getMonthNames(roLocale.calendar)[0]);
 
-      const de = new DateTime().toLocale('de');
-      console.log(""+ de.locale.getMonthNames(de.calendar)[0]);
+      const deLocale = roLocale.toLocale('de');
+      console.log(deLocale.locale.getMonthNames(deLocale.calendar)[0]);
       
-      const fa = new DateTime().toLocale('fa-IR');
-      console.log(""+ fa.locale.getMonthNames(fa.calendar)[0]);
+      const faLocale = deLocale.toLocale('fa-IR');
+      console.log(faLocale.locale.getMonthNames(faLocale.calendar)[0]);
 
-      const fa_IR = fa.to('persian');
-      console.log(""+ fa_IR.locale.getMonthNames(fa_IR.calendar)[0]);
+      // convert faLocale (from Gregorian) to Persian datetime object
+      const faIR = faLocale.to('persian');
+      console.log(faIR.locale.getMonthNames(faIR.calendar)[0]);
 
-      Calendars.add(new HijriCalendar('islamic', -1));
-      const ar_ue = fa_IR.to('islamic');
-      console.log(""+ ar_ue.locale.getMonthNames(ar_ue.calendar)[0]);
+    //  Calendars.add(new HijriCalendar('islamic', -1));
+    //  const ar_ue = fa_IR.to('islamic');
+    //  console.log(""+ ar_ue.locale.getMonthNames(ar_ue.calendar)[0]);
       
     });
   });

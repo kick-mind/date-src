@@ -274,6 +274,53 @@ console.log(gregorian2Date.year, gregorian2Date.month, gregorian2Date.day) //-> 
 2021 10 26
 ```
 
+#### change zone
+```
+const UTC = new DateTime({ zone: Zones.utc});
+console.log("UTC-Time -> hh:" + UTC.hour + " mm:" + UTC.minute + " ss:"+ UTC.second);
+
+let Tehran = UTC.toZone('Asia/Tehran');
+console.log("Tehran-Time -> hh:" + Tehran.hour + " mm:" + Tehran.minute + " ss:"+ Tehran.second);
+
+const Toronto = Tehran.toZone('America/Toronto');
+console.log("Toronto-Time -> hh:" + Toronto.hour + " mm:" + Toronto.minute + " ss:"+ Toronto.second);
+
+let London = Toronto.toZone('Europe/London');
+console.log("London-Time -> hh:" + London.hour + " mm:" + London.minute + " ss:"+ London.second);
+
+// output:
+
+// UTC-Time -> hh:19 mm:44 ss:28
+// Tehran-Time -> hh:23 mm:14 ss:28
+// Toronto-Time -> hh:14 mm:44 ss:28
+// London-Time -> hh:19 mm:44 ss:28
+```
+
+#### change locale
+```
+// in this example default calendar is gregorian
+const roLocale = new DateTime().toLocale('ro');
+console.log(roLocale.locale.getMonthNames(roLocale.calendar)[0]);
+
+const deLocale = roLocale.toLocale('de');
+console.log(deLocale.locale.getMonthNames(deLocale.calendar)[0]);
+      
+const faLocale = deLocale.toLocale('fa-IR');
+console.log(faLocale.locale.getMonthNames(faLocale.calendar)[0]);
+
+// convert faLocale (from Gregorian) to Persian datetime object
+const faIR = faLocale.to('persian');
+console.log(faIR.locale.getMonthNames(faIR.calendar)[0]);
+
+
+// output:
+// ianuarie
+// Januar
+// ژانویه
+// فروردین
+
+```
+
 ## Parse string
 
 If you know the format of an input string, you can use that to parse it.
