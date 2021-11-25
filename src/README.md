@@ -45,10 +45,10 @@ npm install @js-sugar/date
 
 ## How Jss-date works
 
-Import the calendars you need in your project, instantiate and add them to the Calendars pool.
+Import the calendars you need in your project, instantiate and add them to the Calendars collection.
 
 > Note:  
-> You have to add atleast one calendar to the Calendars pool.
+> You have to add atleast one calendar to the Calendars collection.
 
 Add the following code at the starting point of your application:
 
@@ -59,7 +59,7 @@ import { GregorianCalendar2 } from '@js-sugar/date/calendars/gregorian2';
 import { PersianCalendar }  from '@js-sugar/date/calendars/persian';
 import { HijriCalendar } from '@js-sugar/date/calendars/hijri';
 
-// You can add multiple instances of a calendar with unique id to the Calendars pool.
+// You can add multiple instances of a calendar with unique id to the Calendars collection.
 // add only the calenders you want to use in your project.
 
 Calendars.add(new GregorianCalendar('gregorian'));   // add a Gregorian calendar with a unique ID:[ 'grigorian' ]
@@ -69,7 +69,7 @@ Calendars.add(new HijriCalendar('hijri', -1)); // add a Hijri calendar with a un
 ```
 
 > Note:  
->  the first calendar you add to the Calendars pool is set as default calendar.
+>  the first calendar you add to the Calendars collection is set as default calendar.
 
 
 ## DateTime structure
@@ -84,14 +84,14 @@ DateTime object has three "required" parts:
 > If you don't provide DateTime constructor arguments, default values will be used.
 
 #### DateTime Defaults
-- Default calendar: The first calendar you add to Calendars pool.
+- Default calendar: The first calendar you add to Calendars collection.
 - Default Locale: System locale.
 - Default Zone: System local time-zone.
 
 
 ## Default calendar
 
-The first calendar you add to the Calendars pool is set as default calendar. If you create a DateTime object and don't provide a value for the Calendar argument, default calendar of Calendars pool is used as default value for the calendar argument of that DateTime object.
+The first calendar you add to the Calendars collection is set as default calendar. If you create a DateTime object and don't provide a value for the Calendar argument, default calendar of Calendars collection is used as default value for the calendar argument of that DateTime object.
 
 ```Code examples:
 
