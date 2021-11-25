@@ -248,7 +248,7 @@ const dt2 = dt.subtract({ day: 1 });
 console.log(dt2.year, dt2.month, dt2.day); //-> 1399, 12, 30
 ```
 
-## Convert datetimes between calendars and time zones
+## Convert datetimes between calendars
 
 ```
 const gregorianDate = new DateTime({calendar: 'gregorian'}, 2021, 10, 26);
@@ -274,7 +274,7 @@ console.log(gregorian2Date.year, gregorian2Date.month, gregorian2Date.day) //-> 
 2021 10 26
 ```
 
-#### change zone
+### Change zone
 ```
 const UTC = new DateTime({ zone: Zones.utc});
 console.log("UTC-Time -> hh:" + UTC.hour + " mm:" + UTC.minute + " ss:"+ UTC.second);
@@ -288,15 +288,15 @@ console.log("Toronto-Time -> hh:" + Toronto.hour + " mm:" + Toronto.minute + " s
 let London = Toronto.toZone('Europe/London');
 console.log("London-Time -> hh:" + London.hour + " mm:" + London.minute + " ss:"+ London.second);
 
-// output:
+output:
 
-// UTC-Time -> hh:19 mm:44 ss:28
-// Tehran-Time -> hh:23 mm:14 ss:28
-// Toronto-Time -> hh:14 mm:44 ss:28
-// London-Time -> hh:19 mm:44 ss:28
+UTC-Time -> hh:19 mm:44 ss:28
+Tehran-Time -> hh:23 mm:14 ss:28
+Toronto-Time -> hh:14 mm:44 ss:28
+London-Time -> hh:19 mm:44 ss:28
 ```
 
-#### change locale
+### Change locale
 ```
 // in this example default calendar is gregorian
 const roLocale = new DateTime().toLocale('ro');
@@ -313,11 +313,12 @@ const faIR = faLocale.to('persian');
 console.log(faIR.locale.getMonthNames(faIR.calendar)[0]);
 
 
-// output:
-// ianuarie
-// Januar
-// ژانویه
-// فروردین
+output:
+
+ianuarie
+Januar
+ژانویه
+فروردین
 
 ```
 
