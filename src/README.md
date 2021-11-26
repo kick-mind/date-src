@@ -248,7 +248,7 @@ const dt2 = dt.subtract({ day: 1 });
 console.log(dt2.year, dt2.month, dt2.day); //-> 1399, 12, 30
 ```
 
-## Convert datetimes between calendars
+## Convert datetimes between calendarsdd
 
 ```
 const gregorianDate = new DateTime({calendar: 'gregorian'}, 2021, 10, 26);
@@ -334,20 +334,20 @@ If you know the format of an input string, you can use that to parse it.
 // Import parse plugin
 import { parse } from '@js-sugar/date/plugins/parse';
 
-const dt = parse('2012/2/6', 'Y/M/D');
+const dt = parse('2012/2/6', 'Y/M/d');
 console.log(dt.year, dt.month, dt.day) //-> 2012, 2, 6
 
-const dt = parse("12-25-1995", "MM-DD-YYYY");
+const dt = parse("12-25-1995", "MM-dd-YYYY");
 console.log(dt.year, dt.month, dt.day) //-> 2012, 2, 6
 
-const dt = parse('99/2/6', 'YY/M/D');
+const dt = parse('99/2/6', 'YY/M/d');
 console.log(dt.year, dt.month, dt.day) //-> 99, 2, 6
 ```
 
 The parser ignores non-alphanumeric characters by default, so both of the following will return the same thing.
 
 ```
-const dt = parse('10/15/2020', 'MM-DD-YYYY');
+const dt = parse('10/15/2020', 'MM-dd-YYYY');
 console.log(dt.year, dt.month, dt.day) //-> 2020, 10, 15
 
 ```
