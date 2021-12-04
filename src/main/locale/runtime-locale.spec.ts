@@ -24,7 +24,7 @@ describe('Main', () => {
     });
 
 
-    it('can create en locale', () => {
+    it('can create en-USA locale', () => {
       const l = new RuntimeLocale('en', { weekStart: 6 });
       const gregorianCalendar = Calendars.find('gregorian');
       const persianCalendar = Calendars.find('persian');
@@ -35,25 +35,13 @@ describe('Main', () => {
         l.getMonthNames(gregorianCalendar),
         ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       );
-
-      assert.deepStrictEqual(
-        l.getMonthNames(Calendars.find('gregorian'), 'short'),
-        ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',]
-      );
-
       assert.deepStrictEqual(
         l.getMonthNames(persianCalendar),
         ['Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar', 'Mehr', 'Aban', 'Azar', 'Dey', 'Bahman', 'Esfand']
       );
-
       assert.deepStrictEqual(
         l.getWeekdayNames(),
         ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-      );
-      
-      assert.deepStrictEqual(
-        l.getWeekdayNames('short'),
-        ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri']
       );
 
       assert.strictEqual(l.weekStart, 6);
@@ -61,38 +49,83 @@ describe('Main', () => {
       assert.strictEqual(l.getZoneTitle('Asia/Tehran'), 'Iran Standard Time');
     });
 
+    it('can create fa locale', () => {
+      const l = new RuntimeLocale('fa', { weekStart: 6 });
+      const gregorianCalendar = Calendars.find('gregorian');
+      const persianCalendar = Calendars.find('persian');
+      const gregorianMonthNames = l.getMonthNames(gregorianCalendar, 'long');
+      const persianMonthNames = l.getMonthNames(persianCalendar, 'long');
 
-    it('can create fa-IR locale', () => {
-      const l = new RuntimeLocale('fa-IR', { weekStart: 6 });
+      assert.ok(l.resolvedName);
+      assert.deepStrictEqual(gregorianMonthNames, [
+        'ژانویه',
+        'فوریه',
+        'مارس',
+        'آوریل',
+        'مه',
+        'ژوئن',
+        'ژوئیه',
+        'اوت',
+        'سپتامبر',
+        'اکتبر',
+        'نوامبر',
+        'دسامبر',
+      ]);
+      
+      assert.deepStrictEqual(persianMonthNames, [
+        'فروردین',
+        'اردیبهشت',
+        'خرداد',
+        'تیر',
+        'مرداد',
+        'شهریور',
+        'مهر',
+        'آبان',
+        'آذر',
+        'دی',
+        'بهمن',
+        'اسفند'
+      ]);
 
-      assert.deepStrictEqual(
-        l.getMonthNames(Calendars.find('gregorian'), 'long'),
-        ['ژانویه', 'فوریه', 'مارس', 'آوریل', 'مه', 'ژوئن', 'ژوئیه', 'اوت', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر']
-      );
+      assert.deepStrictEqual(l.getWeekdayNames(), [
+        'شنبه',
+        'یکشنبه',
+        'دوشنبه',
+        'سه‌شنبه',
+        'چهارشنبه',
+        'پنجشنبه',
+        'جمعه',
+      ]);
 
-      assert.deepStrictEqual(
-        l.getMonthNames(Calendars.find('gregorian'), 'narrow'),
-        ['ژ', 'ف', 'م', 'آ', 'م', 'ژ', 'ژ', 'ا', 'س', 'ا', 'ن', 'د']
-      );
+      assert.deepStrictEqual(l.getMonthNames(Calendars.find('gregorian'), 'narrow'), [
+        'ژ',
+        'ف',
+        'م',
+        'آ',
+        'م',
+        'ژ',
+        'ژ',
+        'ا',
+        'س',
+        'ا',
+        'ن',
+        'د',
+      ]);
 
-      assert.deepStrictEqual(
-        l.getWeekdayNames(),
-        ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه']
-      );
+      assert.deepStrictEqual(l.getWeekdayNames('narrow'), [
+        'ش',
+        'ی',
+        'د',
+        'س',
+        'چ',
+        'پ',
+        'ج',
+      ]);
 
-      assert.deepStrictEqual(
-        l.getWeekdayNames('narrow'), ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
-      );
+      assert.strictEqual(l.getZoneTitle('America/New_York'), 'وقت تابستانی شرق امریکا');
+      assert.strictEqual(l.getZoneTitle('UTC'), 'زمان هماهنگ جهانی');
 
-      assert.strictEqual(
-        l.getZoneTitle('UTC'),
-        'زمان هماهنگ جهانی'
-      );
-
-      assert.strictEqual(
-        l.getZoneTitle('America/New_York'),
-        'وقت تابستانی شرق امریکا'
-      );
     });
+
   });
 });

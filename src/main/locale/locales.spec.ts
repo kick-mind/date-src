@@ -1,5 +1,10 @@
 import assert from 'assert';
+import { RuntimeLocale } from './runtime-locale';
+import { Calendars } from '../calendar';
+// import { PersianCalendar } from '../calendar/persian/persian';
 import { Locales } from './locales';
+
+// Calendars.add(new PersianCalendar('persian'));
 
 describe('Main', () => {
   describe('Locales', function () {
@@ -16,8 +21,6 @@ describe('Main', () => {
       assert.ok(Locales.resolve('fa'));
     });
 
-    it('can cache resolved locales', () => {
-      assert.strictEqual(Locales.resolve('fa'), Locales.resolve('fa'));
-    });
+    
   });
 });
