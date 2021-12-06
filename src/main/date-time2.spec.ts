@@ -8,7 +8,7 @@ import { Calendars } from './calendar/calendars';
 import { DateTime } from './date-time';
 import { format } from '../plugins/format';
 import { locale, locales } from 'moment';
-
+import { parse } from '../plugins/parse';
 describe('Main', () => {
   describe('DateTime2', () => {
     before(function () {
@@ -113,15 +113,29 @@ describe('Main', () => {
 
    
     it('Locale', () => {
-   
+      const javaScriptRelease = Date.parse('04 Dec 2020 00:12:00 GMT');
+      const d = new DateTime(javaScriptRelease);
+      console.log("year:"+ d.year +" month:"+ d.month +" day:"+ d.day);
+        const dt = new Date(1970,0,1);
+        console.log("UTC-Time -> hh:" + dt.getMonth() );
     });
 
     it('Zone', () => {
-   
+      const d = new DateTime(2000,1,1);
+      console.log("hh:" + d.year +" mm:"+ d.minute +" ss:" + d.second);
     });
 
     it('Plugins: parse', () => {
-   
+   // Import parse plugin
+
+// Import parse plugin
+
+const dt = parse('2012/2/6', 'Y/M/d');
+console.log(dt.year, dt.month, dt.day) //-> 2012, 2, 6
+const dt1 = parse("12-25-1995", "MM-dd-YYYY");
+console.log(dt1.year, dt1.month, dt1.day) //-> 2012, 2, 6
+const dt2 = parse('99/2/6', 'YY/M/d');
+console.log(dt2.year, dt2.month, dt2.day) //-> 99, 2, 6
     });
 
     it('format', () => {
