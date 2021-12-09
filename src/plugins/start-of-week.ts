@@ -1,5 +1,4 @@
 import { DateTime } from '../main';
-import { weekDayLocale } from '../plugins/week-day-locale';
 import { weekDay } from './week-day';
 /**
  * @name startOfWeek
