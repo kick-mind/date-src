@@ -248,7 +248,7 @@ const dt2 = dt.subtract({ day: 1 });
 console.log(dt2.year, dt2.month, dt2.day); //-> 1399, 12, 30
 ```
 
-## Convert datetimes between calendarsdd
+## Convert datetimes between calendars
 
 ```
 const gregorianDate = new DateTime({calendar: 'gregorian'}, 2021, 10, 26);
