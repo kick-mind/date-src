@@ -15,12 +15,7 @@ import { daysInMonth } from './days-in-month';
  * because 2004 was a leap year.
  */
 export function setYear(date: DateTime, year: number): DateTime {
-  const day = Math.min(
-    date.day,
-    daysInMonth(
-      new DateTime(year, date.month, 1, 0, 0, 0, 0, { calendar: date.calendar })
-    )
-  );
+  const day = Math.min(date.day, daysInMonth(date.clone({ year: year })));
 
   return new DateTime(
     year,

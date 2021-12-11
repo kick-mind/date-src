@@ -14,12 +14,7 @@ import { daysInMonth } from './days-in-month';
  * setMonth(new DateTime(2018,7,31), 2) will be date of 2018-2-28
  */
 export function setMonth(date: DateTime, month: number): DateTime {
-  const day = Math.min(
-    date.day,
-    daysInMonth(
-      new DateTime(date.year, month, 1, 0, 0, 0, 0, { calendar: date.calendar })
-    )
-  );
+  const day = Math.min(date.day, daysInMonth(date.clone({ month: month })));
   return new DateTime(
     date.year,
     month,
