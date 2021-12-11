@@ -17,13 +17,5 @@ import { daysInMonth } from './days-in-month';
 export function setDay(date: DateTime, day: number): DateTime {
   const days = Math.min(day, daysInMonth(date));
 
-  return new DateTime(
-    date.year,
-    date.month,
-    days,
-    date.hour,
-    date.minute,
-    date.second,
-    date.ms
-  );
+  return date.clone({ day: days });
 }

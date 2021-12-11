@@ -20,20 +20,42 @@ describe('Plugins', () => {
       console.log(newDate.year + ' ' + newDate.month + ' ' + newDate.day);
       assert.strictEqual(
         true,
-        isSame(newDate, new DateTime(2003, 2, 28, 12, 34, 23, 4))
+        isSame(
+          newDate,
+          dt.clone({
+            year: 2003,
+            month: 2,
+            day: 28,
+            hour: 12,
+            minute: 34,
+            second: 23,
+            ms: 4,
+          })
+        )
       );
     });
     it('set day2', () => {
-        const dt = new DateTime(2003, 2, 28, 12, 34, 23, 4);
-        const day = 2003;
-  
-        const newDate = setDay(dt, 20);
-  
-        console.log(newDate.year + ' ' + newDate.month + ' ' + newDate.day);
-        assert.strictEqual(
-          true,
-          isSame(newDate, new DateTime(2003, 2, 20, 12, 34, 23, 4))
-        );
-      });
+      const dt = new DateTime(2003, 2, 28, 12, 34, 23, 4);
+      const day = 2003;
+
+      const newDate = setDay(dt, 20);
+
+      console.log(newDate.year + ' ' + newDate.month + ' ' + newDate.day);
+      assert.strictEqual(
+        true,
+        isSame(
+          newDate,
+          dt.clone({
+            year: 2003,
+            month: 2,
+            day: 20,
+            hour: 12,
+            minute: 34,
+            second: 23,
+            ms: 4,
+          })
+        )
+      );
+    });
   });
 });

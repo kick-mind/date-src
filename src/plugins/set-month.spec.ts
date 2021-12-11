@@ -18,7 +18,15 @@ describe('Plugins', () => {
       console.log(newDate.year + ' ' + newDate.month + ' ' + newDate.day);
       assert.strictEqual(
         true,
-        isSame(newDate, new DateTime(2018, 2, 28, 12, 34, 23, 4))
+        isSame(newDate,  dt.clone({
+          year: 2018,
+          month: 2,
+          day: 28,
+          hour: 12,
+          minute: 34,
+          second: 23,
+          ms: 4,
+        }))
       );
     });
   });
