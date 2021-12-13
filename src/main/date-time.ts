@@ -18,10 +18,10 @@ import {
 } from '../common';
 import { CalendarSpecifier, LocaleSpecifier, ZoneSpecifier } from './common';
 
-/** Is a non-negetive integer? */
-const II = (x: any) => IsInt(x) && x >= 0;
+/** Is an integer? */
+const II = (x: any) => IsInt(x);
 
-/** Is a non-negetive integer or null/undefined? */
+/** Is an integer or null/undefined? */
 const IIN = (x: any) => x == null || II(x);
 
 /** Is object? */
@@ -102,7 +102,7 @@ export class DateTime {
       minute = a5;
       second = a6;
       ms = a7;
-    } else if (IsInt(a0) && ION(a1)) {
+    } else if (II(a0) && ION(a1)) {
       // 5'th overload (create by timestamp)
       ts = a0;
       opts = a1;

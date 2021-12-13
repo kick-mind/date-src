@@ -56,7 +56,6 @@ function assertUtcDateEquality(date: Date, dateTime: DateTime) {
 }
 
 describe('Main', () => {
-
   describe('DateTime', () => {
     before(function () {
       Calendars.add(new GregorianCalendar('gregorian'));
@@ -221,7 +220,8 @@ describe('Main', () => {
       const newDt = dt.clone();
       assert.deepStrictEqual(dt, newDt);
     });
-    it('toObject', () => {
+
+    it('can convert DateTime to object', () => {
       const dt = new DateTime({ zone: Zones.utc });
       const newZone = dt.toZone('Asia/Tehran');
       const newDt = newZone.toObject();
@@ -239,6 +239,11 @@ describe('Main', () => {
       const d2 = dt.toZone(Zones.utc);
       const d3 = d2.toObject();
       // assert.strictEqual(newZone.day, newDt.day);
+    });
+
+    it('can create an "invalid" DateTime', () => {
+      const dt = new DateTime({calendar: 'persian'}, 1400, -2, -2);
+      
     });
   });
 
