@@ -1,7 +1,12 @@
 {
   "name": "@js-sugar/date",
-  "version": "1.3.0",
-  "description": "A Multi-Calendar, Tree-shakable, Immutable and Lightweight Date Library for Javascript",
+  "version": "1.5.0",
+  "description": "A multi-calendar, tree-shakable, extensible, immutable and lightweight date library for JavaScript",
+  "author": "JS-Sugar",
+  "license": "ISC",
+  "homepage": "https://github.com/js-sugar/date",
+  "main": "./main/jss-date.js",
+  "types": "./main/index.d.ts",
   "keywords": [
     "date",
     "time",
@@ -9,10 +14,5 @@
     "tree-shakable",
     "immutable",
     "moment"
-  ],
-  "author": "JS-Sugar",
-  "license": "ISC",
-  "homepage": "https://github.com/js-sugar/date",
-  "main": "./main/jss-date.js",
-  "types": "./main/index.d.ts"
+  ]
 }

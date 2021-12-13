@@ -242,8 +242,7 @@ describe('Main', () => {
     });
 
     it('can create an "invalid" DateTime', () => {
-      const dt = new DateTime({calendar: 'persian'}, 1400, -2, -2);
-      
+      const d = new DateTime({calendar: 'persian'}, 1400, -1, -1);
     });
   });
 
