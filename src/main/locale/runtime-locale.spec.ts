@@ -127,5 +127,10 @@ describe('Main', () => {
 
     });
 
+    
+    it('can format numbers', () => {
+      const l = new RuntimeLocale('fa', { weekStart: 6 });
+      assert.strictEqual(l.formatNumber(123456), '۱۲۳۴۵۶');
+    });
   });
 });

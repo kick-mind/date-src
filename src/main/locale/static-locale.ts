@@ -59,4 +59,8 @@ export class StaticLocale extends Locale {
             return this.#data?.zones[zoneName][format === 'short' ? 0 : 1];
         }
     }
+
+    formatNumber(n: number): string {
+        throw new Error('Not supported in this version.');
+    }
 }

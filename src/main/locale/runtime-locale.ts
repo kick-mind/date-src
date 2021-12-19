@@ -47,9 +47,10 @@ let cache: {
 export class RuntimeLocale extends Locale {
     #resolvedName: string;
     #isSystemLocale: boolean;
+    #numFormatter: Intl.NumberFormat;
 
     constructor(name: string, options: { weekStart: number }) {
-        super(name, options );
+        super(name, options);
         this.#isSystemLocale = name === 'system';
         let { resolvedName } = verifyLocale(this.#isSystemLocale ? null : name, true, true);
         this.#resolvedName = resolvedName;
@@ -124,5 +125,13 @@ export class RuntimeLocale extends Locale {
         }
 
         return formatter.formatToParts(new Date()).find(m => m.type.toLowerCase() === 'timezonename').value;
+    }
+
+    formatNumber(n: number): string {
+        if (!this.#numFormatter) {
+            this.#numFormatter = new Intl.NumberFormat(this.#resolvedName, { style: 'decimal', useGrouping: false });
+        }
+
+        return this.#numFormatter.format(n);
     }
 }

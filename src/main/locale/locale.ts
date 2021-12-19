@@ -38,4 +38,7 @@ export abstract class Locale {
 
     /** Gets the (localized) title of a zone */
     abstract getZoneTitle(zoneName: string, format: ZoneTitleFormat): string;
+
+    /** Formats a number */
+    abstract formatNumber(n: number): string;
 }
