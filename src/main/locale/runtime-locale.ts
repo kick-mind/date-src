@@ -2,6 +2,7 @@ import { MonthNameFormat, WeekdayNameFormat, ZoneTitleFormat } from '../../commo
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
 import { verifyLocale } from '../../common';
+import { LocaleFeatureSupport } from '../common';
 
 function isSupportedCalendar(calendarName: string) {
     return [
@@ -127,11 +128,21 @@ export class RuntimeLocale extends Locale {
         return formatter.formatToParts(new Date()).find(m => m.type.toLowerCase() === 'timezonename').value;
     }
 
-    formatNumber(n: number): string {
+    formatNumber(n: number, options?: { minimumIntegerDigits?: number }): string {
         if (!this.#numFormatter) {
-            this.#numFormatter = new Intl.NumberFormat(this.#resolvedName, { style: 'decimal', useGrouping: false });
+            this.#numFormatter = new Intl.NumberFormat(this.#resolvedName, {
+                style: 'decimal',
+                useGrouping: false,
+                minimumIntegerDigits: options?.minimumIntegerDigits ?? 1
+            });
         }
 
         return this.#numFormatter.format(n);
+    }
+
+    get support(): LocaleFeatureSupport {
+        return {
+            numberFormating: true
+        };
     }
 }

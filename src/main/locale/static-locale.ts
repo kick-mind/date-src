@@ -1,5 +1,6 @@
 import { deepFreeze, MonthNameFormat, WeekdayNameFormat, ZoneTitleFormat } from '../../common';
 import { Calendar } from '../calendar';
+import { LocaleFeatureSupport } from '../common';
 import { Locale } from './locale';
 
 let getFormatIndex = (f: MonthNameFormat) => f == 'narrow' ? 2 : (f == 'short' ? 1 : 0);
@@ -62,5 +63,11 @@ export class StaticLocale extends Locale {
 
     formatNumber(n: number): string {
         throw new Error('Not supported in this version.');
+    }
+
+    get support(): LocaleFeatureSupport {
+        return {
+            numberFormating: true
+        };
     }
 }

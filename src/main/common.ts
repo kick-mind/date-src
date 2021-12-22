@@ -16,3 +16,10 @@ export type ZoneSpecifier = Zone | string;
  * A locale object or a locale name
  */
 export type LocaleSpecifier = Locale | string;
+
+/** 
+ * A locale object or a locale name
+ */
+export interface LocaleFeatureSupport {
+    numberFormating: boolean;
+}

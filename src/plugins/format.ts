@@ -16,53 +16,58 @@ export function format(d: DateTime, formatStr: string): string {
 
     const zInfo = () => {
         let o = zone.getOffset(ts); // offset
-        let s = o > 0 ? 1 : -1; // sign
+        let p = o > 0; // is positive offset?
         return {
-            s,
-            o,
-            hr: Math.floor(o / 60) * s,
-            min: Math.floor(o % 60) * s,
+            o,            
+            p,
+            hr: Math.floor(o / 60) * (p ? 1 : -1),
+            min: Math.floor(o % 60) * (p ? 1 : -1),
         };
     };
 
+    const numFormatter = locale.support?.numberFormating ?
+        (n: number, pad: number = 1) => locale.formatNumber(n, { minimumIntegerDigits: pad }) :
+        (n: number, pad: number = 1) => n.toString();
+
     const matches: any = {
-        Y: () => year,
-        YY: () => padNum(year, 2),
-        YYYY: () => padNum(year, 4),
-        M: () => month,
-        MM: () => padNum(month, 2),
+        Y: () => numFormatter(year),
+        YY: () => numFormatter(year, 2),
+        YYYY: () => numFormatter(year, 4),
+        M: () => numFormatter(month),
+        MM: () => numFormatter(month, 2),
         MMM: () => locale.getMonthNames(calendar, 'short')[month - 1],
         MMMM: () => locale.getMonthNames(calendar, 'long')[month - 1],
-        d: () => day,
-        dd: () => padNum(day, 2),
-        H: () => hour,
-        HH: () => padNum(hour, 2),
-        h: () => hour % 12,
-        hh: () => padNum(hour % 12, 2),
-        m: () => minute,
-        mm: () => padNum(minute, 2),
-        s: () => second,
-        ss: () => padNum(second, 2),
-        f: () => ms,
-        fff: () => padNum(ms, 3),
-        c: () => wd,
-        cc: () => wdl,
+        d: () => numFormatter(day),
+        dd: () => numFormatter(day, 2),
+        H: () => numFormatter(hour),
+        HH: () => numFormatter(hour, 2),
+        h: () => numFormatter(hour % 12),
+        hh: () => numFormatter(hour % 12, 2),
+        m: () => numFormatter(minute),
+        mm: () => numFormatter(minute, 2),
+        s: () => numFormatter(second),
+        ss: () => numFormatter(second, 2),
+        f: () => numFormatter(ms),
+        fff: () => numFormatter(ms, 3),
+        c: () => numFormatter(wd),
+        cc: () => numFormatter(wdl),
         C: () => locale.getWeekdayNames('narrow')[wdl],
         CC: () => locale.getWeekdayNames('short')[wdl],
         CCC: () => locale.getWeekdayNames('long')[wdl],
         z: () => { // Zone offset: +5
             let z = zInfo();
-            return z.s > 0 ? `+${z.o}` : z.o;
+            const o = numFormatter(z.o);
+            return z.p ? `+${o}` : o;
         },
         zz: () => { // Zone offset: +05:00
             let z = zInfo();
-            return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}:${padNum(z.min, 2)}`;
+            return `${z.p ? '+' : '-'}${numFormatter(z.hr, 2)}:${numFormatter(z.min, 2)}`;
         },
         zzz: () => { // Zone offset: +0500
             let z = zInfo();
-            return `${z.s ? '+' : '-'}${padNum(z.hr, 2)}${padNum(z.min, 2)}`;
+            return `${z.p ? '+' : '-'}${numFormatter(z.hr, 2)}${numFormatter(z.min, 2)}`;
         },
-        Z: () => zone.name, // Zone ID: America/New_York
+        Z: () => zone.name, // Zone name, like America/New_York
         ZZ: () => locale.getZoneTitle(zone.name, 'short'), // Short zone title: EST
         ZZZ: () => locale.getZoneTitle(zone.name, 'long'), // Long zone title: Eastern Standard Time          
     };

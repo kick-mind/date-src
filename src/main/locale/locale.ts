@@ -1,3 +1,4 @@
+import { LocaleFeatureSupport } from '..';
 import { IsInt, MonthNameFormat, WeekdayNameFormat, ZoneTitleFormat } from '../../common';
 import { Calendar } from '../calendar';
 
@@ -40,5 +41,8 @@ export abstract class Locale {
     abstract getZoneTitle(zoneName: string, format: ZoneTitleFormat): string;
 
     /** Formats a number */
-    abstract formatNumber(n: number): string;
+    abstract formatNumber(n: number, options?: { minimumIntegerDigits?: number }): string;
+
+    /** Feature support descriptor */
+    abstract get support(): LocaleFeatureSupport;
 }
