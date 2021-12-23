@@ -23,39 +23,12 @@ const matchWord = /\d*[^\s\d-_:/()]+/; // Word
 // remove
 let locale: any = {};
 
-function fixNonEnNumber(str: string) {
-  {
-    const persian = [
-      /۰/g,
-      /۱/g,
-      /۲/g,
-      /۳/g,
-      /۴/g,
-      /۵/g,
-      /۶/g,
-      /۷/g,
-      /۸/g,
-      /۹/g,
-    ];
-    const arabic = [
-      /٠/g,
-      /١/g,
-      /٢/g,
-      /٣/g,
-      /٤/g,
-      /٥/g,
-      /٦/g,
-      /٧/g,
-      /٨/g,
-      /٩/g,
-    ];
-
+function fixLocaleDigits(str: string, localeDigits: string) {
+  {   
     if (typeof str === 'string') {
       let i = 0;
       for (; i < 10; i++) {
-        str = str
-          .replace(persian[i], i.toString())
-          .replace(arabic[i], i.toString());
+        str = str.replace(new RegExp(localeDigits[i], 'g'), i.toString());
       }
     }
     return str;
@@ -263,7 +236,7 @@ export function parse(
   const localeDigits = l.formatNumber(123456789, { minimumIntegerDigits: 10 });
   // Your locale-based digits are here, go on ...
 
-  let fixed = fixNonEnNumber(date);
+  let fixed = fixLocaleDigits(date, localeDigits);
   try {
     const parser = makeParser(format);
     const {
