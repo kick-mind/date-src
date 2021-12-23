@@ -5,6 +5,7 @@ import {
   ZoneSpecifier,
   LocaleSpecifier,
   FixedZone,
+  Locales,
 } from '../main';
 
 const formattingTokens =
@@ -258,6 +259,10 @@ export function parse(
     locale?: LocaleSpecifier;
   }
 ): DateTime {
+  const l = Locales.resolve(opts?.locale) || Locales.default;
+  const localeDigits = l.formatNumber(123456789, { minimumIntegerDigits: 10 });
+  // Your locale-based digits are here, go on ...
+
   let fixed = fixNonEnNumber(date);
   try {
     const parser = makeParser(format);

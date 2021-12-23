@@ -16,7 +16,7 @@ describe('Plugins', () => {
 
 
     it('can format dates (fa-IR)', () => {
-      const l = Locales.resolve('fa-IR', { weekStart: 6 });
+      const l = Locales.resolve({ name: 'fa-IR', weekStart: 6 });
       const z = Zones.utc;
       const d = new DateTime(2001, 9, 8, 18, 5, 4, 90, { locale: l, zone: z });
 
