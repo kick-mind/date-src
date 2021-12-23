@@ -137,13 +137,18 @@ export class DateTime {
     this.#z = z;
 
     // Resolve locale
-    let l: any = opts?.locale;
-    if (!l) {
+    let ls = opts?.locale;
+    let l: Locale;
+
+    if (!ls) {
       l = Locales.default;
-    } else if (IsStr(l)) {
-      l = Locales.resolve(l, { weekStart: 0, strict: true });
+    } else if (typeof ls === 'string') {
+      l = Locales.resolve(ls, { weekStart: 0, strict: true });
+    } else if (typeof ls === 'object') {
+      l = Locales.resolve(ls.name, { weekStart: ls.weekStart, strict: true });
     } else {
-      vObj(l, Locale, true, 'Invalid locale');
+      vObj(ls, Locale, true, 'Invalid locale');
+      l = ls;
     }
     this.#l = l;
 

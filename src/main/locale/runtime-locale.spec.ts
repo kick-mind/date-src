@@ -138,8 +138,6 @@ describe('Main', () => {
       assert.strictEqual(l.formatNumber(123456), '۱۲۳۴۵۶');
       assert.strictEqual(l.formatNumber(1, { minimumIntegerDigits: 3 }), '۰۰۱');
       assert.strictEqual(l.formatNumber(123456, { minimumIntegerDigits: 3 }), '۱۲۳۴۵۶');
-
-
     });
   });
 });

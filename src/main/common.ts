@@ -15,4 +15,7 @@ export type ZoneSpecifier = Zone | string;
 /** 
  * A locale object or a locale name
  */
-export type LocaleSpecifier = Locale | string;
+export type LocaleSpecifier = Locale | string | {
+    name: string,
+    weekStart: number
+};

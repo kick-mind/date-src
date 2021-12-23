@@ -242,8 +242,14 @@ describe('Main', () => {
     });
 
     it('can create an "invalid" DateTime', () => {
-      const d = new DateTime({calendar: 'persian'}, 1400, -1, -1);
+      const d = new DateTime({ calendar: 'persian' }, 1400, -1, -1);
     });
+
+    it('can create a date with a custom week start', () => {
+      const d = new DateTime({ calendar: 'persian', locale: { name: 'fa', weekStart: 6 } }, 1400, 1);
+      assert.strictEqual(d.locale.weekStart, 6);
+    });
+
   });
 
 });
