@@ -61,11 +61,6 @@ const zoneExpressions = [
   },
 ];
 
-const getLocalePart = (name: string) => {
-  const part = locale[name];
-  return part && (part.indexOf ? part : part.s.concat(part.f));
-};
-
 const meridiemMatch = (input: string, isLowerCase: boolean) => {
   let isAfternoon;
   const { meridiem } = locale;
@@ -141,31 +136,6 @@ const expressions: any = {
   ],
   M: [match1to2, addInput('month')],
   MM: [match2, addInput('month')],
-  MMM: [
-    matchWord,
-    function (input: string) {
-      const months = getLocalePart('months');
-      const monthsShort = getLocalePart('monthsShort');
-      const matchIndex =
-        (monthsShort || months.map((_: any) => _.substr(0, 3))).indexOf(input) +
-        1;
-      if (matchIndex < 1) {
-        throw new Error();
-      }
-      this.month = matchIndex % 12 || matchIndex;
-    },
-  ],
-  MMMM: [
-    matchWord,
-    function (input: string) {
-      const months = getLocalePart('months');
-      const matchIndex = months.indexOf(input) + 1;
-      if (matchIndex < 1) {
-        throw new Error();
-      }
-      this.month = matchIndex % 12 || matchIndex;
-    },
-  ],
   Y: [matchSigned, addInput('year')],
   YY: [match2, addInput('year')],
   YYYY: [match4, addInput('year')],
