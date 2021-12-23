@@ -1,19 +1,30 @@
 /** DateTime units. */
 export interface DateTimeUnits {
+    /** Year */
     year?: number;
+    /** Month */
     month?: number;
+    /** Day */
     day?: number;
+    /** Hour */
     hour?: number;
+    /** Minute */
     minute?: number;
+    /** Second */
     second?: number;
+    /** Millisecond */
     ms?: number;
 }
 
 /** Time units. */
-export interface TimeUnits{
+export interface TimeUnits {
+    /** Hour */
     hour?: number;
+    /** Minute */
     minute?: number;
+    /** Second */
     second?: number;
+    /** Millisecond */
     ms?: number;
 }
 

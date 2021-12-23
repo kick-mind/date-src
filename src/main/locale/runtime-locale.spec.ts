@@ -71,7 +71,7 @@ describe('Main', () => {
         'نوامبر',
         'دسامبر',
       ]);
-      
+
       assert.deepStrictEqual(persianMonthNames, [
         'فروردین',
         'اردیبهشت',
@@ -122,15 +122,24 @@ describe('Main', () => {
         'ج',
       ]);
 
-      assert.strictEqual(l.getZoneTitle('America/New_York'), 'وقت تابستانی شرق امریکا');
       assert.strictEqual(l.getZoneTitle('UTC'), 'زمان هماهنگ جهانی');
+
+      const t = l.getZoneTitle('America/New_York');
+      if (t !== 'وقت عادی شرق امریکا' && t !== 'وقت تابستانی شرق امریکا') {
+        assert.fail()
+      }
+
 
     });
 
-    
+
     it('can format numbers', () => {
       const l = new RuntimeLocale('fa', { weekStart: 6 });
       assert.strictEqual(l.formatNumber(123456), '۱۲۳۴۵۶');
+      assert.strictEqual(l.formatNumber(1, { minimumIntegerDigits: 3 }), '۰۰۱');
+      assert.strictEqual(l.formatNumber(123456, { minimumIntegerDigits: 3 }), '۱۲۳۴۵۶');
+
+
     });
   });
 });

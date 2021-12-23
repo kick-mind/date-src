@@ -10,11 +10,9 @@ import {
   IsInt,
   IsObj,
   IsStr,
-  padNum,
   throwInvalidParam,
   vClsCall,
   vObj,
-  WeekdayNameFormat,
 } from '../common';
 import { CalendarSpecifier, LocaleSpecifier, ZoneSpecifier } from './common';
 

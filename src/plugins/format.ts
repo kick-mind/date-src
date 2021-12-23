@@ -1,4 +1,3 @@
-import { padNum } from '../common';
 import { DateTime } from '../main';
 import { weekDay } from './week-day';
 import { weekDayLocale } from './week-day-locale';
@@ -14,27 +13,25 @@ export function format(d: DateTime, formatStr: string): string {
     let wd = weekDay(d),
         wdl = weekDayLocale(d);
 
-    const zInfo = () => {
-        let o = zone.getOffset(ts); // offset
-        let p = o > 0; // is positive offset?
-        return {
-            o,            
-            p,
-            hr: Math.floor(o / 60) * (p ? 1 : -1),
-            min: Math.floor(o % 60) * (p ? 1 : -1),
-        };
+    let zoneOffset = zone.getOffset(ts); // offset
+    const zInfo = {
+        o: zoneOffset,
+        p: zoneOffset >= 0, // is positive offset?,
+        s: zoneOffset >= 0 ? '+' : '-', // sign
+        hr: Math.abs(Math.floor(zoneOffset / 60)),
+        min: Math.abs(Math.floor(zoneOffset % 60)),
     };
 
-    const numFormatter = locale.support?.numberFormating ?
-        (n: number, pad: number = 1) => locale.formatNumber(n, { minimumIntegerDigits: pad }) :
-        (n: number, pad: number = 1) => n.toString();
+    const numFormatter =
+        (n: number, pad: number = 1) => locale.formatNumber(n, { minimumIntegerDigits: pad });
+        
 
     const matches: any = {
         Y: () => numFormatter(year),
-        YY: () => numFormatter(year, 2),
+        YY: () => numFormatter(year, 4).substring(2),
         YYYY: () => numFormatter(year, 4),
         M: () => numFormatter(month),
-        MM: () => numFormatter(month, 2),
+        MM: () => numFormatter(month, 4).substring(2),
         MMM: () => locale.getMonthNames(calendar, 'short')[month - 1],
         MMMM: () => locale.getMonthNames(calendar, 'long')[month - 1],
         d: () => numFormatter(day),
@@ -55,17 +52,14 @@ export function format(d: DateTime, formatStr: string): string {
         CC: () => locale.getWeekdayNames('short')[wdl],
         CCC: () => locale.getWeekdayNames('long')[wdl],
         z: () => { // Zone offset: +5
-            let z = zInfo();
-            const o = numFormatter(z.o);
-            return z.p ? `+${o}` : o;
+            const o = numFormatter(zInfo.o);
+            return zInfo.p ? `+${o}` : o;
         },
         zz: () => { // Zone offset: +05:00
-            let z = zInfo();
-            return `${z.p ? '+' : '-'}${numFormatter(z.hr, 2)}:${numFormatter(z.min, 2)}`;
+            return `${zInfo.s}${numFormatter(zInfo.hr, 2)}:${numFormatter(zInfo.min, 2)}`;
         },
         zzz: () => { // Zone offset: +0500
-            let z = zInfo();
-            return `${z.p ? '+' : '-'}${numFormatter(z.hr, 2)}${numFormatter(z.min, 2)}`;
+            return `${zInfo.s}${numFormatter(zInfo.hr, 2)}${numFormatter(zInfo.min, 2)}`;
         },
         Z: () => zone.name, // Zone name, like America/New_York
         ZZ: () => locale.getZoneTitle(zone.name, 'short'), // Short zone title: EST

@@ -32,8 +32,8 @@ export function throwInvalidParam(param?: string) {
  * Pads a number
  * @private
  */
-export function padNum(value: number, length: number, zeroString: string = '0') {
-  return value.toString().slice(-length).padStart(length, zeroString);
+export function padNum(value: number, length: number) {
+  return value.toString().slice(-length).padStart(length, '0');
 }
 
 /** 

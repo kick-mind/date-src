@@ -1,9 +1,8 @@
-import { Zone } from '.';
-import { hasIntl, IsInt } from '../../common';
 import { FixedZone } from './fixed-zone';
 import { IANAZone } from './iana-zone';
 import { LocalZone } from './local-zone';
 import { RuntimeIANAZone } from './runtime-iana-zone';
+import { Zone } from './zone';
 
 const zones = {
     utc: new FixedZone('UTC', 0),
