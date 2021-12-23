@@ -30,9 +30,19 @@ const ION = (x: any) => x == null || IO(x);
 
 /** DateTime create options. */
 export interface DateTimeCreationOptions {
-  calendar?: CalendarSpecifier; // A Calendar object or Calendar ID
-  zone?: ZoneSpecifier; // | number :: zone offset (for next versions)
+  /** Calendar specifier */
+  calendar?: CalendarSpecifier;
+  /** Zone specifier */
+  zone?: ZoneSpecifier;
+  /** Locale specifier */
   locale?: LocaleSpecifier;
+}
+
+/** DateTime configuration. */
+export interface DateTimeConfiguration {
+  calendar: Calendar;
+  zone: Zone;
+  locale: Locale;
 }
 
 /**
@@ -241,7 +251,7 @@ export class DateTime {
    * Returns a clone of the configurations of this object (calandar, zone and locale).
    * @public
    */
-  get config(): { calendar: Calendar; zone?: Zone; locale?: Locale } {
+  get config(): DateTimeConfiguration {
     return { calendar: this.#c, zone: this.#z, locale: this.#l };
   }
   //#endregion
