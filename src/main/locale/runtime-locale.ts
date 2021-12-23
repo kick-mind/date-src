@@ -65,19 +65,15 @@ export class RuntimeLocale extends Locale {
 
     getWeekdayNames(format: WeekdayNameFormat = 'long', weekStart?: number): string[] {
         let rName = this.#resolvedName;
-        let res = cache[rName].weekday[format];
-        let ws = weekStart || this.weekStart;
+        let ws = typeof weekStart === 'number' ? weekStart : this.weekStart;
+        let f = new Intl.DateTimeFormat(rName, { weekday: format });
+        let day = new Date(2021, 4, 2); // Sunday
+        const res = [];
 
-        if (!res) {
-            // create/cache weekday names
-            let f = new Intl.DateTimeFormat(rName, { weekday: format });
-            res = [];
-            let day = new Date(2021, 4, 28); // Sunday
-            for (let i = 0; i < 7; i++) {
-                res[(i + ws) % 7] = f.format(day);
-                day.setDate(day.getDate() + 1);
-            }
-            cache[rName].weekday[format] = res;
+        day.setDate(day.getDate() + ws);
+        for (let i = 0; i < 7; i++) {
+            res[i] = f.format(day);
+            day.setDate(day.getDate() + 1);
         }
 
         return res;

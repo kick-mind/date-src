@@ -107,6 +107,26 @@ describe('Main', () => {
         'شنبه',
       ]);
 
+      assert.deepStrictEqual(l.getWeekdayNames('long', 3), [
+        'چهارشنبه',
+        'پنجشنبه',
+        'جمعه',
+        'شنبه',
+        'یکشنبه',
+        'دوشنبه',
+        'سه‌شنبه',
+      ]);
+
+      assert.deepStrictEqual(l.getWeekdayNames('narrow'), [
+        'ش',
+        'ی',
+        'د',
+        'س',
+        'چ',
+        'پ',
+        'ج',
+      ]);
+
       assert.deepStrictEqual(l.getMonthNames(Calendars.find('gregorian'), 'narrow'), [
         'ژ',
         'ف',
@@ -122,15 +142,7 @@ describe('Main', () => {
         'د',
       ]);
 
-      assert.deepStrictEqual(l.getWeekdayNames('narrow'), [
-        'ش',
-        'ی',
-        'د',
-        'س',
-        'چ',
-        'پ',
-        'ج',
-      ]);
+
 
       assert.strictEqual(l.getZoneTitle('UTC'), 'زمان هماهنگ جهانی');
 

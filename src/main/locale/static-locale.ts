@@ -49,7 +49,7 @@ export class StaticLocale extends Locale {
         }
     }
 
-    getWeekdayNames(format: WeekdayNameFormat = 'long'): string[] {
+    getWeekdayNames(format: WeekdayNameFormat = 'long', weekStart?: number): string[] {
         const idx = getFormatIndex(format);
         return [...this.#data.weekdays[idx]];
     }
