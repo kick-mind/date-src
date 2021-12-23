@@ -97,6 +97,16 @@ describe('Main', () => {
         'جمعه',
       ]);
 
+      assert.deepStrictEqual(l.getWeekdayNames('long', 0), [
+        'یکشنبه',
+        'دوشنبه',
+        'سه‌شنبه',
+        'چهارشنبه',
+        'پنجشنبه',
+        'جمعه',
+        'شنبه',
+      ]);
+
       assert.deepStrictEqual(l.getMonthNames(Calendars.find('gregorian'), 'narrow'), [
         'ژ',
         'ف',
@@ -128,8 +138,6 @@ describe('Main', () => {
       if (t !== 'وقت عادی شرق امریکا' && t !== 'وقت تابستانی شرق امریکا') {
         assert.fail()
       }
-
-
     });
 
 

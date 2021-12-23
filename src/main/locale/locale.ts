@@ -34,10 +34,11 @@ export abstract class Locale {
     abstract getMonthNames(calendar: Calendar, format?: MonthNameFormat): string[];
 
     /** Returns the weekday names */
-    abstract getWeekdayNames(format?: WeekdayNameFormat): string[];
+    abstract getWeekdayNames(format?: WeekdayNameFormat, weekStart?: number): string[];
 
     /** Gets the (localized) title of a zone */
     abstract getZoneTitle(zoneName: string, format: ZoneTitleFormat): string;
 
     /** Formats a number */
-    abstract formatNumber(n: number, options?: { minimumIntegerDigits?: number }): string;}
+    abstract formatNumber(n: number, options?: { minimumIntegerDigits?: number }): string;
+}
