@@ -148,7 +148,7 @@ export const t = (format: string) =>
 export const englishFormats: any = {
   LTS: 'h:mm:ss A',
   LT: 'h:mm A',
-  L: 'MM/DD/YYYY',
+  L: 'MM/dd/YYYY',
   LL: 'MMMM D, YYYY',
   LLL: 'MMMM D, YYYY h:mm A',
   LLLL: 'dddd, MMMM D, YYYY h:mm A',
