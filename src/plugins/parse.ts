@@ -22,6 +22,44 @@ const matchWord = /\d*[^\s\d-_:/()]+/; // Word
 // remove
 let locale: any = {};
 
+function fixNonEnNumber(str: string) {
+  {
+    const persian = [
+      /۰/g,
+      /۱/g,
+      /۲/g,
+      /۳/g,
+      /۴/g,
+      /۵/g,
+      /۶/g,
+      /۷/g,
+      /۸/g,
+      /۹/g,
+    ];
+    const arabic = [
+      /٠/g,
+      /١/g,
+      /٢/g,
+      /٣/g,
+      /٤/g,
+      /٥/g,
+      /٦/g,
+      /٧/g,
+      /٨/g,
+      /٩/g,
+    ];
+
+    if (typeof str === 'string') {
+      let i = 0;
+      for (; i < 10; i++) {
+        str = str
+          .replace(persian[i], i.toString())
+          .replace(arabic[i], i.toString());
+      }
+    }
+    return str;
+  }
+}
 // tslint:disable-next-line: variable-name
 function offsetFromString(string: string) {
   if (!string) {
@@ -220,6 +258,7 @@ export function parse(
     locale?: LocaleSpecifier;
   }
 ): DateTime {
+  let fixed = fixNonEnNumber(date);
   try {
     const parser = makeParser(format);
     const {
@@ -231,7 +270,7 @@ export function parse(
       seconds,
       milliseconds,
       zone,
-    }: any = parser(date);
+    }: any = parser(fixed);
 
     const d = day || 1;
     const y = year || 1;
@@ -249,6 +288,6 @@ export function parse(
       });
     }
   } catch (e) {
-    return new DateTime(null); // Invalid Date
+    throw new Error('Invalid Date');
   }
 }

@@ -117,7 +117,22 @@ describe('Plugins', () => {
       );
     });
 
-   
+    it('parse persian numbers', () => {
+      const d = parse('۲۰۱۰-۱۰-۲۰ ۴:۳۰', 'YYYY-MM-dd HH:mm');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day, d.hour, d.minute, d.second],
+        [2010, 10, 20, 4, 30, 0]
+      );
+    });
+
+    it('parse arabic numbers', () => {
+      const d = parse('۲۰۱۰ـ۱۰ـ۲۰', 'YYYY-MM-dd');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day],
+        [2010, 10, 20]
+      );
+    });
+
     // it('can parse monthname', () => {
     //   const d = parse('2018 January 15', 'YYYY MMMM DD');
     //   assert.deepStrictEqual(
