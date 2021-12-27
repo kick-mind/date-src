@@ -16,21 +16,13 @@ describe('Plugins', () => {
     it('can parse', () => {
       const d = parse('99/2/6', 'YY/M/d');
       assert.deepStrictEqual([d.year, d.month, d.day], [99, 2, 6]);
-    });
 
-    it('can parse2', () => {
-      const d = parse('2012/2/6', 'Y/M/d');
-      assert.deepStrictEqual([d.year, d.month, d.day], [2012, 2, 6]);
-    });
+      const d2 = parse('2012/2/6', 'Y/M/d');
+      assert.deepStrictEqual([d2.year, d2.month, d2.day], [2012, 2, 6]);
 
-    it('can parse3', () => {
-      const d = parse('2012/2/6', 'Y/M/d');
-      assert.deepStrictEqual([d.year, d.month, d.day], [2012, 2, 6]);
-    });
+      const d4 = parse('2012,              2/6', 'Y/M/d');
+      assert.deepStrictEqual([d4.year, d4.month, d4.day], [2012, 2, 6]);
 
-    it('can parse4', () => {
-      const d = parse('2012/2/6', 'Y/M/d');
-      assert.deepStrictEqual([d.year, d.month, d.day], [2012, 2, 6]);
     });
 
     it('can parse non-alphanumeric characters', () => {
@@ -131,12 +123,14 @@ describe('Plugins', () => {
     });
 
     it('parse arabic numbers', () => {
-      const d = parse('٢٠١٠-١٠-٢٠ ٤:٣٠', 'YYYY-MM-dd',{
+      const d = parse('٢٠١٠-١٠-١٠', 'YYYY-MM-dd', {
         calendar: 'hijri',
-        locale: Locales.resolve('ar-AE'),
+        locale: 'ar-AE',
       });
 
-      assert.deepStrictEqual([d.year, d.month, d.day], [2010, 10, 20]);
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day, d.calendar, d.locale],
+        [2010, 10, 10, Calendars.find('hijri'), Locales.resolve('ar-AE')]);
     });
 
     // it('can parse monthname', () => {
