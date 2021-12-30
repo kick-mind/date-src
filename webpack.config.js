@@ -1,5 +1,6 @@
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const fs = require("fs");
 const path = require("path");
 
@@ -85,6 +86,13 @@ module.exports = {
         }),
     ],
     optimization: {
-        minimize: true
-    }
+        minimize: true,
+        minimizer: [new TerserPlugin({
+            terserOptions: {
+            //   mangle: false,
+              keep_classnames: true,
+            },
+          }
+        )],
+    },
 }
