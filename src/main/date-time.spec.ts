@@ -215,11 +215,18 @@ describe('Main', () => {
       assert.strictEqual('persian', persian.calendar.type);
     });
 
-    it('clone', () => {
-      const dt = new DateTime();
-      const newDt = dt.clone();
-      assert.deepStrictEqual(dt, newDt);
+    it('can clone', () => {
+      const d1 = new DateTime();
+      const d2 = d1.clone();
+      assert.deepStrictEqual(d1, d2);
+
+      const d3 = new DateTime(1400, 10, 9);
+      const d4 = d3.clone({ year: 1401 });
+      assert.deepStrictEqual([d4.year, d4.month, d4.day], [1401, d3.month, d3.day]);
+
+
     });
+
 
     it('can convert DateTime to object', () => {
       const dt = new DateTime({ zone: Zones.utc });

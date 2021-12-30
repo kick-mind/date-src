@@ -1,10 +1,3 @@
-import { Calendar } from './calendar';
-import { Calendars } from './calendar';
-import { Zone } from './zone';
-import { Zones } from './zone/zones';
-import { Locale } from './locale';
-import { Locales } from './locale';
-
 import {
   DateTimeUnits,
   IsInt,
@@ -14,7 +7,7 @@ import {
   vClsCall,
   vObj,
 } from '../common';
-import { CalendarSpecifier, LocaleSpecifier, ZoneSpecifier } from './common';
+import { CalendarSpecifier, LocaleSpecifier, ZoneSpecifier, Locale, Locales, Zone, Zones, Calendar, Calendars } from '.';
 
 /** Is an integer? */
 const II = (x: any) => IsInt(x);
@@ -337,21 +330,17 @@ export class DateTime {
    * @public
    */
   clone(newUnits?: DateTimeUnits): DateTime {
-    if (this.#ts) {
-      return new DateTime(this.#ts, this.config);
-    } else {
-      const u = { ...this.#units, ...newUnits };
-      return new DateTime(
-        u.year,
-        u.month,
-        u.day,
-        u.hour,
-        u.minute,
-        u.second,
-        u.ms,
-        this.config
-      );
-    }
+    const u = { ...this.toObject(), ...newUnits };
+    return new DateTime(
+      u.year,
+      u.month,
+      u.day,
+      u.hour,
+      u.minute,
+      u.second,
+      u.ms,
+      this.config
+    );
   }
 
   /**
