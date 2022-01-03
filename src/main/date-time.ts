@@ -129,15 +129,7 @@ export class DateTime {
     const o = { strict: true };
 
     // Resolve zone
-    let z: any = opts?.zone;
-    if (!z) {
-      z = Zones.local;
-    } else if (IsStr(z)) {
-      z = Zones.iana(z, o);
-    } else {
-      vObj(z, Zone, true, 'Invalid zone');
-    }
-    this.#z = z;
+    this.#z = Zones.resolve(opts?.zone || Zones.local, { strict: true });
 
     // Resolve locale
     this.#l = Locales.resolve(opts?.locale || Locales.default, { strict: true });

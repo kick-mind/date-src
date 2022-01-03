@@ -32,7 +32,7 @@ export abstract class Calendars {
     }
 
     /** Finds a calendar by id. */
-    static find(id: string, opts?: { strict: boolean }): Calendar  {
+    static find(id: string, opts?: { strict: boolean }): Calendar {
         const c = calendars.find(x => x.id === id);
         if (!c && (opts?.strict === true)) {
             throw new Error('Calendar not found.');

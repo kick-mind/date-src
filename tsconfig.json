@@ -2,7 +2,7 @@
   "include": [
     // "index.ts",
     "src/**/*.ts"
-  ],
+, "src/plugins/from-iso.spec.ts.tmp", "src/plugins/from-iso.ts.tmp"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ],

@@ -1,3 +1,4 @@
+import { ZoneSpecifier } from '../common';
 import { FixedZone } from './fixed-zone';
 import { IANAZone } from './iana-zone';
 import { LocalZone } from './local-zone';
@@ -40,7 +41,7 @@ export abstract class Zones {
      * @public
      * @static
      */
-    static iana(ianaName: string, opts?: { strict: boolean }): IANAZone {
+    static iana(ianaName: string, opts?: { strict?: boolean }): IANAZone {
         let key = ianaName.toLowerCase();
         let z: Zone = zones.iana[key];
 
@@ -52,6 +53,27 @@ export abstract class Zones {
                     throw Error('Could not resolve zone');
                 }
             }
+        }
+
+        return z;
+    }
+
+    /**
+     * Tries to resolve a Zone by a ZoneSpecifier.
+     * @public
+     * @static
+     */
+    static resolve(zone: ZoneSpecifier, opts?: { strict?: boolean }): Zone {
+        let z: Zone;
+
+        if (zone instanceof Zone) {
+            z = zone;
+        } else if (typeof zone === 'string') {
+            z = this.iana(zone, opts);
+        } else if (typeof zone === 'number') {
+            z = new FixedZone(`FixedZone:${zone}`, zone);
+        } else {
+            throw Error('Could not resolve zone');
         }
 
         return z;
