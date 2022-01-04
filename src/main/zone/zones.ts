@@ -71,7 +71,7 @@ export abstract class Zones {
         } else if (typeof zone === 'string') {
             z = this.iana(zone, opts);
         } else if (typeof zone === 'number') {
-            z = new FixedZone(`FixedZone:${zone}`, zone);
+            z = new FixedZone(`FixedZone(${zone})`, zone);
         } else {
             throw Error('Could not resolve zone');
         }

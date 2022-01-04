@@ -10,16 +10,17 @@ export function fromJsDate(date: Date, options?: { zone?: ZoneSpecifier, locale?
         throw Error('No gregorian calendar found.');
     }
 
-    const d = new Date(date);
-    let z = Zones.resolve(options?.zone || options?.zone === 0 ? options.zone : d.getTimezoneOffset());
+    // The time-zone offset is the difference, in minutes, between UTC and local time.
+    // Note that this means that the offset is positive if the local timezone is behind UTC and negative if it is ahead.
+    let z = Zones.resolve(options?.zone || options?.zone === 0 ? options.zone : -1 * date.getTimezoneOffset());
 
     return new DateTime(
-        d.getFullYear(),
-        d.getMonth() + 1,
-        d.getDate(),
-        d.getHours(),
-        d.getMinutes(),
-        d.getSeconds(),
-        d.getMilliseconds(),
+        date.getFullYear(),
+        date.getMonth() + 1,
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds(),
+        date.getMilliseconds(),
         { calendar: c, zone: z, locale: options?.locale });
 }

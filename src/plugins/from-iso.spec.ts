@@ -11,7 +11,7 @@ describe('Plugins', () => {
     });
 
     it('can create a DateTime object from an ISO 8601 date string', () => {
-      const d1 = fromIso('2011-10-10T14:48:00.000+09:00');
+      const d1 = fromIso('2011-10-10T08:40:00.000Z');
 
       // const dt = new DateTime({
       //   zone: 'Asia/Tokyo',

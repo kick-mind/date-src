@@ -11,5 +11,6 @@ export function fromIso(date: string, options?: { zone?: ZoneSpecifier, locale?:
         throw Error('No gregorian calendar found.');
     }
 
-    return fromJsDate(new Date(Date.parse(date)), { zone: options?.zone, locale: options?.locale });
+    const d = new Date(Date.parse(date));
+    return fromJsDate(d, { zone: options?.zone, locale: options?.locale });
 }
