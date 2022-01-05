@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { Calendars, DateTime } from '../main';
 import { fromJsDate } from './from-js-date';
-import { fromIso } from './from-iso';
+import { parseIso } from './parse-iso';
 import { GregorianCalendar } from '../calendars/gregorian';
 
 describe('Plugins', () => {
@@ -11,7 +11,7 @@ describe('Plugins', () => {
     });
 
     it('can create a DateTime object from an ISO 8601 date string', () => {
-      const d1 = fromIso('2011-10-10T08:40:00.000Z');
+      const d1 = parseIso('2011-10-10T08:40:00.000Z');
 
       // const dt = new DateTime({
       //   zone: 'Asia/Tokyo',

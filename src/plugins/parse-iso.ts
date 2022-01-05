@@ -5,7 +5,7 @@ import { fromJsDate } from './from-js-date';
  * Creates a DateTime from an ISO 8601 Date string
  * @public
  */
-export function fromIso(date: string, options?: { zone?: ZoneSpecifier, locale?: LocaleSpecifier }) {
+export function parseIso(date: string, options?: { zone?: ZoneSpecifier, locale?: LocaleSpecifier }) {
     const c = Calendars.findByType('gregory')[0];
     if (!c) {
         throw Error('No gregorian calendar found.');
