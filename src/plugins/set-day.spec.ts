@@ -17,7 +17,7 @@ describe('Plugins', () => {
 
       const newDate = setDay(dt, 29);
 
-      console.log(newDate.year + ' ' + newDate.month + ' ' + newDate.day);
+      console.log(newDate.year + ' ' + newDate.month + ' ' + newDate.day, ' '+ newDate.hour+ ' '+ newDate.minute+ ' '+ newDate.second + ' ' + newDate.ms+ ' ');
       assert.strictEqual(
         true,
         isSame(
