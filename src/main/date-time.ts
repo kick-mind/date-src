@@ -213,8 +213,7 @@ export class DateTime {
    */
   get ts(): number {
     if (this.#ts == null) {
-      const zoneTs = this.#c.getTimestamp(this.#units);
-      this.#ts = zoneTs - this.#z.getOffset(zoneTs) * 1000 * 60;
+      this.#ts = this.#c.getTimestamp(this.#units);
     }
     return this.#ts;
   }

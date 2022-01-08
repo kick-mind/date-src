@@ -148,12 +148,20 @@ describe('Main', () => {
       assert.strictEqual(dt2.year, 1399);
     });
 
-    // it('subtract 7 hours and 1 ms', function () {
-    //   const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, { calendar: 'persian' });
-    //   const dt2 = dt.subtract({ hour: 7, ms: 1 });
-    //   debugger;
-    //   assert.strictEqual(dt2.year, 1399);
-    // });
+    it('subtract 3 hours and 30 minutes', function () {
+      const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, { calendar: 'persian' });
+      const dt2 = dt.subtract({ hour: 3, minute:30 });
+      debugger;
+      assert.strictEqual(dt2.year, 1399);
+    });
+
+    
+    it('subtract 3 hours and 30 minutes and 1 ms', function () {
+      const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, { calendar: 'persian' });
+      const dt2 = dt.subtract({ hour: 3, minute:30, ms: 1 });
+      debugger;
+      assert.strictEqual(dt2.year, 1399);
+    });
 
     it('subtract', () => {
       const dt = new DateTime();

@@ -5,5 +5,5 @@ import { DateTime } from '../main';
  * @public
  */
 export function weekDay(d: DateTime): number {
-    return d.calendar.weekDay(d.ts);
+    return d.calendar.weekDay(d.ts + d.zone.getOffset(d.ts) * 1000 * 60);
 }
