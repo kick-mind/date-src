@@ -178,7 +178,7 @@ export abstract class Calendar {
    * @public
    */
   weekDay(time: number): number {
-    return Math.trunc(getCalendarTimestamp(time) / MS_PER_DAY + 1) % 7;
+    return (Math.trunc(getCalendarTimestamp(time) / MS_PER_DAY) + 1) % 7;
   }
 
   /** 

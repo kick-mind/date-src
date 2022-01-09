@@ -14,15 +14,26 @@ describe('Plugins', () => {
       Calendars.add(new PersianCalendar('persian'));
     });
 
-    it('toJsDate', () => {
-      const d = new DateTime({locale: 'fa', calendar: 'persian'}, 1400, 9, 22);
+    it('tset persian weekDay', () => {
+      const d = new DateTime({locale: 'fa', calendar: 'persian'}, 1400, 10, 19);
+      assert.strictEqual(weekDay(d), 0);
+    });
+
+    it('tset persian weekDay2', () => {
+      const d = new DateTime({locale: 'fa', calendar: 'persian'}, 1400, 9, 8);
       assert.strictEqual(weekDay(d), 1);
     });
 
-    it('test day of week', () => {
-      const d = new DateTime(2021, 12, 21);
+    it('test gregorian weekDay', () => {
+      const d = new DateTime(2022, 1, 9);
       let x = weekDay(d);
-      assert.strictEqual(weekDay(d), 1);
+      assert.strictEqual(weekDay(d), 0);
+    });
+
+    it('test gregorian weekDay2', () => {
+      const d = new DateTime(2021, 9, 21);
+      let x = weekDay(d);
+      assert.strictEqual(weekDay(d), 2);
     });
   });
 });
