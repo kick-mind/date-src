@@ -5,5 +5,9 @@ import { DateTime } from '../main/date-time';
  * @public 
  */
 export function dayOfYear(d: DateTime): number {
-    return d.calendar.dayOfYear(this.ts);
+    return d.calendar.dayOfYear(d.ts);
 }
+
+
+
+

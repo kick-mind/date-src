@@ -1,8 +1,8 @@
 import { DateTime } from '../main';
 
-/** Returns whether this DateTime is valid.
+/** Returns whether the given object is a JS-Suger DateTime object.
  * @public
  */
-export function isJssDate(d: DateTime): boolean {
-    return d instanceof DateTime;
+export function isJssDate(x: any): boolean {
+    return x instanceof DateTime;
 }
