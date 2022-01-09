@@ -207,8 +207,8 @@ export class DateTime {
   }
 
   /**
-   * Gets timestamp of this object.
-   * This value can be positive or negetive (it depends on the implementation of the calendar).
+   * Gets timestamp of this object (usually EPOCH).
+   * This value can be a positive or negetive number (it depends on the implementation of the calendar).
    * @public
    */
   get ts(): number {
