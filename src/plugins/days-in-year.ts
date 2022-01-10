@@ -3,7 +3,8 @@ import { DateTime } from '../main';
 /**
  * Returns the number of days in this DateTime's year. 
  * @public
+ * @param date DateTime
  */
-export function daysInYear(d: DateTime): number {
-    return d.calendar.daysInYear(d.year);
+export function daysInYear(date: DateTime): number {
+    return date.calendar.daysInYear(date.year);
 }

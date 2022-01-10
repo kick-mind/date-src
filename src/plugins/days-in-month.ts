@@ -3,8 +3,9 @@ import { DateTime } from '../main/date-time';
 /**
  * Gets the number of days in the given DateTime's month. 
  * @public
+ * @param date DateTime
  */
-export function daysInMonth(d: DateTime): number {
-    let u = d.toObject();
-    return d.calendar.daysInMonth(u.year, u.month);
+export function daysInMonth(date: DateTime): number {
+    let u = date.toObject();
+    return date.calendar.daysInMonth(u.year, u.month);
 }

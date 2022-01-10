@@ -1,9 +1,10 @@
 import { DateTime } from '../main';
 
 /**
- * Gets the ISO day of the week with (Monday = 1, ..., Sunday = 7). 
+ * Gets the ISO day of the week of the given DateTime object (Monday = 1, ..., Sunday = 7). 
  * @public
+ * @param date DateTime
  */
-export function weekDay(d: DateTime): number {
-    return d.calendar.weekDay(d.ts + d.zone.getOffset(d.ts) * 1000 * 60);
+export function weekDay(date: DateTime): number {
+    return date.calendar.weekDay(date.ts + date.zone.getOffset(date.ts) * 1000 * 60);
 }

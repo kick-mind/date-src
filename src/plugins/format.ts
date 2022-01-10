@@ -8,10 +8,10 @@ const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,
  * Returns a string representation of this DateTime formatted according to the specified format string. 
  * @public
  */
-export function format(d: DateTime, formatStr: string): string {
-    const { calendar, zone, locale, year, month, day, hour, minute, second, ms, ts, } = d;
-    let wd = weekDay(d),
-        wdl = weekDayLocale(d);
+export function format(date: DateTime, formatStr: string): string {
+    const { calendar, zone, locale, year, month, day, hour, minute, second, ms, ts, } = date;
+    let wd = weekDay(date),
+        wdl = weekDayLocale(date);
 
     let zoneOffset = zone.getOffset(ts); // offset
     const zInfo = {

@@ -10,7 +10,7 @@ import { weekDay } from './week-day';
  * @param {weekStartsOn} number - the original date.
  * Sunday:0|Monday:1|Tuesday:2|Wednesday:3|Thursday:4|Friday:5|Saturday:6
  * @returns {DateTime} the start of a month
-* @example
+ * @example
  * // Set week day to Sunday, with the default weekStartsOn of Sunday:
  * var result = setDay(new Date(2014, 8, 1), 0)
  * //=> Sun Aug 31 2014 00:00:00

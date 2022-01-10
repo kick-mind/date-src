@@ -4,6 +4,6 @@ import { DateTime } from '../main';
  * Get the quarter. 
  * @public
  */
-export function quarter(d: DateTime): number {
-    return Math.floor(d.month / 4) + 1;
+export function quarter(date: DateTime): number {
+    return Math.floor(date.month / 4) + 1;
 }

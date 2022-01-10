@@ -4,6 +4,6 @@ import { DateTime } from '../main';
  * Returns whether d is between d1 and d2.
  * @public
  */
-export function isBetween(d: DateTime, d1: DateTime, d2: DateTime): boolean {
-    return d.ts > d1.ts && d.ts < d2.ts;
+export function isBetween(date: DateTime, date1: DateTime, date2: DateTime): boolean {
+    return date.ts > date1.ts && date.ts < date2.ts;
 }

@@ -345,7 +345,7 @@ export class DateTime {
   }
 
   /**
-   * Returns an object with the values of this DateTime.
+   * Returns the units of this DateTime object.
    * @public
    */
   toObject(): DateTimeUnits {

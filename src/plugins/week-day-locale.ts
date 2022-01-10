@@ -1,9 +1,9 @@
 import { DateTime } from '../main';
 
 /** 
- * Get the day of the week with respect of this DateTime's locale (locale aware) 
+ * Gets the day of the week with respect to the given DateTime's locale 
  * @public
  */
-export function weekDayLocale(d: DateTime): number {
-    return (d.locale.weekStart + d.calendar.weekDay(d.ts)) % 7;
+export function weekDayLocale(date: DateTime): number {
+    return (date.locale.weekStart + date.calendar.weekDay(date.ts)) % 7;
 }
