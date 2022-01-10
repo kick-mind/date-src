@@ -207,9 +207,10 @@ export class DateTime {
   }
 
   /**
-   * Gets timestamp of this object (usually EPOCH).
-   * This value can be a positive or negetive number (it depends on the implementation of the calendar).
+   * Gets the timestamp of this object.
    * @public
+   * @description This value is usually the number of milliseconds since January 1, 1970 (EPOCH) and 
+   * it can be a positive or negetive number (it depends on the implementation of the Calendar).
    */
   get ts(): number {
     if (this.#ts == null) {
@@ -232,6 +233,7 @@ export class DateTime {
   /**
    * Adds a period of time to this DateTime and returns the resulting DateTime.
    * @public
+   * @param units DateTimeUnits
    */
   add(units: DateTimeUnits): DateTime {
     return new DateTime(this.#c.add(this.ts, units), this.config);
@@ -240,6 +242,7 @@ export class DateTime {
   /**
    * Subtracts a period of time from this DateTime and returns the resulting DateTime.
    * @public
+   * @param units DateTimeUnits
    */
   subtract(units: DateTimeUnits): DateTime {
     return new DateTime(this.#c.subtract(this.ts, units), this.config);
