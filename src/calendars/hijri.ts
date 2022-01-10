@@ -107,7 +107,9 @@ function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
   return du;
 }
 
-/** Hijri(Islamic) Calendar */
+/** 
+ * Hijri(Islamic) calendar
+ */
 export class HijriCalendar extends Calendar {
   constructor(id: string, private hijriAdjustment: number) {
     super(id, 'hijri');
@@ -211,7 +213,3 @@ export class HijriCalendar extends Calendar {
     return { ...getDateUnits(ts, this.hijriAdjustment), ...getTimeUnits(ts) };
   }
 }
-
-// for (let i = 2; i < 3; i++) {
-//   Calendars.add(new HijriCalendar(`hijri${i == 0 ? '' : i}`, 0));
-// }

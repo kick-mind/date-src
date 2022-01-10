@@ -90,7 +90,9 @@ function dateToTicks(year: number, month: number, day: number): number {
   return getAbsoluteDate(year, month, day) * MS_PER_DAY;
 }
 
-/** Gregorian2 calendar */
+/** 
+ * Gregorian2 calendar
+ */
 export class GregorianCalendar2 extends Calendar {
   constructor(id: string) {
     super(id, 'gregory');
@@ -120,26 +122,32 @@ export class GregorianCalendar2 extends Calendar {
       dateToTicks(y, m, d) + (getCalendarTimestamp(time) % MS_PER_DAY);
     return getJsTimestamp(ticks);
   }
+
   addYears(time: number, years: number): number {
     return this.addMonths(time, years * 12);
   }
-  // check this method later
+
+  // TODO: check this method later
   dayOfYear(time: number): number {
     const now = new Date(time);
     const start = new Date(now.getFullYear(), 0, 0);
     const diff = now.getTime() - start.getTime();
     return Math.floor(diff / MS_PER_DAY);
   }
+
   daysInMonth(year: number, month: number): number {
     const days = this.isLeapYear(year) ? DAYS_TO_MONTH_366 : DAYS_TO_MONTH_365;
     return days[month] - days[month - 1];
   }
+
   daysInYear(year: number): number {
     return this.isLeapYear(year) ? 366 : 365;
   }
+
   isLeapYear(year: number): boolean {
     return isLeapYear(year);
   }
+
   getTimestamp(units: DateTimeUnits): number {
     const u = units;
     return Date.UTC(
@@ -158,10 +166,3 @@ export class GregorianCalendar2 extends Calendar {
     return { ...getDateUnits(ts), ...getTimeUnits(ts) };
   }
 }
-
-// Calendars.add(new GregorianCalendar2('gregorian2'));
-
-// declare var jss: any;
-// if (jss) {
-//   jss.Calendars.GregorianCalendar2 = GregorianCalendar2;
-// }

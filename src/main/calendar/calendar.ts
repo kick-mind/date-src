@@ -143,7 +143,7 @@ export abstract class Calendar {
   }
 
   /** 
-   * Subtracts a period of time to a timestamp and returns the resulting timestamp.
+   * Subtracts a period of time from a timestamp and returns the resulting timestamp.
    * @public
    */
   subtract(ts: number, units: Partial<DateTimeUnits>): number {
@@ -182,10 +182,11 @@ export abstract class Calendar {
   }
 
   /** 
-   * Gets the week number of the week year (1 to 52). 
+   * Gets the week number of the week year (1 to 52).
    * @public
+   * @param ts timestamp
    */
-  weekNumber(time: number, firstDayOfWeek: number, offset: number = 1): number {
+  weekNumber(ts: number, firstDayOfWeek: number, offset: number = 1): number {
     let fn = (tm: number, firstDay: number, fullDays: number): number => {
       let dayForJan1: number;
       let offst: number;
@@ -210,35 +211,65 @@ export abstract class Calendar {
     if (offset == 1) {
       return getFirstDayWeekOfYear(
         firstDayOfWeek,
-        this.dayOfYear(time),
-        this.weekDay(time)
+        this.dayOfYear(ts),
+        this.weekDay(ts)
       );
     } else {
-      return fn(time, firstDayOfWeek, offset);
+      return fn(ts, firstDayOfWeek, offset);
     }
   }
 
-  /** Returns the number of days in this DateTime's month. */
-  abstract addMonths(time: number, months: number): number;
+  /** 
+   * Adds the specified number of months to the given timestamp and returns the resulting timestamp.
+   * @param ts timestamp
+   * @public
+   */
+  abstract addMonths(ts: number, months: number): number;
 
-  /** */
-  abstract addYears(time: number, years: number): number;
+  /** 
+   * Adds the specified number of years to the given timestamp and returns the resulting timestamp.
+   * @public
+   * @param ts timestamp
+   */
+  abstract addYears(ts: number, years: number): number;
 
-  /** Gets the day of the year (1 to 366). */
-  abstract dayOfYear(time: number): number;
+  /** 
+   * Gets the day of the year (1 to 366).
+   * @public
+   * @param ts timestamp
+   */
+  abstract dayOfYear(ts: number): number;
 
-  /** Returns the number of days in this DateTime's month. */
+  /** 
+   * Returns the number of days in the given year and month.
+   * @public
+   */
   abstract daysInMonth(year: number, month: number): number;
 
-  /** Returns the number of days in this DateTime's year. */
+  /** 
+   * Returns the number of days in the given year.
+   * @param year year
+   */
   abstract daysInYear(year: number): number;
 
-  /** Returns true if this DateTime is in a leap year, false otherwise. */
+  /** 
+   * Returns true if this DateTime is in a leap year, false otherwise. 
+   * @public
+   * @param year year
+   */
   abstract isLeapYear(year: number): boolean;
 
-  /** Returns a timestamp equivalent to the given DateTimeUnits */
+  /** 
+   * Returns a timestamp equivalent to the given DateTimeUnits 
+   * @public
+   * @param units DateTimeUnits
+   */
   abstract getTimestamp(units: DateTimeUnits): number;
 
-  /** Returns a DateTimeUnits(year, month, ...) equivalent to the given timestamp */
+  /** 
+   * Returns a DateTimeUnits(year, month, ...) equivalent to the given timestamp
+   * @public
+   * @param ts timestamp
+   */
   abstract getUnits(ts: number): DateTimeUnits;
 }

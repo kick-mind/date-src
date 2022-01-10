@@ -21,7 +21,10 @@ function getDateUnits(ts: number): DateTimeUnits {
     ms: 0,
   };
 }
-/** Gregorian calendar */
+
+/**
+ *  Gregorian calendar (Implemented by using JavaScript Date)
+ */
 export class GregorianCalendar extends Calendar {
   constructor(id: string) {
     super(id, 'gregory');
