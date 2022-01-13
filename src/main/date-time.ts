@@ -305,6 +305,7 @@ export class DateTime {
   /**
    * Returns a new DateTime equivalent with this DateTime but with a different Calendar
    * @public
+   * @param calendar CalendarSpecifier
    */
   to(calendar: CalendarSpecifier): DateTime {
     return new DateTime(this.ts, { ...this.config, calendar });

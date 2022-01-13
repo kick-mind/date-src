@@ -31,7 +31,7 @@ export abstract class Zones {
 
     /** Creates a fixed time zone. */
     static fixed(name: string, hour: number, minute = 0): FixedZone {
-        return new FixedZone(name, hour * 60 * 60 * 1000 + minute * 60 * 1000);
+        return new FixedZone(name, hour * 60  + minute);
     }
 
     /**

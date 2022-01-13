@@ -5,6 +5,16 @@ import { weekDayLocale } from './week-day-locale';
 const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,2}|s{1,2}|f{1,3}|c{1,2}|C{1,3}|a|A|z{1,3}|Z{1,3}/g;
 
 /** 
+ * Predefined formats 
+ * @public
+ * @enum
+ */
+export enum Formats {
+    /** ISO 8601 date time format */
+    iso = 'YYYY-MM-ddTHH:mm:ss.fffzz'
+}
+
+/** 
  * Returns a string representation of this DateTime formatted according to the specified format string. 
  * @public
  */
