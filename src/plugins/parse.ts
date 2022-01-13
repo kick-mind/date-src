@@ -6,6 +6,7 @@ import {
   LocaleSpecifier,
   FixedZone,
   Locales,
+  DateTimeCreationOptions,
 } from '../main';
 
 const formattingTokens =
@@ -24,7 +25,7 @@ const matchWord = /\d*[^\s\d-_:/()]+/; // Word
 let locale: any = {};
 
 function fixLocaleDigits(str: string, localeDigits: string) {
-  {   
+  {
     if (typeof str === 'string') {
       let i = 0;
       for (; i < 10; i++) {
@@ -193,14 +194,43 @@ function makeParser(format: any) {
   };
 }
 
+/**
+ * Parses a string based on a specified format and returns a DateTime  
+ * @param date date string to parse
+ * @param format date format
+ * @param opts DateTimeCreationOptions
+ * @returns A DateTime object
+ * @description  
+ * List of all available parsing tokens:
+ * 
+ * | Token | Example | Description                       |
+ * | ----- | ------- | --------------------------------- |
+ * | YY    | 01      | Two-digit year                    |
+ * | YYYY  | 2001    | Four-digit year                   |
+ * | M     | 1-12    | Month, beginning at 1             |
+ * | MM    | 01-12   | Month, 2-digits                   |
+ * | d     | 1-31    | Day of month                      |
+ * | dd    | 01-31   | Day of month, 2-digits            |
+ * | H     | 0-23    | Hours                             |
+ * | HH    | 00-23   | Hours, 2-digits                   |
+ * | h     | 1-12    | Hours, 12-hour clock              |
+ * | hh    | 01-12   | Hours, 12-hour clock, 2-digits    |
+ * | m     | 0-59    | Minutes                           |
+ * | mm    | 00-59   | Minutes, 2-digits                 |
+ * | s     | 0-59    | Seconds                           |
+ * | ss    | 00-59   | Seconds, 2-digits                 |
+ * | S     | 0-9     | Hundreds of milliseconds, 1-digit |
+ * | SS    | 00-99   | Tens of milliseconds, 2-digits    |
+ * | SSS   | 000-999 | Milliseconds, 3-digits            |
+ * | Z     | -05:00  | Offset from UTC                   |
+ * | ZZ    | -0500   | Compact offset from UTC, 2-digits |
+ * | A     | AM PM   | Post or ante meridiem, upper-case |
+ * | a     | am pm   | Post or ante meridiem, lower-case |
+ */
 export function parse(
   date: string,
   format: string,
-  opts?: {
-    calendar?: CalendarSpecifier;
-    zone?: ZoneSpecifier;
-    locale?: LocaleSpecifier;
-  }
+  opts?: DateTimeCreationOptions
 ): DateTime {
   const l = Locales.resolve(opts?.locale) || Locales.default;
   const localeDigits = l.formatNumber(123456789, { minimumIntegerDigits: 10 });
