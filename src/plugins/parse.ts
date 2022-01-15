@@ -1,47 +1,7 @@
-import {
-  DateTime,
-  FixedZone,
-  Locales,
-  DateTimeCreationOptions,
-} from '../main';
-
-
-/** 
- * Parser utils
- * @private
- */
-// eslint-disable-next-line import/prefer-default-export
-export const t = (format: string) =>
-  format.replace(
-    /(\[[^\]]+])|(MMMM|MM|DD|dddd)/g,
-    (_, a, b) => a || b.slice(1)
-  );
-
-/** 
- * @private
- */
-export const englishFormats: any = {
-  LTS: 'h:mm:ss A',
-  LT: 'h:mm A',
-  L: 'MM/dd/YYYY',
-  LL: 'MMMM D, YYYY',
-  LLL: 'MMMM D, YYYY h:mm A',
-  LLLL: 'dddd, MMMM D, YYYY h:mm A',
-};
-
-/** 
- * @private
- */
-export const formatHelper = (formatStr: string) =>
-  formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
-    const B = b && b.toUpperCase();
-    return a || englishFormats[b];
-  });
-
-
+import { DateTime, FixedZone, Locales, DateTimeCreationOptions } from '../main';
 
 const formattingTokens =
-  /(\[[^[]*\])|([-:/.()\s]+)|(A|a|YYYY|YY?|MM?M?M?|dd?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g;
+  /(\[[^[]*\])|([-:/.()\s]+)|(A|a|YYYY|YY?|MM?|dd?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g;
 
 const match1 = /\d/; // 0 - 9
 const match2 = /\d\d/; // 00 - 99
@@ -161,7 +121,6 @@ function correctHours(time: any) {
 }
 
 function makeParser(format: any) {
-  format = formatHelper(format);
   const array = format.match(formattingTokens);
   const { length } = array;
   for (let i = 0; i < length; i += 1) {
@@ -196,14 +155,14 @@ function makeParser(format: any) {
 }
 
 /**
- * Parses a string based on a specified format and returns a DateTime  
+ * Parses a string based on a specified format and returns a DateTime
  * @param date date string to parse
  * @param format date format
  * @param opts DateTimeCreationOptions
  * @returns A DateTime object
- * @description  
+ * @description
  * List of all available parsing tokens:
- * 
+ *
  * | Token | Example | Description                       |
  * | ----- | ------- | --------------------------------- |
  * | YY    | 01      | Two-digit year                    |
