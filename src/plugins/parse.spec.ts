@@ -133,12 +133,38 @@ describe('Plugins', () => {
         [2010, 10, 10, Calendars.find('hijri'), Locales.resolve('ar-AE')]);
     });
 
-    // it('can parse monthname', () => {
-    //   const d = parse('2018 January 15', 'YYYY MMMM DD');
-    //   assert.deepStrictEqual(
-    //     [d.year, d.month, d.day],
-    //     [1970, 1, 1]
-    //   );
-    // });
+     it('can parse am pm', () => {
+       const d = parse('30/9/2020 5 PM', 'd/M/YYYY h A');
+       assert.deepStrictEqual(
+         [d.year, d.month, d.day, d.hour],
+         [2020, 9, 30, 17]
+       );
+     });
+
+     it('can parse am pm2', () => {
+      const d = parse('30/9/2020 5 pm', 'd/M/YYYY h a');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day, d.hour],
+        [2020, 9, 30, 17]
+      );
+    });
+
+    it('can parse am am', () => {
+      const d = parse('30/9/2020 5 AM', 'd/M/YYYY h A');
+      assert.deepStrictEqual(
+        [d.year, d.month, d.day, d.hour],
+        [2020, 9, 30, 5]
+      );
+    });
+
+    it('can parse am am2', () => {
+     const d = parse('30/9/2020 5 am', 'd/M/YYYY h a');
+     assert.deepStrictEqual(
+       [d.year, d.month, d.day, d.hour],
+       [2020, 9, 30, 5]
+     );
+   });
+
+     
   });
 });

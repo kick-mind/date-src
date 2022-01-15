@@ -32,16 +32,16 @@ export const englishFormats: any = {
 /** 
  * @private
  */
-export const formatHelper = (formatStr: string, formats: any) =>
+export const formatHelper = (formatStr: string) =>
   formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
     const B = b && b.toUpperCase();
-    return a || formats[b] || englishFormats[b] || t(formats[B]);
+    return a || englishFormats[b];
   });
 
 
 
 const formattingTokens =
-  /(\[[^[]*\])|([-:/.()\s]+)|(A|a|YYYY|YY?|MM?M?M?|Do|dd?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g;
+  /(\[[^[]*\])|([-:/.()\s]+)|(A|a|YYYY|YY?|MM?M?M?|dd?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g;
 
 const match1 = /\d/; // 0 - 9
 const match2 = /\d\d/; // 00 - 99
@@ -51,9 +51,6 @@ const match1to2 = /\d\d?/; // 0 - 99
 const matchSigned = /[+-]?\d+/; // -inf - inf
 const matchOffset = /[+-]\d\d:?(\d\d)?|Z/; // +00:00 -00:00 +0000 or -0000 +00 or Z
 const matchWord = /\d*[^\s\d-_:/()]+/; // Word
-
-// remove
-let locale: any = {};
 
 function fixLocaleDigits(str: string, localeDigits: string) {
   {
@@ -93,21 +90,9 @@ const zoneExpressions = [
   },
 ];
 
+// check if is afternoon
 const meridiemMatch = (input: string, isLowerCase: boolean) => {
-  let isAfternoon;
-  const { meridiem } = locale;
-  if (!meridiem) {
-    isAfternoon = input === (isLowerCase ? 'pm' : 'PM');
-  } else {
-    for (let i = 1; i <= 24; i += 1) {
-      // todo: fix input === meridiem(i, 0, isLowerCase)
-      if (input.indexOf(meridiem(i, 0, isLowerCase)) > -1) {
-        isAfternoon = i > 12;
-        break;
-      }
-    }
-  }
-  return isAfternoon;
+  return input === (isLowerCase ? 'pm' : 'PM');
 };
 
 const expressions: any = {
@@ -151,21 +136,6 @@ const expressions: any = {
   hh: [match1to2, addInput('hours')],
   d: [match1to2, addInput('day')],
   dd: [match2, addInput('day')],
-  Do: [
-    matchWord,
-    function (input: string) {
-      const { ordinal } = locale;
-      [this.day] = input.match(/\d+/);
-      if (!ordinal) {
-        return;
-      }
-      for (let i = 1; i <= 31; i += 1) {
-        if (ordinal(i).replace(/\[|\]/g, '') === input) {
-          this.day = i;
-        }
-      }
-    },
-  ],
   M: [match1to2, addInput('month')],
   MM: [match2, addInput('month')],
   Y: [matchSigned, addInput('year')],
@@ -191,7 +161,7 @@ function correctHours(time: any) {
 }
 
 function makeParser(format: any) {
-  format = formatHelper(format, locale && locale.formats);
+  format = formatHelper(format);
   const array = format.match(formattingTokens);
   const { length } = array;
   for (let i = 0; i < length; i += 1) {
