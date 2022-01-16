@@ -19,7 +19,7 @@ describe('Plugins', () => {
       Calendars.add(new GregorianCalendar('gregorian'));
     });
     it('set weekDay', () => {
-      const dt = new DateTime(2021, 12, 1);
+      const dt = new DateTime({ calendar: 'gregorian' }, 2021, 12, 1);
 
       const newDate = setWeekDay(dt, 0, 0);
 

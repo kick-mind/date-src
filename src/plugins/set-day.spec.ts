@@ -12,7 +12,7 @@ describe('Plugins', () => {
       Calendars.add(new PersianCalendar('persian'));
     });
     it('set day', () => {
-      const dt = new DateTime(2003, 2, 28, 12, 34, 23, 4);
+      const dt = new DateTime(2003, 2, 28, 12, 34, 23, 4, { calendar:'gregorian'});
       const day = 2003;
 
       const newDate = setDay(dt, 29);
@@ -35,7 +35,7 @@ describe('Plugins', () => {
       );
     });
     it('set day2', () => {
-      const dt = new DateTime(2003, 2, 28, 12, 34, 23, 4);
+      const dt = new DateTime(2003, 2, 28, 12, 34, 23, 4, {calendar: 'gregorian'});
       const day = 2003;
 
       const newDate = setDay(dt, 20);

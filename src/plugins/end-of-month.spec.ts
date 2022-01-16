@@ -9,12 +9,14 @@ describe('Plugins', () => {
       Calendars.add(new GregorianCalendar('gregorian'));
     });
     it('get end of month', () => {
-      const dt = new DateTime(2021, 12, 9, 5, 45, 56, 3);
+      const dt = new DateTime(2021, 12, 9, 5, 45, 56, 3, {
+        calendar: 'gregorian',
+      });
       const dt2 = endOfMonth(dt);
 
       assert.strictEqual(
         true,
-        isSame(dt2, new DateTime(2021, 12, 31))
+        isSame(dt2, new DateTime({ calendar: 'gregorian' }, 2021, 12, 31))
       );
     });
   });

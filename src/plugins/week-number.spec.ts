@@ -13,6 +13,7 @@ describe('Plugins', () => {
       console.log(weekNumber(dt1));
 
       const dt = new DateTime(2021, 1, 1, 0, 0, 0, 0, {
+        calendar: 'gregorian',
         zone: 'Asia/Tehran',
         locale: 'fa',
       });

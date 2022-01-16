@@ -13,7 +13,9 @@ describe('Plugins', () => {
       Calendars.add(new PersianCalendar('persian'));
     });
     it('set year', () => {
-      const dt = new DateTime(2004, 2, 29, 12, 34, 23, 4);
+      const dt = new DateTime(2004, 2, 29, 12, 34, 23, 4, {
+        calendar: 'gregorian',
+      });
       const year = 2003;
 
       const newDate = setYear(dt, year);

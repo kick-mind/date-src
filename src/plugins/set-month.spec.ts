@@ -10,7 +10,9 @@ describe('Plugins', () => {
       Calendars.add(new GregorianCalendar('gregorian'));
     });
     it('set month', () => {
-      const dt = new DateTime(2018, 7, 31, 12, 34, 23, 4);
+      const dt = new DateTime(2018, 7, 31, 12, 34, 23, 4, {
+        calendar: 'gregorian',
+      });
       const month = 2;
 
       const newDate = setMonth(dt, month);
@@ -18,15 +20,18 @@ describe('Plugins', () => {
       console.log(newDate.year + ' ' + newDate.month + ' ' + newDate.day);
       assert.strictEqual(
         true,
-        isSame(newDate,  dt.clone({
-          year: 2018,
-          month: 2,
-          day: 28,
-          hour: 12,
-          minute: 34,
-          second: 23,
-          ms: 4,
-        }))
+        isSame(
+          newDate,
+          dt.clone({
+            year: 2018,
+            month: 2,
+            day: 28,
+            hour: 12,
+            minute: 34,
+            second: 23,
+            ms: 4,
+          })
+        )
       );
     });
   });
