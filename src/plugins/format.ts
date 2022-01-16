@@ -16,6 +16,8 @@ export enum Formats {
 
 /** 
  * Returns a string representation of this DateTime formatted according to the specified format string. 
+ * @param date DateTime
+ * @param formatStr Format string
  * @public
  */
 export function format(date: DateTime, formatStr: string): string {

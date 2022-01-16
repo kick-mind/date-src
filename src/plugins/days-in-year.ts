@@ -1,7 +1,7 @@
 import { DateTime } from '../main';
 
 /**
- * Returns the number of days in this DateTime's year. 
+ * Gets the number of days in this DateTime's year. 
  * @public
  * @param date DateTime
  */

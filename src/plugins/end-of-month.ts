@@ -1,10 +1,8 @@
 import { DateTime } from '../main';
 
 /**
- * @name startOfMonth
+ * Gets the start of a month for the given date.
  * @category Plugins.
- * @summary Return the start of a month for the given date.
- * @description Return the start of a month for the given date.
  * @param {DateTime} date - the original date
  * @returns {DateTime} the start of a month
  * @example
