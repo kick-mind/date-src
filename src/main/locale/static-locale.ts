@@ -1,3 +1,9 @@
+/**
+ * @category Locale
+ * @module StaticLocale
+ */
+
+
 import { deepFreeze, MonthNameFormat, WeekdayNameFormat, ZoneTitleFormat } from '../../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';

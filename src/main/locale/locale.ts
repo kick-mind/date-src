@@ -1,3 +1,9 @@
+/**
+ * @category Locale
+ * @module Locale
+ */
+
+
 import { IsInt, MonthNameFormat, WeekdayNameFormat, ZoneTitleFormat } from '../../common';
 import { Calendar } from '../calendar';
 

@@ -1,3 +1,9 @@
+/**
+ * @category Zone
+ * @module Zones
+ */
+
+
 import { ZoneSpecifier } from '../common';
 import { FixedZone } from './fixed-zone';
 import { IANAZone } from './iana-zone';

@@ -1,9 +1,35 @@
+/**
+ * @category Locale
+ * @module Locales
+ */
+
+
 import { LocaleSpecifier } from '..';
+import { StaticLocale } from './static-locale';
 import { hasIntl, vObj } from '../../common';
-import { FALLBACK_LOCALE } from './fallback-locale';
 import { Locale } from './locale';
 import { RuntimeLocale } from './runtime-locale';
 
+function fallback() {
+    const
+        m = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        ms = m.map(x => x.substring(0, 2)),
+        mn = m.map(x => x[0]),
+        w = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        ws = w.map(x => x.substring(0, 2)),
+        wn = w.map(x => m[0]);
+
+    return new StaticLocale({
+        name: 'fallback',
+        weekStart: 0,
+        months: {
+            gregorian: [m, ms, mn]
+        },
+        weekdays: [w, ws, wn]
+    });
+}
+
+const FALLBACK_LOCALE = fallback();
 let sysLocale: Locale = hasIntl() ? new RuntimeLocale('system', { weekStart: 0 }) : undefined;
 let defLocale: Locale = sysLocale || FALLBACK_LOCALE;
 let locales = [defLocale]; // locales repository

@@ -1,3 +1,9 @@
+/**
+ * @category Zone
+ * @module FixedZone
+ */
+
+
 import { vType } from '../../common';
 import { Zone } from './zone';
 

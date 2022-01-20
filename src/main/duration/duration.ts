@@ -1,4 +1,9 @@
-import { vObj, vType } from '../../common';
+/**
+ * @category Duration
+ * @module Duration
+ */
+
+import { vType } from '../../common';
 
 let F = Math.floor;
 

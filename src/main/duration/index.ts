@@ -1,2 +1,6 @@
-// @index('./*', f => `export * from '${f.path}';`)
+/**
+ * @internal
+ * @module 
+ */
+
 export * from './duration';

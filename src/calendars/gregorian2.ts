@@ -1,3 +1,8 @@
+/**
+ * @category Calendar
+ * @module Gregorian2Calendar
+ */
+
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 // tslint:disable: triple-equals

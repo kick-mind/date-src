@@ -1,3 +1,8 @@
+/**
+ * @category Calendar
+ * @module PersianCalendar
+ */
+
 import {
   DateTimeUnits,
   getCalendarTimestamp,

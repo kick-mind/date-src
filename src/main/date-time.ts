@@ -1,3 +1,8 @@
+/**
+ * @category Core
+ * @module DateTime
+ */
+
 import {
   DateTimeUnits,
   IsInt,

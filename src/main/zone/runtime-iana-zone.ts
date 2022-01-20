@@ -1,3 +1,9 @@
+/**
+ * @category Zone
+ * @module RuntimeIANAZone
+ */
+
+
 import { IANAZone } from './iana-zone';
 
 /** 

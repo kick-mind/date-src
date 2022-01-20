@@ -1,5 +1,8 @@
-// @index('./*', f => `export * from '${f.path}';`)
-export * from './fallback-locale';
+/**
+ * @internal
+ * @module 
+ */
+
 export * from './locale';
 export * from './locales';
 export * from './runtime-locale';

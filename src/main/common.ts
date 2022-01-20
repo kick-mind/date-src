@@ -1,3 +1,8 @@
+/**
+ * @internal
+ * @module 
+ */
+
 import { Calendar } from './calendar';
 import { Locale } from './locale';
 import { Zone } from './zone';

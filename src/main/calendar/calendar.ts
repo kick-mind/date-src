@@ -1,3 +1,8 @@
+/**
+ * @category Calendar
+ * @module Calendar
+ */
+
 // tslint:disable: variable-name
 // tslint:disable: member-ordering
 import {
@@ -66,6 +71,10 @@ function hour(time: number): number {
   return Math.trunc((time / MS_PER_HOUR) % 24);
 }
 
+// TODO: This function is exported from library, it should be private.
+/** 
+ * @internal
+ */
 export function getTimeUnits(time: number): TimeUnits {
   return {
     hour: hour(time),

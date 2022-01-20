@@ -1,3 +1,9 @@
+/**
+ * @category Zone
+ * @module Zone
+ */
+
+
 /** 
  * An abstract base class for all time zones 
  * @public

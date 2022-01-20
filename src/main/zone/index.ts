@@ -1,4 +1,9 @@
-// @index('./*', f => `export * from '${f.path}';`)
+/**
+ * @internal
+ * @module
+ */
+
+
 export * from './fixed-zone';
 export * from './iana-zone';
 export * from './local-zone';

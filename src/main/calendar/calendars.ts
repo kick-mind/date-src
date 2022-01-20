@@ -1,3 +1,9 @@
+/**
+ * @category Calendar
+ * @module Calendars
+ */
+
+
 import { vObj } from '../../common';
 import { Calendar } from './calendar';
 

@@ -1,3 +1,8 @@
+/**
+ * @category Calendar
+ * @module HijriCalendar
+ */
+
 import {
   DateTimeUnits,
   getCalendarTimestamp,

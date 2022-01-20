@@ -1,4 +1,8 @@
-// @index('./*', f => `export * from '${f.path}';`)
+/**
+ * @internal
+ * @module 
+ */
+
 export * from './calendar';
 export * from './date-time';
 export * from './duration';

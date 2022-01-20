@@ -1,3 +1,9 @@
+/**
+ * @category Zone
+ * @module LocalZone
+ */
+
+
 import { Zone } from './zone';
 
 /** 
