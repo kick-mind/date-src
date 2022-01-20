@@ -1,3 +1,8 @@
+/**
+ * @internal
+ * @module 
+ */
+
 /** DateTime units. */
 export interface DateTimeUnits {
     /** Year */

@@ -1,3 +1,9 @@
+/**
+ * @internal
+ * @module 
+ */
+
+
 export const JS_EPOCH = 62135596800000;
 export const MS_PER_SECOND = 1000;
 export const MS_PER_MINUTE = MS_PER_SECOND * 60;

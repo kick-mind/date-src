@@ -58,7 +58,7 @@ module.exports = {
         ...getPluginsEntries()
     },
     output: {
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve(__dirname, "dist", "package"),
         filename: "[name].js",
         publicPath: "/",
         globalObject: "this",

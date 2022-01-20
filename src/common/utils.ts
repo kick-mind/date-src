@@ -1,3 +1,8 @@
+/**
+ * @internal
+ */
+
+
 import { JS_EPOCH, MS_PER_HOUR, MS_PER_MINUTE, MS_PER_SECOND } from './const';
 
 /** 

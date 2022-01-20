@@ -1,3 +1,7 @@
+/**
+ * @category Plugins
+ */
+
 import { DateTime } from '../main';
 import { weekDay } from './week-day';
 import { weekDayLocale } from './week-day-locale';
@@ -11,13 +15,16 @@ const REGEX_FORMAT = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|m{1,
  */
 export enum Formats {
     /** ISO 8601 date time format */
-    iso = 'YYYY-MM-ddTHH:mm:ss.fffzz'
+    iso = 'YYYY-MM-ddTHH:mm:ss.fffzz',
+    /** ISO 8601 date format */
+    isoDate = 'YYYY-MM-dd'
 }
 
 /** 
  * Returns a string representation of this DateTime formatted according to the specified format string. 
  * @param date DateTime
  * @param formatStr Format string
+
  * @public
  */
 export function format(date: DateTime, formatStr: string): string {

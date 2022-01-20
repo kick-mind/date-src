@@ -1,9 +1,14 @@
+/**
+ * @category Plugins
+ */
+
 import { ZoneSpecifier, Calendars, LocaleSpecifier, DateTime, CalendarSpecifier, Calendar, FixedZone, Zones, Zone, Locales } from '../main';
 
 /** 
  * Creates a DateTime from a Javascript Date object
  * @public
  * @param date JavaScript Date
+ * @category Plugins
  */
 export function fromJsDate(date: Date, options?: { zone?: ZoneSpecifier, locale?: LocaleSpecifier }) {
     const c = Calendars.findByType('gregory')[0];

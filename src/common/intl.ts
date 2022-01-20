@@ -1,3 +1,8 @@
+/**
+ * @internal
+ * @module 
+ */
+
 /** Locale verification result */
 export interface LocaleVerificationResult {
     supported: boolean;
