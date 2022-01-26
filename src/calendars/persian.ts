@@ -531,7 +531,7 @@ export class PersianCalendar extends Calendar {
       y = Math.trunc(y + i / 12);
     } else {
       m = 12 + ((i + 1) % 12);
-      y = y + Math.trunc((i - 11) / 12);
+      y = Math.trunc(y + (i - 11) / 12);
     }
     const days = this.daysInMonth(y, m);
     if (d > days) {

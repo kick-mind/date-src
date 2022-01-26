@@ -13,21 +13,7 @@ import {
 } from '../common';
 import { Calendar, getTimeUnits } from '../main';
 
-const MONTH_DAYS = [
-  0,
-  30,
-  59,
-  89,
-  118,
-  148,
-  177,
-  207,
-  236,
-  266,
-  295,
-  325,
-  355,
-];
+const MONTH_DAYS = [0, 30, 59, 89, 118, 148, 177, 207, 236, 266, 295, 325, 355];
 
 function daysInYear(year: number): number {
   return isLeapYear(year) ? 355 : 354;
@@ -57,9 +43,7 @@ function getAbsoluteDateHijri(
   d: number,
   hijriAdjustment: number
 ) {
-  return (
-    daysUpToHijriYear(y) + MONTH_DAYS[m - 1] + d - 1 - hijriAdjustment
-  );
+  return daysUpToHijriYear(y) + MONTH_DAYS[m - 1] + d - 1 - hijriAdjustment;
 }
 
 function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
@@ -112,7 +96,7 @@ function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
   return du;
 }
 
-/** 
+/**
  * Hijri(Islamic) calendar
  */
 export class HijriCalendar extends Calendar {
@@ -133,7 +117,7 @@ export class HijriCalendar extends Calendar {
       y = Math.trunc(y + i / 12);
     } else {
       m = 12 + ((i + 1) % 12);
-      y = y + Math.trunc((i - 11) / 12);
+      y = Math.trunc(y + (i - 11) / 12);
     }
     const days = this.daysInMonth(y, m);
     if (d > days) {

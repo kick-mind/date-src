@@ -83,9 +83,9 @@ describe('Calendars', () => {
       let units = pc.getUnits(time);
 
       assert.deepStrictEqual(units, {
-        year: 1190,
+        year: 1186,
         month: 7,
-        day: 1,
+        day: 2,
         hour: 23,
         minute: 30,
         second: 32,
