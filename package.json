@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "webpack",
-    "publish": "npm publish dist --access=public",
+    "publish": "npm publish dist/package --access=public",
     "build-publish": "npm run build && npm run publish",
     "generate-docs": "typedoc"
   },

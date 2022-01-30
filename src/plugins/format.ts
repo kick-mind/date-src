@@ -24,11 +24,11 @@ export enum Formats {
  * Returns a string representation of this DateTime formatted according to the specified format string. 
  * @param date DateTime
  * @param formatStr Format string
-
  * @public
  */
-export function format(date: DateTime, formatStr: string): string {
+export function format(date: DateTime, formatStr: string, options?: { shortMonthNameMaxLength?: number, longMonthNameMaxLength?: number }): string {
     const { calendar, zone, locale, year, month, day, hour, minute, second, ms, ts, } = date;
+    let shortMonthNames: string[], longMonthNames: string[];
     let wd = weekDay(date),
         wdl = weekDayLocale(date);
 
@@ -43,7 +43,6 @@ export function format(date: DateTime, formatStr: string): string {
 
     const numFormatter =
         (n: number, pad: number = 1) => locale.formatNumber(n, { minimumIntegerDigits: pad });
-        
 
     const matches: any = {
         Y: () => numFormatter(year),
@@ -51,8 +50,24 @@ export function format(date: DateTime, formatStr: string): string {
         YYYY: () => numFormatter(year, 4),
         M: () => numFormatter(month),
         MM: () => numFormatter(month, 4).substring(2),
-        MMM: () => locale.getMonthNames(calendar, 'short')[month - 1],
-        MMMM: () => locale.getMonthNames(calendar, 'long')[month - 1],
+        MMM: () => {
+            if (!shortMonthNames) {
+                shortMonthNames = locale.getMonthNames(calendar, 'short');
+                if (options?.shortMonthNameMaxLength) {
+                    shortMonthNames = shortMonthNames.map(x => x.substring(0, options.shortMonthNameMaxLength));
+                }
+            }
+            return shortMonthNames[month - 1];
+        },
+        MMMM: () => {
+            if (!longMonthNames) {
+                longMonthNames = locale.getMonthNames(calendar, 'long');
+                if (options?.longMonthNameMaxLength) {
+                    longMonthNames = longMonthNames.map(x => x.substring(0, options.longMonthNameMaxLength));
+                }
+            }
+            return longMonthNames[month - 1];
+        },
         d: () => numFormatter(day),
         dd: () => numFormatter(day, 2),
         H: () => numFormatter(hour),

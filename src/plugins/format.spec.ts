@@ -21,7 +21,7 @@ describe('Plugins', () => {
       const d = new DateTime(2001, 9, 8, 18, 5, 4, 90, { locale: l, zone: z });
 
       assert.strictEqual(format(d, 'Y YY YYYY'), '۲۰۰۱ ۰۱ ۲۰۰۱');
-      assert.strictEqual(format(d, 'M MM MMM MMMM'), '۹ ۰۹ سپتامبر سپتامبر');
+      assert.strictEqual(format(d, 'M MM MMM MMMM', { shortMonthNameMaxLength: 3 }), '۹ ۰۹ سپتامبر سپتامبر');
       assert.strictEqual(format(d, 'd dd'), '۸ ۰۸');
       assert.strictEqual(format(d, 'H HH h hh'), '۱۸ ۱۸ ۶ ۰۶');
       assert.strictEqual(format(d, 'm mm'), '۵ ۰۵');
