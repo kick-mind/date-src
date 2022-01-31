@@ -49,6 +49,50 @@ describe('Calendars', () => {
       } as DateTimeUnits);
     });
 
+    it('add2', function () {
+      let time = pc.getTimestamp({
+        year: 1190,
+        month: 6,
+        day: 30,
+        hour: 23,
+        minute: 30,
+        second: 32,
+        ms: 501,
+      });
+
+      time = pc.add(time, {
+        year: 99,
+        month: 15,
+        day: 400,
+        hour: 260,
+        minute: 796,
+        second: 2059,
+        ms: 9856554,
+      });
+
+      time = pc.add(time, {
+        year: 99,
+        month: 15,
+        day: 400,
+        hour: 260,
+        minute: 796,
+        second: 2059,
+        ms: 9856554,
+      });
+
+      let units = pc.getUnits(time);
+
+      assert.deepStrictEqual(units, {
+        year: 1393,
+        month: 4,
+        day: 3,
+        hour: 0,
+        minute: 39,
+        second: 43,
+        ms: 609,
+      } as DateTimeUnits);
+    });
+
     it('subtract', function () {
       let time = pc.getTimestamp({
         year: 1393,
