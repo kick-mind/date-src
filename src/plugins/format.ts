@@ -20,13 +20,21 @@ export enum Formats {
     isoDate = 'YYYY-MM-dd'
 }
 
+/**
+ * Format plugin options
+ */
+export interface FormatOptions {
+    shortMonthNameMaxLength?: number;
+    longMonthNameMaxLength?: number;
+}
+
 /** 
  * Returns a string representation of this DateTime formatted according to the specified format string. 
  * @param date DateTime
  * @param formatStr Format string
  * @public
  */
-export function format(date: DateTime, formatStr: string, options?: { shortMonthNameMaxLength?: number, longMonthNameMaxLength?: number }): string {
+export function format(date: DateTime, formatStr: string, options?: FormatOptions): string {
     const { calendar, zone, locale, year, month, day, hour, minute, second, ms, ts, } = date;
     let shortMonthNames: string[], longMonthNames: string[];
     let wd = weekDay(date),
