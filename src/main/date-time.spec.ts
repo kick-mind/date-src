@@ -424,10 +424,10 @@ describe('Main', () => {
 
     it('change locale', () => {
       // in this example default calendar is gregorian
-      const roLocale = new DateTime().toLocale('ro');
-      console.log(roLocale.locale.getMonthNames(roLocale.calendar)[0]);
+      const frLocale = new DateTime().toLocale('fr');
+      console.log(frLocale.locale.getMonthNames(frLocale.calendar)[0]);
 
-      const deLocale = roLocale.toLocale('de');
+      const deLocale = frLocale.toLocale('de');
       console.log(deLocale.locale.getMonthNames(deLocale.calendar)[0]);
 
       const faLocale = deLocale.toLocale('fa-IR');
