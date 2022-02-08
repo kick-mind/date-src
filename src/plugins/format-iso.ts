@@ -7,7 +7,7 @@ import { format, Formats } from './format';
  * @param date - DateTime
  * @return ISO 8601 compliant string representation of the given DateTime
  */
-export function formatIso(date: DateTime): string {
+export function formatIso(date: DateTime, options?: {format?: string}): string {
     date = date.toLocale('en');
     if (date.calendar.type !== 'gregory') {
         const gregorianCalendars = Calendars.findByType('gregory');
@@ -17,5 +17,5 @@ export function formatIso(date: DateTime): string {
         date = date.to(gregorianCalendars[0]);
     }
 
-    return format(date, Formats.iso);   
+    return format(date, options?.format ?? Formats.iso);   
 }
