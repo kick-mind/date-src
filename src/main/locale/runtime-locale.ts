@@ -131,10 +131,12 @@ export class RuntimeLocale extends Locale {
     }
 
     formatNumber(n: number, options?: { minimumIntegerDigits?: number }): string {
-        return new Intl.NumberFormat(this.#resolvedName, {
+        const res =  new Intl.NumberFormat(this.#resolvedName, {
             style: 'decimal',
             useGrouping: false,
             minimumIntegerDigits: options?.minimumIntegerDigits ?? 1
         }).format(n);
+
+        return res;
     }
 }

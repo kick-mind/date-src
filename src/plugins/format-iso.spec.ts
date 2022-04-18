@@ -18,8 +18,8 @@ describe('Plugins', () => {
       const d1 = new DateTime(2001, 9, 8, 18, 5, 4, 90, { calendar: 'gregorian', locale: 'fa-IR', zone: Zones.utc });
       assert.strictEqual(formatIso(d1), '2001-09-08T18:05:04.090+00:00');
 
-      const d2 = new DateTime(1400, 10, 23, 10, 55, 0, 0, { calendar: 'persian', locale: 'fa-IR', zone: Zones.fixed('f1', 3, 30) });
-      assert.strictEqual(formatIso(d2), '2022-01-13T10:55:00.000+03:30');
+      const d2 = new DateTime(1344, 1, 1, 0, 0, 0, 0, { calendar: 'persian', locale: 'fa-IR', zone: Zones.utc });
+      assert.strictEqual(formatIso(d2), '1965-03-21T00:00:00.000+00:00');
     });
   });
 });

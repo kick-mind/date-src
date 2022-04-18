@@ -50,7 +50,8 @@ export function format(date: DateTime, formatStr: string, options?: FormatOption
     };
 
     const numFormatter =
-        (n: number, pad: number = 1) => locale.formatNumber(n, { minimumIntegerDigits: pad });
+        (n: number, pad: number = 1) => locale.formatNumber(n === 0 ? 0 : n, { minimumIntegerDigits: pad });
+        // "n === 0 ? 0 : n"  is for replacing -0 with 0
 
     const matches: any = {
         Y: () => numFormatter(year),
