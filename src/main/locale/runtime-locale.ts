@@ -4,10 +4,10 @@
  */
 
 
-import { MonthNameFormat, WeekdayNameFormat, ZoneTitleFormat } from '../../common';
+import { MonthNameFormat, WeekdayNameFormat, ZoneTitleFormat } from '../common';
 import { Calendar } from '../calendar';
 import { Locale } from './locale';
-import { verifyLocale } from '../../common';
+import { verifyLocale } from '../common';
 
 function isSupportedCalendar(calendarName: string) {
     return [

@@ -16,7 +16,7 @@ import {
   throwInvalidParam,
   MAX_YEAR,
   vType,
-} from '../../common';
+} from '../common';
 
 function add(time: number, value: number, scale: number): number {
   const millis: number = value * scale;

@@ -1,8 +1,8 @@
 {
   "include": [
     // "index.ts",
-    "src/**/*.ts"
-, "src/plugins/from-iso.spec.ts.tmp", "src/plugins/from-iso.ts.tmp"  ],
+    "src/**/*.ts",
+  ],
   "exclude": [
     "src/**/*.spec.ts"
   ],
@@ -11,14 +11,13 @@
     "rootDir": "./src",
     "outDir": "./dist/package",
     "noImplicitAny": true,
-    "esModuleInterop": true,
-    "target": "ES6",
+    "module": "es6",
+    "target": "es6",
     "sourceMap": true,
     "removeComments": false,
     "moduleResolution": "node",
-    // "module": "ES6",
+    "allowJs": true,
     "skipLibCheck": true,
     "declaration": true
-    // "allowSyntheticDefaultImports": true
   }
 }

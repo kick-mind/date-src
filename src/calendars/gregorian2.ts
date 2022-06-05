@@ -15,7 +15,7 @@ import {
   DAYS_TO_MONTH_366,
   throwInvalidParam,
   MAX_YEAR,
-} from '../common';
+} from '../main';
 import { Calendar, getTimeUnits } from '../main';
 
 // Number of days in a non-leap year

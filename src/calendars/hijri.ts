@@ -10,7 +10,7 @@ import {
   MS_PER_DAY,
   throwInvalidParam,
   timeToTicks,
-} from '../common';
+} from '../main';
 import { Calendar, getTimeUnits } from '../main';
 
 const MONTH_DAYS = [0, 30, 59, 89, 118, 148, 177, 207, 236, 266, 295, 325, 355];

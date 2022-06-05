@@ -12,7 +12,7 @@ import {
   MS_PER_DAY,
   DAYS_TO_MONTH_365,
   DAYS_TO_MONTH_366,
-} from '../common';
+} from '../main';
 import { Calendar, getTimeUnits } from '../main';
 
 function getDateUnits(ts: number): DateTimeUnits {

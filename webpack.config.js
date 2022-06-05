@@ -14,9 +14,6 @@ function getCalendarsEntries() {
             import: `./src/calendars/${cal}`,
             filename: `./calendars/${name}.js`,
             dependOn: "main",
-            library: {
-                type: 'umd',
-            }
         };
     });
 
@@ -33,9 +30,6 @@ function getPluginsEntries() {
             import: `./src/plugins/${plugin}`,
             filename: `./plugins/${name}.js`,
             dependOn: "main",
-            library: {
-                type: 'umd',
-            }
         };
     });
 
@@ -49,10 +43,6 @@ module.exports = {
         main: {
             import: "./src/main/index.ts",
             filename: 'main/jss-date.js',
-            library: {
-                name: 'jss',
-                type: 'umd',
-            },
         },
         ...getCalendarsEntries(),
         ...getPluginsEntries()
@@ -62,6 +52,10 @@ module.exports = {
         filename: "[name].js",
         publicPath: "/",
         globalObject: "this",
+        library: {
+            name: 'jss-date',
+            type: 'umd',
+        },
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
@@ -86,13 +80,16 @@ module.exports = {
         }),
     ],
     optimization: {
+        // runtimeChunk: 'multiple',
         minimize: true,
-        minimizer: [new TerserPlugin({
-            terserOptions: {
-            //   mangle: false,
-              keep_classnames: true,
-            },
-          }
-        )],
+        minimizer: [
+            new TerserPlugin({
+                terserOptions: {
+                    //   mangle: false,
+                    keep_classnames: true,
+                },
+            }
+            )
+        ],
     },
 }

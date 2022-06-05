@@ -3,16 +3,21 @@
  * @module DateTime
  */
 
+import { Calendar, Calendars } from './calendar';
+import { Locale, Locales } from './locale';
+import { Zone, Zones } from './zone';
 import {
+  CalendarSpecifier,
   DateTimeUnits,
   IsInt,
   IsObj,
   IsStr,
+  LocaleSpecifier,
   throwInvalidParam,
   vClsCall,
   vObj,
-} from '../common';
-import { CalendarSpecifier, LocaleSpecifier, ZoneSpecifier, Locale, Locales, Zone, Zones, Calendar, Calendars } from '.';
+  ZoneSpecifier,
+} from './common';
 
 /** Is an integer? */
 const II = (x: any) => IsInt(x);

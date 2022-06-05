@@ -11,7 +11,7 @@ import {
   MS_PER_DAY,
   throwInvalidParam,
   timeToTicks,
-} from '../common';
+} from '../main';
 import { Calendar, getTimeUnits } from '../main';
 
 class AlgoMap {

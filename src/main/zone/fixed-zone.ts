@@ -4,7 +4,7 @@
  */
 
 
-import { vType } from '../../common';
+import { vType } from '../common';
 import { Zone } from './zone';
 
 /** 
