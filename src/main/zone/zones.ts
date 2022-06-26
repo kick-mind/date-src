@@ -4,7 +4,7 @@
  */
 
 
-import { ZoneSpecifier } from '../common';
+import { ZoneSpecifier } from '../common';;
 import { FixedZone } from './fixed-zone';
 import { IANAZone } from './iana-zone';
 import { LocalZone } from './local-zone';

@@ -6,7 +6,7 @@
 
 import { LocaleSpecifier } from '..';
 import { StaticLocale } from './static-locale';
-import { hasIntl, vObj } from '../common';
+import { hasIntl, vObj } from '../common';;
 import { Locale } from './locale';
 import { RuntimeLocale } from './runtime-locale';
 

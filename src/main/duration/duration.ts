@@ -3,7 +3,7 @@
  * @module Duration
  */
 
-import { vType } from '../common';
+import { vType } from '../common';;
 
 let F = Math.floor;
 

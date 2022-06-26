@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { GregorianCalendar } from '../calendars/gregorian';
 import { PersianCalendar } from '../calendars/persian';
-import { DateTimeUnits } from '../common';
+import { DateTimeUnits } from '../main/common';;
 import { Calendars, DateTime, DateTimeCreationOptions, Zones } from '../main';
 import { fromObject } from './from-object';
 

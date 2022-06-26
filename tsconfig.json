@@ -11,13 +11,13 @@
     "rootDir": "./src",
     "outDir": "./dist/package",
     "noImplicitAny": true,
-    "module": "es6",
+    "esModuleInterop": true,
     "target": "es6",
     "sourceMap": true,
     "removeComments": false,
     "moduleResolution": "node",
     "allowJs": true,
     "skipLibCheck": true,
-    "declaration": true
+    "declaration": true,
   }
 }

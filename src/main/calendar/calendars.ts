@@ -3,7 +3,7 @@
  * @module Calendars
  */
 
-import { vObj } from '../common';
+import { vObj } from '../common';;
 import { Calendar } from './calendar';
 
 const calendars = new Array<Calendar>();
