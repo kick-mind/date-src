@@ -84,9 +84,9 @@ describe('Calendars', () => {
       let units = hc.getUnits(time);
 
       assert.deepStrictEqual(units, {
-        year: 1141,
+        year: 1145,
         month: 6,
-        day: 6,
+        day: 5,
         hour: 23,
         minute: 30,
         second: 32,
