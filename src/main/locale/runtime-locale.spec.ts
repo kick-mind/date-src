@@ -46,7 +46,7 @@ describe('Main', () => {
 
       assert.strictEqual(l.weekStart, 6);
       assert.strictEqual(l.getZoneTitle('UTC'), 'Coordinated Universal Time');
-      assert.strictEqual(l.getZoneTitle('Asia/Tehran'), 'Iran Standard Time');
+      assert.strictEqual(l.getZoneTitle('Asia/Tehran'), 'Iran Daylight Time');
     });
 
     it('can create fa locale', () => {
@@ -159,5 +159,13 @@ describe('Main', () => {
       assert.strictEqual(l.formatNumber(123456789, { minimumIntegerDigits: 10 }), '۰۱۲۳۴۵۶۷۸۹');
       assert.strictEqual(l.formatNumber(123456, { minimumIntegerDigits: 3 }), '۱۲۳۴۵۶');
     });
+
+    it('can format ar-ae numbers', () => {
+      const l = new RuntimeLocale('ar-qa', { weekStart: 6 });
+      console.log(l.formatNumber(2010));
+      assert.strictEqual(l.formatNumber(2010), '٢٠١٠');
+    });
+    
+  
   });
 });

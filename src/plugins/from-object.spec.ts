@@ -32,7 +32,7 @@ describe('Plugins', () => {
       const d1 = new DateTime(units.year, units.month, units.day, units.hour, units.minute, units.second, units.ms, options);
       const d2 = fromObject(units, options);
 
-      assert.strictEqual(d1.toObject(), d2.toObject());
+      assert.deepStrictEqual(d1.toObject(), d2.toObject());
       // assert.strictEqual(d1.locale, d2.locale);
       // assert.strictEqual(d1.locale, d2.locale);
       // assert.strictEqual(d1.locale, d2.locale);

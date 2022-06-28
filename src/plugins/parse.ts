@@ -217,7 +217,9 @@ export function parse(
     const m = minutes || 0;
     const s = seconds || 0;
     const ms = milliseconds || 0;
-    if (opts?.zone || !zone) {
+    if(!opts?.zone && !zone){
+      return new DateTime(y, M, d, h, m, s, ms);
+    }else if (opts?.zone || !zone) {
       return new DateTime(y, M, d, h, m, s, ms, opts);
     } else {
       return new DateTime(y, M, d, h, m, s, ms, {

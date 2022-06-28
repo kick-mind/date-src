@@ -1,18 +1,20 @@
 import assert from 'assert';
 import { Locales } from './locale';
-import { FixedZone, Zone, Zones } from './zone';
+import {  Zones } from './zone';
 import { DateTime } from './date-time';
-import moment from 'moment';
+
 import { Calendars } from './calendar';
 import { GregorianCalendar } from '../calendars/gregorian';
 import { GregorianCalendar2 } from '../calendars/gregorian2';
 import { PersianCalendar } from '../calendars/persian';
-import momentJalaali from 'moment-jalaali';
-import { Locale,  } from '.';
-import { format } from '../plugins/format';
-import { locale, locales } from 'moment';
-import { parse } from '../plugins/parse';
 import { HijriCalendar } from '../calendars/hijri';
+
+import moment from 'moment';
+import momentJalaali from 'moment-jalaali';
+import { format } from '../plugins/format';
+
+import { parse } from '../plugins/parse';
+
 
 
 function assertDateEquality(date: Date, dateTime: DateTime) {
@@ -151,14 +153,12 @@ describe('Main', () => {
     it('subtract 1 ms', function () {
       const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, { calendar: 'persian' });
       const dt2 = dt.subtract({  ms: 1 });
-      debugger;
       assert.strictEqual(dt2.year, 1399);
     });
 
     it('subtract 3 hours and 30 minutes', function () {
       const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, { calendar: 'persian' });
       const dt2 = dt.subtract({ hour: 3, minute:30 });
-      debugger;
       assert.strictEqual(dt2.year, 1399);
     });
 
@@ -166,7 +166,6 @@ describe('Main', () => {
     it('subtract 3 hours and 30 minutes and 1 ms', function () {
       const dt = new DateTime(1400, 1, 1, 0, 0, 0, 0, { calendar: 'persian' });
       const dt2 = dt.subtract({ hour: 3, minute:30, ms: 1 });
-      debugger;
       assert.strictEqual(dt2.year, 1399);
     });
 
@@ -422,26 +421,26 @@ describe('Main', () => {
       console.log('London-Time -> hh:' + London.hour + ' mm:' + London.minute + ' ss:' + London.second);
     });
 
-    it('change locale', () => {
-      // in this example default calendar is gregorian
-      const frLocale = new DateTime().toLocale('fr');
-      console.log(frLocale.locale.getMonthNames(frLocale.calendar)[0]);
+    // it('change locale', () => {
+    //   // in this example default calendar is gregorian
+    //   const frLocale = new DateTime().toLocale('fr');
+    //   console.log(frLocale.locale.getMonthNames(frLocale.calendar)[0]);
 
-      const deLocale = frLocale.toLocale('de');
-      console.log(deLocale.locale.getMonthNames(deLocale.calendar)[0]);
+    //   const deLocale = frLocale.toLocale('de');
+    //   console.log(deLocale.locale.getMonthNames(deLocale.calendar)[0]);
 
-      const faLocale = deLocale.toLocale('fa-IR');
-      console.log(faLocale.locale.getMonthNames(faLocale.calendar)[0]);
+    //   const faLocale = deLocale.toLocale('fa-IR');
+    //   console.log(faLocale.locale.getMonthNames(faLocale.calendar)[0]);
 
-      // convert faLocale (from Gregorian) to Persian datetime object
-      const faIR = faLocale.to('persian');
-      console.log(faIR.locale.getMonthNames(faIR.calendar)[0]);
+    //   // convert faLocale (from Gregorian) to Persian datetime object
+    //   const faIR = faLocale.to('persian');
+    //   console.log(faIR.locale.getMonthNames(faIR.calendar)[0]);
 
-      //  Calendars.add(new HijriCalendar('islamic', -1));
-      //  const ar_ue = fa_IR.to('islamic');
-      //  console.log(""+ ar_ue.locale.getMonthNames(ar_ue.calendar)[0]);
+    //   //  Calendars.add(new HijriCalendar('islamic', -1));
+    //   //  const ar_ue = fa_IR.to('islamic');
+    //   //  console.log(""+ ar_ue.locale.getMonthNames(ar_ue.calendar)[0]);
 
-    });
+    // });
 
 
 
