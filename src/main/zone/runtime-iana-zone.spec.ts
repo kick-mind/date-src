@@ -3,6 +3,7 @@ import { Calendars } from '../calendar';
 import { PersianCalendar } from '../../calendars/persian';
 import { GregorianCalendar } from '../../calendars/gregorian';
 import { RuntimeIANAZone } from '.';
+import { DateTime } from '../date-time';
 
 
 describe('Main', () => {
@@ -22,7 +23,16 @@ describe('Main', () => {
     
     it('can resolve Asia/Tehran zone', () => {
       const z = new RuntimeIANAZone('Asia/Tehran');
-      assert.strictEqual(z.getCurrentOffset(), 3 * 60 + 30); // Asia/Tehran offset: 03:30
+      assert.strictEqual(z.getCurrentOffset(), 4 * 60 + 30); // Asia/Tehran offset: 03:30
+    });   
+
+    it('can resolve america/washington zone', () => {
+      const z = new RuntimeIANAZone('America/Adak');
+      var d = new DateTime();
+      assert.strictEqual(z.getOffset(d.ts), -540); // Asia/Tehran offset: 03:30
+      assert.strictEqual(z.getCurrentOffset(), -540); // Asia/Tehran offset: 03:30
+      console.log(z.getOffset(d.ts));
+      console.log(z.getCurrentOffset());
     });   
   });
 });

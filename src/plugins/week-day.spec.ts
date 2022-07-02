@@ -39,5 +39,50 @@ describe('Plugins', () => {
       let x = weekDay(d);
       assert.strictEqual(weekDay(d), 2);
     });
+
+    it('test gregorian weekDay3', () => {
+      const d = new DateTime({ calendar: 'gregorian' }, 2022, 1, 1);
+      let x = weekDay(d);
+      assert.strictEqual(weekDay(d), 6);
+    });
+
+    it('test weekDay 0', () => {
+      const d = new DateTime({ calendar: 'gregorian' }, 2022, 7, 3);
+      let x = weekDay(d);
+      assert.strictEqual(weekDay(d), 0);
+    });
+
+    it('test weekDay 1', () => {
+      const d = new DateTime({ calendar: 'gregorian' }, 2022, 7, 4);
+      let x = weekDay(d);
+      assert.strictEqual(weekDay(d), 1);
+    });
+    it('test weekDay 2', () => {
+      const d = new DateTime({ calendar: 'gregorian' }, 2022, 7, 5);
+      let x = weekDay(d);
+      assert.strictEqual(weekDay(d), 2);
+    });
+    it('test weekDay 3', () => {
+      const d = new DateTime({ calendar: 'gregorian' }, 2022, 7, 6);
+      let x = weekDay(d);
+      assert.strictEqual(weekDay(d), 3);
+    });
+    it('test weekDay 4', () => {
+      const d = new DateTime({ calendar: 'gregorian' }, 2022, 7, 7);
+      let x = weekDay(d);
+      assert.strictEqual(weekDay(d), 4);
+    });
+    it('test weekDay 5', () => {
+      const d = new DateTime({ calendar: 'gregorian' }, 2022, 7, 8);
+      let x = weekDay(d);
+      assert.strictEqual(weekDay(d), 5);
+    });
+    it('test weekDay 6', () => {
+      const d = new DateTime({ calendar: 'gregorian' }, 2022, 7, 9);
+      let x = weekDay(d);
+      assert.strictEqual(weekDay(d), 6);
+    });
+
+   
   });
 });
