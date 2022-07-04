@@ -35,7 +35,7 @@ describe('Plugins', () => {
     });
 
     it('fns vs jss', () => {
-      for (let i = 0; i < 1000; i++) {
+      for (let i = 0; i < 100; i++) {
         let year = Math.floor(Math.random() * 22) + 2001;
         let month = Math.floor(Math.random() * 12);
         let day = Math.floor(Math.random() * 28) + 1;
