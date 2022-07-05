@@ -17,10 +17,17 @@ describe('Plugins', () => {
       });
       const dt2 = endOfMonth(dt);
 
-      assert.strictEqual(
-        true,
-        isSame(dt2, new DateTime({ calendar: 'gregorian' }, 2021, 12, 31))
-      );
+     var dt3=  new DateTime({ calendar: 'gregorian' }, 2021, 12, 31);
+     console.log(dt3.year + ' ' + dt3.month + ' ' + dt3.day + ' ' + dt3.ms + ' ' + dt3.locale.name);
+     console.log(dt2.year + ' ' + dt2.month + ' ' + dt2.day + ' ' + dt2.ms + ' ' + dt2.locale.name); 
+
+     assert.deepStrictEqual({year: dt2.year, month: dt2.month, day: dt2.day}, {
+      year: dt3.year,
+      month: dt3.month,
+      day: dt3.day
     });
   });
+
+  });
 });
+

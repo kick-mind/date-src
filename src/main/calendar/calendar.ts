@@ -170,6 +170,7 @@ export abstract class Calendar {
   /** 
    * Returns true if the given date is valid, otherwise returns false.
    * @public
+   * The month count starts with 1, up to 12.
    */
   isValid(year: number, month: number, day: number): boolean {
     return (
@@ -251,6 +252,7 @@ export abstract class Calendar {
 
   /** 
    * Returns the number of days in the given year and month.
+   * The month count starts with 1, up to 12.
    * @public
    */
   abstract daysInMonth(year: number, month: number): number;

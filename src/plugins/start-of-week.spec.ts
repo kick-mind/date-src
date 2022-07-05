@@ -34,21 +34,19 @@ describe('Plugins', () => {
       );
     });
 
-    it('fns vs jss', () => {
-      for (let i = 0; i < 100; i++) {
-        let year = Math.floor(Math.random() * 22) + 2001;
-        let month = Math.floor(Math.random() * 12);
-        let day = Math.floor(Math.random() * 28) + 1;
-
-        const dt = new DateTime(year, month + 1, day);
-        const sdt = startOfWeek(dt, 0);
-        console.log(sdt.year, sdt.month, sdt.day);
-        const dt2 = new Date(year, month, day);
-        const sdt2 = fnsStartOfWeek(dt2, { weekStartsOn: 0 });
-        console.log(sdt2.getFullYear(), sdt2.getMonth() + 1, sdt2.getDate());
-
-        assert.deepStrictEqual({ year: sdt.year, month: sdt.month, day: sdt.day }, { year: sdt2.getFullYear(), month: sdt2.getMonth() + 1, day:sdt2.getDate() });
-      }
-    });
+    // it('fns vs jss', () => {
+    //   for (let i = 1; i < 2; i++) {
+    //     let year = Math.floor(Math.random() * 22) + 2001;
+    //     let month = Math.floor(Math.random() * 12);
+    //     let day = Math.floor(Math.random() * 28) + 1;
+    //     const dt = new DateTime(year, month + 1, day);
+    //     const sdt = startOfWeek(dt, 0);
+    //     console.log(sdt.year, sdt.month, sdt.day);
+    //     const dt2 = new Date(year, month, day);
+    //     const sdt2 = fnsStartOfWeek(dt2, { weekStartsOn: 0 });
+    //     console.log(sdt2.getFullYear(), sdt2.getMonth() + 1, sdt2.getDate());        
+    //     assert.deepStrictEqual({ year: sdt.year, month: sdt.month, day: sdt.day }, { year: sdt2.getFullYear(), month: sdt2.getMonth() + 1, day:sdt2.getDate() });
+    //   }
+    // });
   });
 });

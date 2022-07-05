@@ -77,7 +77,7 @@ DateTime object is the main object of the JSS-Date library. It stores date and t
 > - Default Zone: local time-zone.
 
 
-## new Date(year, month, date, hours, minutes, seconds, ms)
+## new DateTime(year, month, date, hours, minutes, seconds, ms)
 Create the date with the given components in the local time zone and default calendar. Only the first two arguments are obligatory.
 
 - The year should have 4 digits.
