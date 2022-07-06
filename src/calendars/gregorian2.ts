@@ -15,8 +15,9 @@ import {
   DAYS_TO_MONTH_366,
   throwInvalidParam,
   MAX_YEAR,
+  CalendarBase,
+  getTimeUnits
 } from '../main';
-import { Calendar, getTimeUnits } from '../main';
 
 // Number of days in a non-leap year
 const DAYS_PER_YEAR = 365;
@@ -98,7 +99,7 @@ function dateToTicks(year: number, month: number, day: number): number {
 /** 
  * Gregorian2 calendar
  */
-export class GregorianCalendar2 extends Calendar {
+export class GregorianCalendar2 extends CalendarBase {
   constructor(id: string) {
     super(id, 'gregory');
   }

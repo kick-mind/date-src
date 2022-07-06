@@ -4,6 +4,7 @@
  */
 
 import {
+  CalendarBase,
   DateTimeUnits,
   getCalendarTimestamp,
   getJsTimestamp,
@@ -11,9 +12,8 @@ import {
   MS_PER_DAY,
   throwInvalidParam,
   timeToTicks,
+  getTimeUnits
 } from '../main';
-import { Calendar, getTimeUnits } from '../main';
-
 class AlgoMap {
   constructor(year: number, algorithm: number) {
     this._lowestYear = year;
@@ -515,7 +515,7 @@ function getDateUnits(ticks: number): DateTimeUnits {
   du.day = ordinalDay - daysInPreviousMonths(du.month);
   return du;
 }
-export class PersianCalendar extends Calendar {
+export class PersianCalendar extends CalendarBase {
   constructor(id: string) {
     super(id, 'persian');
   }
