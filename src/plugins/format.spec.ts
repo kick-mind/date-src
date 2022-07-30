@@ -42,7 +42,7 @@ describe('Plugins', () => {
         26
       );
       console.log(format(d, 'CC') + ' ' + d.locale.weekStart);
-      assert.strictEqual(format(d, 'CC'), 'ُSun');
+      assert.strictEqual(format(d, 'CC'), 'Sun');
     });
 
     it('can format dates (en-US) 2', () => {

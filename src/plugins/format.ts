@@ -90,10 +90,10 @@ export function format(date: DateTime, formatStr: string, options?: FormatOption
         f: () => numFormatter(ms),
         fff: () => numFormatter(ms, 3),
         c: () => numFormatter(wd),
-        cc: () => numFormatter(wdl),
-        C: () => locale.getWeekdayNames('narrow')[wdl],
-        CC: () => locale.getWeekdayNames('short')[wdl],
-        CCC: () => locale.getWeekdayNames('long')[wdl],
+        cc: () => numFormatter(wd),
+        C: () => locale.getWeekdayNames('narrow')[wd],
+        CC: () => locale.getWeekdayNames('short')[wd],
+        CCC: () => locale.getWeekdayNames('long')[wd],
         z: () => { // Zone offset: +5
             const o = numFormatter(zInfo.o);
             return zInfo.p ? `+${o}` : o;
