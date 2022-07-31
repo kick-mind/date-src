@@ -15,8 +15,8 @@ import {
   DAYS_TO_MONTH_366,
   throwInvalidParam,
   MAX_YEAR,
-  CalendarBase,
-  getTimeUnits
+  getTimeUnits,
+  Calendar
 } from '../main';
 
 // Number of days in a non-leap year
@@ -99,7 +99,7 @@ function dateToTicks(year: number, month: number, day: number): number {
 /** 
  * Gregorian2 calendar
  */
-export class GregorianCalendar2 extends CalendarBase {
+export class GregorianCalendar2 extends Calendar {
   constructor(id: string) {
     super(id, 'gregory');
   }

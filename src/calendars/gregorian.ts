@@ -12,8 +12,9 @@ import {
   MS_PER_DAY,
   DAYS_TO_MONTH_365,
   DAYS_TO_MONTH_366,
+  Calendar,
+  getTimeUnits
 } from '../main';
-import { CalendarBase, getTimeUnits } from '../main';
 
 function getDateUnits(ts: number): DateTimeUnits {
   const d = new Date(ts);
@@ -31,7 +32,7 @@ function getDateUnits(ts: number): DateTimeUnits {
 /**
  *  Gregorian calendar (Implemented by using JavaScript Date)
  */
-export class GregorianCalendar extends CalendarBase {
+export class GregorianCalendar extends Calendar {
   constructor(id: string) {
     super(id, 'gregory');
   }

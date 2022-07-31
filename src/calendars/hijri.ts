@@ -4,14 +4,14 @@
  */
 
 import {
-  CalendarBase,
   DateTimeUnits,
   getCalendarTimestamp,
   getJsTimestamp,
   MS_PER_DAY,
   throwInvalidParam,
   timeToTicks,
-  getTimeUnits
+  getTimeUnits,
+  Calendar
 } from '../main';
 
 const MONTH_DAYS = [0, 30, 59, 89, 118, 148, 177, 207, 236, 266, 295, 325, 355];
@@ -100,7 +100,7 @@ function getDateUnits(ticks: number, hijriAdjustment: number): DateTimeUnits {
 /**
  * Hijri(Islamic) calendar
  */
-export class HijriCalendar extends CalendarBase {
+export class HijriCalendar extends Calendar {
   constructor(id: string, private hijriAdjustment: number) {
     super(id, 'hijri');
   }
