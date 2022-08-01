@@ -295,7 +295,7 @@ const d2 = d.toZone('Asia/Tehran');
 console.log(d2.hour, d2.minute, d2.second); // output: 3, 30, 0
 
 const d3 = d.toZone('Europe/Luxembourg');
-console.log(d2.hour, d2.minute, d2.second); // output: 1, 0, 0
+console.log(d3.hour, d3.minute, d3.second); // output: 1, 0, 0
 ```
 
 Note that toZone() method returns a new DateTime object and doesn't change the zone of the object.
