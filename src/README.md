@@ -4,10 +4,10 @@ JSS-date is a multi-calendar, lightweight and rich JavaScript library for parsin
 
 ## Main Features
 - Multi-Calendar  
-  JSS-Date supports supports any calendars. currently we have implemented Gregorian, Hijri and Persian calendars and we plan to implement more calendars in the future. you can easily implement your own calendars.
+  JSS-Date supports supports many calendars. currently we have implemented Gregorian, Hijri and Persian calendars and we will implement more calendars in the future. you can easily implement your own calendars.
 
-  - Calendar Independent
-    - The (core) library is not dependent on any specific calendar. you can create DateTime objects with different Calendar objects.
+  - DateTime object is independent of calendars
+    - The (core) library is not dependent on calendar object. you can create DateTime objects with different calendars.
   - Extensible
     - Calendars, locales and zones can be extended.
     - You can easily implement your own calendars, locales and zones by just inheriting from a base class and implementing a few abstract methods.
@@ -30,7 +30,7 @@ JSS-date is a multi-calendar, lightweight and rich JavaScript library for parsin
 - Immutable
   - All objects (DateTime, Calendar, Locale, Zone, Duration) are immutable.
 - Treeshakable
-  - All calendars, locales, zones and plugins are tree-shakable. you only import things you need into your project.
+  - All calendars, locales, zones and plugins are tree-shakable.
 - Lightweight
   - Core library size is around 15KB minified (5KB minified and Gzipped)
 - NodeJS and browser support
@@ -44,20 +44,38 @@ npm install @js-sugar/date
 
 ## How it works
 
-Import the calendars you need in your project, instantiate and add them to the Calendars collection. You have to add at least one calendar to the Calendars collection.
+Import the calendars you need in your project, instantiate and add them to the Calendars collection. You must add at least one calendar to the Calendars collection.
 
 Add the following code at the starting point of your application:
 
+### Angular environment
 ```
 import { DateTime, Calendars } from '@js-sugar/date';
 import { GregorianCalendar }  from '@js-sugar/date/calendars/gregorian';
 import { HijriCalendar }  from '@js-sugar/date/calendars/hijri';
 import { PersianCalendar }  from '@js-sugar/date/calendars/persian';
+import { GregorianCalendar2 }  from '@js-sugar/date/calendars/gregorian2';
 
 // Add the calendars you need in your project
 Calendars.add(new GregorianCalendar('gregorian'));   
 Calendars.add(new HijriCalendar('hijri'));   
 Calendars.add(new PersianCalendar('persian'));   
+Calendars.add(new GregorianCalendar2('gregorian'));   
+```
+
+### Nodejs environment
+```
+const { DateTime, Calendars } = require("@js-sugar/date");
+const { GregorianCalendar } = require("@js-sugar/date/calendars/gregorian");
+const { HijriCalendar } = require("@js-sugar/date/calendars/hijri");
+const { PersianCalendar } = require("@js-sugar/date/calendars/persian");
+const { GregorianCalendar2 } = require("@js-sugar/date/calendars/gregorian2");
+
+// Add the calendars you need in your project
+Calendars.add(new GregorianCalendar('gregorian'));
+Calendars.add(new HijriCalendar('hijri'));   
+Calendars.add(new PersianCalendar('persian'));   
+Calendars.add(new GregorianCalendar2('gregorian2'));   
 ```
 
 > Note:  
@@ -83,7 +101,7 @@ Create the date with the given components in the local time zone and default cal
 - The year should have 4 digits.
 - The month count starts with 1, up to 12.
 - The date parameter is actually the day of month, if absent then 1 is assumed.
-- If hours/minutes/seconds/ms is absent, they are assumed to be equal 
+- If hours/minutes/seconds/ms is absent, they are assumed to be equal 0
 
 
 ## Examples
