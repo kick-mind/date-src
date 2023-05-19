@@ -28,7 +28,7 @@
     "generate-docs": "typedoc"
   },
   "keywords": [],
-  "author": "JS-Sugar",
+  "author": "soft-libs",
   "license": "ISC",
   "dependencies": {}
 }

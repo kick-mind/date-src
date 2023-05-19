@@ -1,10 +1,10 @@
 {
-  "name": "@js-sugar/date",
-  "version": "1.13.1",
+  "name": "@soft-libs/tick",
+  "version": "1.0.2",
   "description": "A multi-calendar, tree-shakable, extensible, immutable and lightweight date library for JavaScript",
-  "author": "JS-Sugar",
+  "author": "soft-libs",
   "license": "ISC",
-  "homepage": "https://github.com/js-sugar/date",
+  "homepage": "https://github.com/soft-libs/tick",
   "main": "./main/jss-date.js",
   "types": "./main/index.d.ts",
   "keywords": [
