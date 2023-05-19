@@ -23,7 +23,7 @@ describe('Main', () => {
     
     it('can resolve Asia/Tehran zone', () => {
       const z = new RuntimeIANAZone('Asia/Tehran');
-      assert.strictEqual(z.getCurrentOffset(), 4 * 60 + 30); // Asia/Tehran offset: 03:30
+      assert.strictEqual(z.getCurrentOffset(), 3 * 60 + 30); // Asia/Tehran offset: 03:30
     });   
 
     it('can resolve america/washington zone', () => {

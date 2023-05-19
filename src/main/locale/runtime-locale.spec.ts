@@ -46,7 +46,7 @@ describe('Main', () => {
 
       assert.strictEqual(l.weekStart, 6);
       assert.strictEqual(l.getZoneTitle('UTC'), 'Coordinated Universal Time');
-      assert.strictEqual(l.getZoneTitle('Asia/Tehran'), 'Iran Daylight Time');
+      assert.strictEqual(l.getZoneTitle('Asia/Tehran'), 'Iran Standard Time');
     });
 
     it('can create fa locale', () => {

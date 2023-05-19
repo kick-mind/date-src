@@ -16,14 +16,15 @@ describe('Main', () => {
 
     it('can create local zone', () => {
       const z1 = new LocalZone();
-      assert.strictEqual(z1.getCurrentOffset(), 270);
+      console.log(z1.getCurrentOffset());
+      assert.strictEqual(z1.getCurrentOffset(), 210);
     });
 
     it('can create local zone2', () => {
       var date = new DateTime();
       const z1 = new LocalZone();
       console.log(z1.getOffset(date.ts));
-      assert.strictEqual(z1.getOffset(date.ts), 270);
+      assert.strictEqual(z1.getOffset(date.ts), 210);
     });
     
   });

@@ -49,7 +49,7 @@ export interface DateTimeConfiguration {
 }
 
 /**
- * JS-Sugar DateTime.
+ * Tick DateTime.
  * @public
  */
 export class DateTime {
