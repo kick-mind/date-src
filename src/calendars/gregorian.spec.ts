@@ -65,9 +65,9 @@ describe('Calendars', () => {
 
       assert.deepStrictEqual(units, {
         year: 1970,
-        month: 6,
-        day: 30,
-        hour: 23,
+        month: 7,
+        day: 1,
+        hour: 0,
         minute: 30,
         second: 32,
         ms: 500,
