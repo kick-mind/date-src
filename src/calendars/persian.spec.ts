@@ -49,6 +49,29 @@ describe('Calendars', () => {
       } as DateTimeUnits);
     });
 
+    it('add3', function () {
+      let time = pc.getTimestamp({
+        year: 1402,
+        month: 5,
+        day: 13,
+        hour: 16,
+        minute: 33,
+        second: 0,
+        ms: 0,
+      });
+
+      time = pc.add(time, {
+        year: 0,
+        month: 0,
+        day: 1,
+        hour: 1,
+        minute: 0,
+        second: 0,
+        ms: 0,
+      });
+
+    });
+
     it('add2', function () {
       let time = pc.getTimestamp({
         year: 1190,
