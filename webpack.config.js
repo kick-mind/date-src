@@ -42,7 +42,7 @@ module.exports = {
     entry: {
         main: {
             import: "./src/main/index.ts",
-            filename: 'main/jss-date.js',
+            filename: 'main/tick.js',
         },
         ...getCalendarsEntries(),
         ...getPluginsEntries()
@@ -53,7 +53,7 @@ module.exports = {
         publicPath: "/",
         globalObject: "this",
         library: {
-            name: 'jss-date',
+            name: 'tick',
             type: 'umd',
         },
     },

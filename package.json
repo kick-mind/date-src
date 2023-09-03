@@ -1,5 +1,5 @@
 {
-  "name": "jss-date",
+  "name": "tick",
   "version": "1.0.0",
   "description": "",
   "private": "true",
@@ -30,5 +30,8 @@
   "keywords": [],
   "author": "soft-libs",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {},
+  "engines": {
+    "node": "<5"
+  }
 }

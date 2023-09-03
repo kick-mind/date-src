@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { isJssDate } from './is-jss-date';
+import { isJssDate } from './is-tick';
 import { fromJsDate } from './from-js-date';
 
 describe('Plugins', () => {
