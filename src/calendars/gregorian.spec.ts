@@ -44,8 +44,8 @@ describe('Calendars', () => {
       let time = gc.getTimestamp({
         year: 1978,
         month: 11,
-        day: 16,
-        hour: 12,
+        day: 22,
+        hour: 6,
         minute: 5,
         second: 8,
         ms: 54,
@@ -65,9 +65,9 @@ describe('Calendars', () => {
 
       assert.deepStrictEqual(units, {
         year: 1970,
-        month: 6,
-        day: 30,
-        hour: 23,
+        month: 7,
+        day: 6,
+        hour: 18,
         minute: 30,
         second: 32,
         ms: 500,

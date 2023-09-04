@@ -58,7 +58,7 @@ import { GregorianCalendar2 }  from '@soft-libs/tick/calendars/gregorian2';
 
 // Add the calendars you need in your project
 Calendars.add(new GregorianCalendar('gregorian'));   
-Calendars.add(new HijriCalendar('hijri'));   
+Calendars.add(new HijriCalendar('hijri',0));   
 Calendars.add(new PersianCalendar('persian'));   
 Calendars.add(new GregorianCalendar2('gregorian'));   
 ```
@@ -73,7 +73,7 @@ const { GregorianCalendar2 } = require("@soft-libs/tick/calendars/gregorian2");
 
 // Add the calendars you need in your project
 Calendars.add(new GregorianCalendar('gregorian'));
-Calendars.add(new HijriCalendar('hijri'));   
+Calendars.add(new HijriCalendar('hijri',0));   
 Calendars.add(new PersianCalendar('persian'));   
 Calendars.add(new GregorianCalendar2('gregorian2'));   
 ```
@@ -108,7 +108,7 @@ Create the date with the given components in the local time zone and default cal
 Following examples show you how to create DateTime objects with different Calendars, Locales and zones. In all examples of this documentation, we suppose that you have added following calendars to your project:
 ```
 Calendars.add(new GregorianCalendar('gregorian'));   
-Calendars.add(new HijriCalendar('hijri'));   
+Calendars.add(new HijriCalendar('hijri',0));   
 Calendars.add(new PersianCalendar('persian'));   
 ```
 
