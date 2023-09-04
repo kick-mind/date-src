@@ -1,10 +1,10 @@
 {
   "name": "@soft-libs/tick",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "A multi-calendar, tree-shakable, extensible, immutable and lightweight date library for JavaScript",
   "author": "soft-libs",
   "license": "ISC",
-  "homepage": "https://github.com/soft-libs/tick",
+  "homepage": "https://soft-libs.github.io/tick-docs",
   "main": "./main/tick.js",
   "types": "./main/index.d.ts",
   "keywords": [
