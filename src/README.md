@@ -1,6 +1,6 @@
 # Tick
 
-Tick is a multi-calendar, lightweight and rich JavaScript library for parsing, validating, manipulating, formatting, and displaying dates and times for all the Javascript runtime environments (NodeJS, browser, ...). It supports many calendars and you can easily convert DateTimes between different calendars and time zones.
+Tick is a multi-calendar, lightweight and rich JavaScript library for parsing, validating, manipulating, formatting, and displaying dates and times for all the Javascript runtime environments (NodeJS, browser, ...). It supports many calendars and you can easily convert DateTime between different calendars and time zones.
 
 ## Main Features
 - Multi-Calendar  
@@ -16,17 +16,15 @@ Tick is a multi-calendar, lightweight and rich JavaScript library for parsing, v
     - Gregorian2
     - Islamic (Hijri)
     - Persian
-    - (More calendars will be added in the future ...)
   - Accurate
-    - See our tests in github (soon)
   - Wide Date range support
     - Gregorian2, Persian and Islamic(Hijri) calendars support dates from 1/1/1 to 9999/12/30
 - Localization support
   - Intl-API based locales
-  - File based locales (soon)
+  - File based locales (Not implemented yet)
 - Timezone support
   - Intl-API based timezones
-  - File based timezones (soon)
+  - File based timezones (Not implemented yet)
 - Immutable
   - All objects (DateTime, Calendar, Locale, Zone, Duration) are immutable.
 - Treeshakable

@@ -1,4 +1,4 @@
 {
 	"typescript.tsdk": "node_modules\\typescript\\lib",
-	"mocha.subdirectory": "..\\..\\..\\..\\..\\c:\\dev\\src\\github\\js-sugar\\date"
+	"mocha.subdirectory": "..\\..\\..\\..\\..\\c:\\dev\\src\\github\\soft-libs\tick"
 }

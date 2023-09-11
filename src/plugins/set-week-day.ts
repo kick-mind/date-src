@@ -9,17 +9,17 @@ import { weekDay } from './week-day';
  * @param {dayOfWeek} number - day - the day of the week of the new date
  * @param {weekStartsOn} number - the index of the first day of the week
  * Sunday:0|Monday:1|Tuesday:2|Wednesday:3|Thursday:4|Friday:5|Saturday:6
- * js-sugar/date Month index is 1..12 
+ * Tick Month index is 1..12 
  * @returns {DateTime}  the new date with the day of the week set
  * @example
  * // Set week day to Sunday, with the default weekStartsOn of Sunday:
- * // Soft-libs/tick month index is 1..12 
+ * // Tick month index is 1..12 
  * const result = setDay(new Date(2022, 8, 1), 0)  
  * //=> Thu June 31 2022 00:00:00 (2022/7/31)
  *
  * @example
  * // Set week day to Sunday, with a weekStartsOn of Monday:
- * // soft-libs/tick month index is 1..12 
+ * // Tick month index is 1..12 
  * const result = setDay(new Date(2014, 9, 1), 0, { weekStartsOn: 1 })
  * //=> Sun Sep 07 2014 00:00:00
  */

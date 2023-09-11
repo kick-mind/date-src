@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { isJssDate } from './is-tick';
+import { isTick } from './is-tick';
 import { fromJsDate } from './from-js-date';
 
 describe('Plugins', () => {
@@ -12,7 +12,7 @@ describe('Plugins', () => {
         const randdt = new Date(
           start.getTime() + Math.random() * (end.getTime() - start.getTime())
         );
-        assert.strictEqual(isJssDate(fromJsDate(randdt)), true);
+        assert.strictEqual(isTick(fromJsDate(randdt)), true);
       }
     });
   });
