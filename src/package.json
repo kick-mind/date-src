@@ -1,6 +1,6 @@
 {
   "name": "@soft-libs/tick",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A multi-calendar, tree-shakable, extensible, immutable and lightweight date library for JavaScript",
   "author": "soft-libs",
   "license": "ISC",

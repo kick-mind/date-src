@@ -1,24 +1,28 @@
 # Tick
 
-Tick is a multi-calendar, lightweight and rich JavaScript library for parsing, validating, manipulating, formatting, and displaying dates and times for all the Javascript runtime environments (NodeJS, browser, ...). It supports many calendars and you can easily convert DateTime between different calendars and time zones.
+Tick is an open source multi-calendar, lightweight and rich JavaScript library for parsing, validating, manipulating, formatting, and displaying date and time for all the Javascript runtime environments (NodeJS, browser, ...). It supports many calendars and you can easily convert DateTime between different calendars and time zones.
 
 ## Main Features
 - Multi-Calendar  
-  Tick supports supports many calendars. currently we have implemented Gregorian, Hijri and Persian calendars and we will implement more calendars in the future. you can easily implement your own calendars.
+  Tick currently supports multiple calendars. Gregorian, Hijri and Persian calendars have already been implemented. you can easily implement your own calendars.
 
-  - DateTime object is independent of calendars
+  - DateTime object is independent of the calendars
     - The (core) library is not dependent on calendar object. you can create DateTime objects with different calendars.
   - Extensible
     - Calendars, locales and zones can be extended.
-    - You can easily implement your own calendars, locales and zones by just inheriting from a base class and implementing a few abstract methods.
+    - You can easily implement your own calendars, locales, and zones by just extending base class and implementing abstract methods.
   - With 4 Pre-implemented calendars
-    - Gregorian (implemented by using JavaScript Date object)
-    - Gregorian2
-    - Islamic (Hijri)
-    - Persian
+    - Gregorian (Actually it is a wrapper for JavaScript Date object)
+    - Gregorian2 (Has a standalone solution, [Read the following note for details...](#read-note))
+    - Hijri (Has a standalone solution, [Read the following note for details...](#read-note))
+    - Persian (Has a standalone solution, [Read the following note for details...](#read-note))
+    > [Note:](#read-note) <a name="read-note"></a>  
+      > Gregorian2, Hijri, and Persian calendars have a standalone solution that operates independently of the JavaScript Date object. It offers its unique calculations and functionalities, providing a comprehensive and reliable approach to managing date.
+
   - Accurate
-  - Wide Date range support
-    - Gregorian2, Persian and Islamic(Hijri) calendars support dates from 1/1/1 to 9999/12/30
+  - Wide date range support
+    - Gregorian calendar supports JavaScript Date object range.
+    - Gregorian2, Persian and Hijri calendars support dates from 1/1/1 to 9999/12/31. [Read the previous note for details...](#read-note)
 - Localization support
   - Intl-API based locales
   - File based locales (Not implemented yet)
@@ -80,7 +84,7 @@ Calendars.add(new GregorianCalendar2('gregorian2'));
 >  the first calendar you add to the Calendars collection is set as the default calendar. You can change the default Calendar of your project at any time.
 
 ## DateTime Object
-DateTime object is the main object of the Tick library. It stores date and time values. While creating DateTime objects, you should provide following parameters:
+DateTime object is the main object of Tick library. It stores date and time values. While creating DateTime object, you should provide following parameters:
 
 - Calendar: A Calendar object (like Gregorian, Hijri, ...)
 - Zone: A Zone object (like UTC, local zone , ...)
@@ -118,7 +122,7 @@ const d = new DateTime(); // now
 ```
 
 #### Example 2:  
-Create DateTime objects by providing a calendar:
+Create DateTime objects by specifying a calendar:
 ```
 import { DateTime, Calendars } from '@soft-libs/tick';
 
@@ -137,7 +141,7 @@ console.log(d3.year, d3.month, d3.day);
 ```
 
 #### Example 3:
-Create a DateTime with specific units (by using default calendar, zone and locale):
+Create a DateTime by specifying date and time units (by using default calendar, zone and locale):
 ```
 const d1 = new DateTime(2021, 10);
 // year: 2021,
@@ -156,7 +160,7 @@ const d2 = new DateTime(2021, 10, 28, 14, 56, 45, 122);
 ```
 
 #### Example 4: 
-Create DateTimes with specific date/time units and a specific calendar:
+Create DateTimes  by specifying date/time units and a calendar:
 ```
 const d1 = new DateTime(2021, 10, 28, 14, 56, 45, 122, {calendar: 'gregorian'});
 // year: 2021,
@@ -174,7 +178,7 @@ const d2 = new DateTime({calendar: 'gregorian'} , 2021, 10);
 ```
 
 #### Example 5:
-Create a DateTime with specific calendar, locale and time-zones:
+Create a DateTime by specifying calendar, locale and time-zones:
 ```
 const d1 = new DateTime({zone: Zones.utc}, 2021, 10);
 // year: 2021, month: 10, day: 1 
@@ -221,16 +225,18 @@ const d4 = new DateTime({
 > After creating a DateTime object, you cannot change it. In other words, you cannot change it's date-time units, calendar, zone or locale.
 
 ## Calendars
-A Calendar is an object that does date-time calculations in a specific calendaring system. DateTime object doesn't know anything about this calculations. it just delegate the calculations to a Calendar object.  
-We have implemented 4 calendars so far:  
+A Calendar is an object that does date-time calculations in a specific calendaring system, DateTime object is not aware of calculations, it just delegate calendaring calculations to its Calendar object.  
+
+Currently four calendars have been implemented: 
 - GregorianCalendar
 - Gregorian2Calendar
 - HijriCalendar
 - PersianCalendar
 
-You can easily implement your own Calendar by just inheriting from Calendar class and implementing a few abstract methods.  
-The first calendar you add to the Calendars collection is set as the default calendar. If you create a DateTime object and don't provide a value for the calendar parameter, the default calendar of application is used as the calendar of that DateTime object.  
-You can set the default calendar of the project at any time:  
+You can easily implement your own Calendar by extending Calendar class and implementing abstract methods.  
+
+The first calendar you add to  Calendars collection is set as default calendar. If you create a DateTime object and don't provide a value for the calendar parameter, the default calendar of application is used as the calendar of that DateTime object.  
+You can set the default calendar of the project at runtime:  
 
 ```
 import { Calendars } from '@soft-libs/tick';
