@@ -1,6 +1,6 @@
 # Tick
 
-Tick is an open source multi-calendar, lightweight and rich JavaScript library for parsing, validating, manipulating, formatting, and displaying date and time for all the Javascript runtime environments (NodeJS, browser, ...). It supports many calendars and you can easily convert DateTime between different calendars and time zones.
+Tick is an open-source multi-calendar, lightweight and rich JavaScript library for parsing, validating, manipulating, formatting, and displaying date and time for all the Javascript runtime environments (NodeJS, browser, ...). It supports many calendars and you can easily convert DateTime between different calendars and time zones.
 
 ## Main Features
 - Multi-Calendar  
@@ -46,7 +46,7 @@ npm install @soft-libs/tick
 
 ## How it works
 
-Import the calendars you need in your project, instantiate and add them to the Calendars collection. You must add at least one calendar to the Calendars collection.
+Import the calendars you need in your project, instantiate and add them to Calendars collection. You must add at least one calendar to Calendars collection.
 
 Add the following code at the starting point of your application:
 
@@ -81,7 +81,7 @@ Calendars.add(new GregorianCalendar2('gregorian2'));
 ```
 
 > Note:  
->  the first calendar you add to the Calendars collection is set as the default calendar. You can change the default Calendar of your project at any time.
+>  the first calendar you add to Calendars collection is set as the default calendar. You can change the default Calendar of your project at any time.
 
 ## DateTime Object
 DateTime object is the main object of Tick library. It stores date and time values. While creating DateTime object, you should provide following parameters:
@@ -92,7 +92,7 @@ DateTime object is the main object of Tick library. It stores date and time valu
 
 > Note:  
 > If you don't provide above parameters to the DateTime constructor, default values will be used:
-> - Default calendar: The first calendar you add to the Calendars collection.
+> - Default calendar: The first calendar you add to Calendars collection.
 > - Default Locale: System locale.
 > - Default Zone: local time-zone.
 
@@ -235,7 +235,7 @@ Currently four calendars have been implemented:
 
 You can easily implement your own Calendar by extending Calendar class and implementing abstract methods.  
 
-The first calendar you add to  Calendars collection is set as default calendar. If you create a DateTime object and don't provide a value for the calendar parameter, the default calendar of application is used as the calendar of that DateTime object.  
+If you create a DateTime object and don't provide a value for the calendar parameter, the default calendar of application is used as the calendar of that DateTime object.  
 You can set the default calendar of the project at runtime:  
 
 ```

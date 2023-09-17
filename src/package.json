@@ -1,10 +1,13 @@
 {
   "name": "@soft-libs/tick",
-  "version": "3.0.1",
-  "description": "A multi-calendar, tree-shakable, extensible, immutable and lightweight date library for JavaScript",
+  "version": "3.0.2",
+  "description": "Tick is an open-source, multi-calendar, tree-shakable, extensible, immutable and lightweight date library for JavaScript",
   "author": "soft-libs",
-  "license": "ISC",
-  "homepage": "https://soft-libs.github.io/tick-docs",
+  "contributors": [
+    "Mohammad Ansari <devui1085@gmail.com>"
+    ],
+  "license": "MIT",
+  "homepage": "https://soft-libs.github.io/tick-api-docs",
   "repository": {
     "type": "git",
     "url": "https://github.com/soft-libs/tick"
@@ -17,6 +20,21 @@
     "calendar",
     "tree-shakable",
     "immutable",
-    "moment"
+    "moment",
+    "Locale",
+    "Zone",
+    "GregorianCalendar",
+    "PersianCalendar",
+    "HijriCalendar",
+    "IslamicCalendar",
+    "Tick",
+    "Soft-libs",
+    "DateTime",
+    "GregorianToPersian",
+    "PersianToGregorian",
+    "GregorianToHijri",
+    "HijriToGregorian",
+    "PersianToHijri",
+    "HijriToPersian"
   ]
 }
